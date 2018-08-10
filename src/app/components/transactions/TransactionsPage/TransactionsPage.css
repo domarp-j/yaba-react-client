@@ -1,0 +1,8 @@
+.new-transaction-section {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.transaction-fetch-loader {
+  height: 90px;
+}
