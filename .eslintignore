@@ -1,3 +1,4 @@
 
-registerServiceWorker.js
+build/*
 coverage/*
+registerServiceWorker.js
