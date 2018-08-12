@@ -1,6 +1,8 @@
 # yaba (Yet Another Budget App) - React Client
 
-The React front-end for yaba
+The React front-end for yaba, a simple but intuitive budgeting app.
+
+Check it out at [yaba.netlify.com](https://yaba.netlify.com)
 
 ## Setup
 
@@ -12,3 +14,7 @@ Note: You will have to prepend app-specific commands with `docker-compose run re
 
 - ESLint `docker-compose run react-client yarn lint`
 - Jest `docker-compose run react-client yarn test`
+
+## Deploys
+
+Updates to the master branch are automatically deployed to [Netlify](https://www.netlify.com/).
