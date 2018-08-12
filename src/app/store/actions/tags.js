@@ -20,12 +20,11 @@ export const addTagToTransaction = tag => ({
   },
 });
 
-export const createTag = (data={}) =>   dispatch => {
+export const createTag = (data={}) => dispatch => {
   dispatch(requestAddTag());
 
-  return yabaAxios.post(routes.tags, {
+  return yabaAxios.post(routes.transactionTags(data.transactionId), {
     name: data.tagName,
-    transaction_id: data.transactionId,
   }).then(response => { dispatch(addTagToTransaction(response.data.content)); });
 };
 
