@@ -1,0 +1,22 @@
+[build]
+  base = "."
+  publish = "./build"
+  command = "yarn build"
+
+[context.production]
+  command = "yarn build"
+  [context.production.environment]
+    REACT_APP_ENV = "production"
+    REACT_APP_SERVER = "https://yaba-api.herokuapp.com"
+
+[context.branch-deploy]
+  command = "yarn build"
+  [context.branch-deploy.environment]
+    REACT_APP_ENV = "branch"
+    REACT_APP_SERVER = "https://yaba-api.herokuapp.com"
+
+[context.deploy-preview]
+  command = "yarn build"
+  [context.deploy-preview.environment]
+    REACT_APP_ENV = "preview"
+    REACT_APP_SERVER = "https://yaba-api.herokuapp.com"
