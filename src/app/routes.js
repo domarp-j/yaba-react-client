@@ -9,5 +9,6 @@ export default {
   transactions: `${process.env.REACT_APP_SERVER}/api/transaction-items`,
   updateTransaction: `${process.env.REACT_APP_SERVER}/api/transaction-item/update`,
   deleteTransaction: `${process.env.REACT_APP_SERVER}/api/transaction-item/delete`,
-  transactionTags: transactionId => `${process.env.REACT_APP_SERVER}/api/transaction-items/${transactionId}/tags`,
+  addTransactionTag: transactionId => `${process.env.REACT_APP_SERVER}/api/transaction-items/${transactionId}/tags`,
+  deleteTransactionTag: transactionId => `${process.env.REACT_APP_SERVER}/api/transaction-items/${transactionId}/tags/delete`,
 };

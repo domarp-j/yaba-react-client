@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
-import { createTag } from '../../../store/actions/tags';
+import { attachTagToTransaction } from '../../../store/actions/tags';
 
 import './TagForm.css';
 
@@ -52,6 +52,7 @@ const TagForm = ({
     <input />
 
     <Button
+      className='grouped-button'
       color='green'
       loading={isAddingTag}
       onClick={e => submitTagForm(e, handleSubmit, setTouched)}
@@ -62,6 +63,7 @@ const TagForm = ({
     </Button>
 
     <Button
+      className='grouped-button'
       color='red'
       onClick={e => cancelTagForm(e, handleCancel) }
     >
@@ -96,7 +98,7 @@ const schema = yup.object().shape({
 
 const formikOptions = {
   handleSubmit: (values, { props }) => {
-    props.createTag({
+    props.attachTagToTransaction({
       tagName: values.tagName,
       transactionId: props.transactionId,
     });
@@ -110,7 +112,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createTag: data => { dispatch(createTag(data)); },
+  attachTagToTransaction: data => { dispatch(attachTagToTransaction(data)); },
 });
 
 export { TagForm as BaseTagForm };

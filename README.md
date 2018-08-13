@@ -2,7 +2,7 @@
 
 The React front-end for yaba, a simple but intuitive budgeting app.
 
-Check it out at [yaba.netlify.com](https://yaba.netlify.com)
+Check it out at [yaba.netlify.com](https://yaba.netlify.com)!
 
 ## Setup
 

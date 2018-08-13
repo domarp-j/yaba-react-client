@@ -7,3 +7,7 @@
 .no-margin {
   margin: 0 !important;
 }
+
+.grouped-button {
+  padding: 11px !important;
+}

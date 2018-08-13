@@ -13,8 +13,10 @@ import {
 } from '../actions/transactions';
 
 import {
-  REQUEST_TO_ADD_TAG,
-  ADD_TAG_TO_TRANSACTION
+  REQUEST_TO_ADD_TAG_TO_TRANSACTION,
+  ADD_TAG_TO_TRANSACTION,
+  REQUEST_TO_REMOVE_TAG_FROM_TRANSACTION,
+  REMOVE_TAG_FROM_TRANSACTION
 } from '../actions/tags';
 
 const transactions = (
@@ -90,8 +92,8 @@ const transactions = (
       isFetching: false,
       items: [],
     };
-  // Adding tags
-  case REQUEST_TO_ADD_TAG:
+  // Adding tags to transactions
+  case REQUEST_TO_ADD_TAG_TO_TRANSACTION:
     return {
       ...state,
       isAddingTag: true,
@@ -103,6 +105,26 @@ const transactions = (
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return { ...item, tags: [...item.tags, action.tag] };
+      }),
+    };
+  // Removing tags from transactions
+  case REQUEST_TO_REMOVE_TAG_FROM_TRANSACTION:
+    return {
+      ...state,
+      isRemovingTag: true,
+    };
+  case REMOVE_TAG_FROM_TRANSACTION:
+    return {
+      ...state,
+      isRemovingTag: false,
+      items: state.items.map(item => {
+        if (item.id !== action.transaction.id) return item;
+        return {
+          ...item,
+          tags: filter(tag => (
+            tag.id !== action.tag.id && tag.name !== action.tag.name
+          ), [...item.tags]),
+        };
       }),
     };
   default:

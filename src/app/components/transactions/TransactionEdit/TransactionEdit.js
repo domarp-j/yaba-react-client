@@ -61,7 +61,7 @@ class TransactionEdit extends React.Component {
 
   amountButton = {
     [true]: { color: 'green', icon: 'plus' },
-    [false]: { color: 'orange', icon: 'minus' },
+    [false]: { color: 'red', icon: 'minus' },
   };
 
   changeAmountType = e => {

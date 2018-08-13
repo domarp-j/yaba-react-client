@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Accordion, Table, Button, Modal, Header, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
+import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
 import { deleteTransaction, toggleEditState } from '../../../store/actions/transactions';
 import './TransactionItem.css';
@@ -80,11 +81,12 @@ class TransactionItem extends React.Component {
   )
 
   render() {
-    const { amount, date, description, tags, transactionId } = this.props;
+    const { amount, date, description, isAddingTag, tags, transactionId } = this.props;
     const { addingTag } = this.state;
 
     return (
       <Accordion fluid styled>
+        {/* Transaction information */}
         <Accordion.Title active={this.state.isActive} onClick={this.toggleClick}>
           <Table celled striped>
             <Table.Body>
@@ -96,16 +98,41 @@ class TransactionItem extends React.Component {
             </Table.Body>
           </Table>
         </Accordion.Title>
+
+        {/* Transaction tags & CTAs */}
         <Accordion.Content active={this.state.isActive}>
           {tags && tags.length > 0 &&
             <div className='tags'>
-              {tags.map(tag => <Button key={tag.id} content={tag.name} className='tag' />)}
-              {addingTag && <TagForm handleCancel={this.hideTagForm} transactionId={transactionId} />}
+              {/* Transaction tags */}
+              {tags.map(tag => (
+                <Tag
+                  key={`${transactionId}-${tag.id}`}
+                  tagId={tag.id}
+                  tagName={tag.name}
+                  transactionId={transactionId}
+                />
+              ))}
+
+              {/* Input to add new tag */}
+              {addingTag && (
+                <TagForm
+                  handleCancel={this.hideTagForm}
+                  transactionId={transactionId}
+                />
+              )}
+
+              {/* Loader that shows while add-tag call is being processed */}
+              {isAddingTag && <Button className='tag-loader' loading />}
+
+              {/* Button that, when clicked, displays input to add new tag */}
               {!addingTag && this.addTagButton()}
             </div>
           }
           <div>
+            {/* Edit transaction button */}
             <Button content='Edit' color='blue' onClick={this.setEditMode} />
+
+            {/* Delete transaction button */}
             {this.removeTransactionModal()}
           </div>
         </Accordion.Content>
@@ -114,17 +141,20 @@ class TransactionItem extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  isAddingTag: state.transactions.isAddingTag,
+});
 const mapDispatchToProps = dispatch => ({
   deleteTransaction: id => { dispatch(deleteTransaction(id)); },
   toggleEditState: (transaction, editMode) => { dispatch(toggleEditState(transaction, editMode)); },
 });
-
 
 TransactionItem.propTypes = {
   amount: PropTypes.string,
   date: PropTypes.string,
   deleteTransaction: PropTypes.func,
   description: PropTypes.string,
+  isAddingTag: PropTypes.bool,
   tags: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -134,4 +164,4 @@ TransactionItem.propTypes = {
   transactionId: PropTypes.number,
 };
 
-export default connect(null, mapDispatchToProps)(TransactionItem);
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionItem);
