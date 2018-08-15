@@ -13,11 +13,13 @@ import {
 } from '../actions/transactions';
 
 import {
-  REQUEST_TO_ADD_TAG_TO_TRANSACTION,
-  ADD_TAG_TO_TRANSACTION,
-  REQUEST_TO_REMOVE_TAG_FROM_TRANSACTION,
-  REMOVE_TAG_FROM_TRANSACTION
-} from '../actions/tags';
+  REQUEST_ADD_TRANSACTION_TAG,
+  ADD_TRANSACTION_TAG,
+  REQUEST_UPDATE_TRANSACTION_TAG,
+  UPDATE_TRANSACTION_TAG,
+  REQUEST_REMOVE_TRANSACTION_TAG,
+  REMOVE_TRANSACTION_TAG
+} from '../actions/transactionTags';
 
 const transactions = (
   state = {},
@@ -93,12 +95,12 @@ const transactions = (
       items: [],
     };
   // Adding tags to transactions
-  case REQUEST_TO_ADD_TAG_TO_TRANSACTION:
+  case REQUEST_ADD_TRANSACTION_TAG:
     return {
       ...state,
       isAddingTag: true,
     };
-  case ADD_TAG_TO_TRANSACTION:
+  case ADD_TRANSACTION_TAG:
     return {
       ...state,
       isAddingTag: false,
@@ -107,13 +109,35 @@ const transactions = (
         return { ...item, tags: [...item.tags, action.tag] };
       }),
     };
+  // Updating tags for transactions
+  case REQUEST_UPDATE_TRANSACTION_TAG:
+    return {
+      ...state,
+      isUpdatingTag: true,
+    };
+  case UPDATE_TRANSACTION_TAG:
+    return {
+      ...state,
+      isUpdatingTag: false,
+      items: state.items.map(item => {
+        if (item.id !== action.transaction.id) return item;
+        return {
+          ...item,
+          tags: update(
+            findIndex(tag => tag.id === action.tag.id)(item.tags),
+            action.tag,
+            item.tags
+          ),
+        };
+      }),
+    };
   // Removing tags from transactions
-  case REQUEST_TO_REMOVE_TAG_FROM_TRANSACTION:
+  case REQUEST_REMOVE_TRANSACTION_TAG:
     return {
       ...state,
       isRemovingTag: true,
     };
-  case REMOVE_TAG_FROM_TRANSACTION:
+  case REMOVE_TRANSACTION_TAG:
     return {
       ...state,
       isRemovingTag: false,
@@ -127,6 +151,7 @@ const transactions = (
         };
       }),
     };
+  // Fallthrough behavior
   default:
     return state;
   }

@@ -21,12 +21,14 @@ const initialState = {
   email: null,
   transactions: {
     allTransactionsFetched: false,
+    items: [],
     isAdding: false,
     isAddingTag: false,
     isEditing: false,
     isFetching: false,
     isDeleting: false,
-    items: [],
+    isRemovingTag: false,
+    isUpdatingTag: false,
   },
 };
 

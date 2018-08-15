@@ -14,7 +14,7 @@ class TransactionItem extends React.Component {
     this.state = {
       isActive: false,
       openModal: false,
-      addingTag: false,
+      showAddTag: false,
     };
   }
 
@@ -40,9 +40,9 @@ class TransactionItem extends React.Component {
 
   closeModal = () => this.setState({ openModal: false })
 
-  showTagForm = () => this.setState({ addingTag: true })
+  showTagForm = () => this.setState({ showAddTag: true })
 
-  hideTagForm = () => this.setState({ addingTag: false })
+  hideTagForm = () => this.setState({ showAddTag: false })
 
   removeTransactionItem = async () => {
     this.props.deleteTransaction(this.props.transactionId);
@@ -50,7 +50,7 @@ class TransactionItem extends React.Component {
   }
 
   addTagButton = () => (
-    <Button className='margin=bottom-4' onClick={this.showTagForm}>
+    <Button className='grouped-button margin=bottom-4' onClick={this.showTagForm}>
       <Button.Content className='no-padding'>
         <Icon name='plus' className='no-margin' />
       </Button.Content>
@@ -82,7 +82,7 @@ class TransactionItem extends React.Component {
 
   render() {
     const { amount, date, description, isAddingTag, tags, transactionId } = this.props;
-    const { addingTag } = this.state;
+    const { showAddTag } = this.state;
 
     return (
       <Accordion fluid styled>
@@ -114,9 +114,9 @@ class TransactionItem extends React.Component {
               ))}
 
               {/* Input to add new tag */}
-              {addingTag && (
+              {showAddTag && (
                 <TagForm
-                  handleCancel={this.hideTagForm}
+                  onCancel={this.hideTagForm}
                   transactionId={transactionId}
                 />
               )}
@@ -125,7 +125,7 @@ class TransactionItem extends React.Component {
               {isAddingTag && <Button className='tag-loader' loading />}
 
               {/* Button that, when clicked, displays input to add new tag */}
-              {!addingTag && this.addTagButton()}
+              {!showAddTag && this.addTagButton()}
             </div>
           }
           <div>

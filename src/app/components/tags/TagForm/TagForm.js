@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
-import { attachTagToTransaction } from '../../../store/actions/tags';
+import { attachTagToTransaction, modifyTransactionTag } from '../../../store/actions/transactionTags';
 
 import './TagForm.css';
 
@@ -23,17 +23,17 @@ const submitTagForm = (e, handleSubmit, setTouched) => {
   }).then(() => handleSubmit(e));
 };
 
-const cancelTagForm = (e, handleCancel) => {
+const cancelTagForm = (e, onCancel) => {
   e.preventDefault();
-  handleCancel();
+  onCancel();
 };
 
 const TagForm = ({
   errors,
   handleChange,
   handleSubmit,
-  handleCancel,
   isAddingTag,
+  onCancel,
   setTouched,
   touched,
   values,
@@ -58,14 +58,14 @@ const TagForm = ({
       onClick={e => submitTagForm(e, handleSubmit, setTouched)}
     >
       <Button.Content className='no-padding'>
-        <Icon name='plus' className='no-margin' />
+        <Icon name='checkmark' className='no-margin' />
       </Button.Content>
     </Button>
 
     <Button
       className='grouped-button'
       color='red'
-      onClick={e => cancelTagForm(e, handleCancel) }
+      onClick={e => cancelTagForm(e, onCancel) }
     >
       <Button.Content className='no-padding'>
         <Icon name='cancel' className='no-margin' />
@@ -75,21 +75,27 @@ const TagForm = ({
 );
 
 TagForm.propTypes = {
+  editMode: PropTypes.bool,
   errors: PropTypes.shape({
     tagName: PropTypes.string,
   }),
-  handleCancel: PropTypes.func,
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
   isAddingTag: PropTypes.bool,
+  onCancel: PropTypes.func,
   setTouched: PropTypes.func,
   touched: PropTypes.shape({
     tagName: PropTypes.bool,
   }),
+  tagId: PropTypes.number,
   transactionId: PropTypes.number,
   values: PropTypes.shape({
     tagName: PropTypes.string,
   }),
+};
+
+TagForm.defaultProps = {
+  editMode: false,
 };
 
 const schema = yup.object().shape({
@@ -98,12 +104,22 @@ const schema = yup.object().shape({
 
 const formikOptions = {
   handleSubmit: (values, { props }) => {
-    props.attachTagToTransaction({
-      tagName: values.tagName,
-      transactionId: props.transactionId,
-    });
-    props.handleCancel();
+    props.editMode ?
+      props.modifyTransactionTag({
+        tagId: props.tagId,
+        tagName: values.tagName,
+        transactionId: props.transactionId,
+      }) :
+      props.attachTagToTransaction({
+        tagName: values.tagName,
+        transactionId: props.transactionId,
+      });
+
+    props.onCancel();
   },
+  mapPropsToValues: props => ({
+    tagName: props.initialValues.tagName,
+  }),
   validationSchema: schema,
 };
 
@@ -113,6 +129,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   attachTagToTransaction: data => { dispatch(attachTagToTransaction(data)); },
+  modifyTransactionTag: data => { dispatch(modifyTransactionTag(data)); },
 });
 
 export { TagForm as BaseTagForm };

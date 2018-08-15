@@ -4,7 +4,8 @@ import { Button, Icon } from 'semantic-ui-react';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
-import { detachTagFromTransaction } from '../../../store/actions/tags';
+import TagForm from '../TagForm';
+import { detachTagFromTransaction } from '../../../store/actions/transactionTags';
 import './Tag.css';
 
 class Tag extends React.Component {
@@ -19,12 +20,13 @@ class Tag extends React.Component {
     super();
     this.state = {
       showCTAs: false,
+      showEdit: false,
     };
   }
 
-  toggleCTAs = () => this.setState(prevState => {
+  toggleBoolState = stateKey => this.setState(prevState => {
     return {
-      showCTAs: !prevState.showCTAs,
+      [stateKey]: !prevState[stateKey],
     };
   })
 
@@ -37,32 +39,43 @@ class Tag extends React.Component {
   }
 
   render() {
-    const { tagName } = this.props;
-    const { showCTAs } = this.state;
+    const { tagId, tagName, transactionId } = this.props;
+    const { showCTAs, showEdit } = this.state;
 
     return (
-      <Button.Group className='tag'>
-        {/* Button displaying tag name */}
-        <Button content={tagName} onClick={this.toggleCTAs} />
+      showEdit ?
+        // Editing tag
+        <TagForm
+          editMode
+          initialValues={{ tagName }}
+          onCancel={() => this.toggleBoolState('showEdit')}
+          tagId={tagId}
+          transactionId={transactionId}
+        /> :
 
-        {/* Edit tag - attached button */}
-        {showCTAs &&
-          <Button className='grouped-button' color='blue'>
+        // Displaying tag
+        <Button.Group className='tag'>
+          {/* Button displaying tag name */}
+          <Button content={tagName} onClick={() => this.toggleBoolState('showCTAs')} />
+
+          {/* Edit tag - attached button */}
+          {showCTAs &&
+          <Button className='grouped-button' color='blue' onClick={() => this.toggleBoolState('showEdit')}>
             <Button.Content className='no-padding'>
               <Icon name='edit' className='no-margin' />
             </Button.Content>
           </Button>
-        }
+          }
 
-        {/* Delete tag - attached button */}
-        {showCTAs &&
+          {/* Delete tag - attached button */}
+          {showCTAs &&
           <Button className='grouped-button' color='red' onClick={this.handleDelete}>
             <Button.Content className='no-padding'>
               <Icon name='trash' className='no-margin' />
             </Button.Content>
           </Button>
-        }
-      </Button.Group>
+          }
+        </Button.Group>
     );
   }
 }
