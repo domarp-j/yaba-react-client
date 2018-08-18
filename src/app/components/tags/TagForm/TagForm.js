@@ -118,7 +118,7 @@ const formikOptions = {
     props.onCancel();
   },
   mapPropsToValues: props => ({
-    tagName: props.initialValues.tagName,
+    tagName: props.initialValues && props.initialValues.tagName,
   }),
   validationSchema: schema,
 };

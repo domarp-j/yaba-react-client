@@ -36,24 +36,26 @@ export const requestUpdateTransactionTag = () => ({
 });
 
 export const UPDATE_TRANSACTION_TAG = 'UPDATE_TRANSACTION_TAG';
-export const updateTransactionTag = tag => ({
+export const updateTransactionTag = (oldTag, newTag) => ({
   type: UPDATE_TRANSACTION_TAG,
-  transaction: {
-    id: tag.transaction_id,
-  },
-  tag: {
-    id: tag.id,
-    name: tag.name,
-  },
+  transaction: { id: newTag.transaction_id },
+  oldTag,
+  newTag,
 });
 
 export const modifyTransactionTag = (data={}) => dispatch => {
-  dispatch(requestUpdateTransactionTag());
-
-  return yabaAxios.post(routes.updateTransactionTag(data.transactionId), {
+  const tagBeforeUpdate = {
     id: data.tagId,
     name: data.tagName,
-  }).then(response => { dispatch(updateTransactionTag(response.data.content)); });
+  };
+
+  dispatch(requestUpdateTransactionTag());
+
+  return yabaAxios.post(routes.updateTransactionTag(data.transactionId), tagBeforeUpdate)
+    .then(response => {
+      const tagAfterUpdate = response.data.content;
+      dispatch(updateTransactionTag(tagBeforeUpdate, tagAfterUpdate));
+    });
 };
 
 // Removing tags from transactions

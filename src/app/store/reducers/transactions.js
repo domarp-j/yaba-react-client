@@ -124,8 +124,8 @@ const transactions = (
         return {
           ...item,
           tags: update(
-            findIndex(tag => tag.id === action.tag.id)(item.tags),
-            action.tag,
+            findIndex(tag => tag.id === action.oldTag.id)(item.tags),
+            action.newTag,
             item.tags
           ),
         };
