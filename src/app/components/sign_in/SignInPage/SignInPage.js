@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
-import NavSignedOut from '../../shared/NavSignedOut';
+import NavSignedOut from '../../navigation/NavSignedOut';
 import SignInForm from '../SignInForm';
 import routes from '../../../routes';
 

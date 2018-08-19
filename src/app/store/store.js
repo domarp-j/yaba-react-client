@@ -5,7 +5,6 @@ import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 
-import email from './reducers/email';
 import transactions from './reducers/transactions';
 
 const initialState = {
@@ -18,7 +17,6 @@ const initialState = {
       },
     },
   },
-  email: null,
   transactions: {
     allTransactionsFetched: false,
     items: [],
@@ -41,7 +39,6 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     reduxTokenAuth: reduxTokenAuthReducer,
-    email,
     transactions,
   })
 );

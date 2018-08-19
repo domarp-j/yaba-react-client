@@ -4,16 +4,15 @@ import { Container, Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { partition } from 'ramda';
 
+import NavSignedIn from '../../navigation/NavSignedIn';
 import TransactionItem from '../TransactionItem';
 import TransactionForm from '../TransactionForm';
 import TransactionEdit from '../TransactionEdit';
-import { addEmail } from '../../../store/actions/email';
 import { clearTransactions, fetchTransactions } from '../../../store/actions/transactions';
 import './TransactionsPage.css';
 
 class TransactionsPage extends React.Component {
   static propTypes = {
-    addEmail: PropTypes.func,
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
     email: PropTypes.string,
@@ -50,13 +49,12 @@ class TransactionsPage extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
 
-    const { addEmail, clearTransactions, fetchTransactions } = this.props;
+    const { clearTransactions, fetchTransactions } = this.props;
 
     new Promise(resolve => {
       clearTransactions();
       resolve();
     }).then(() => {
-      addEmail(localStorage.uid);
       fetchTransactions({ limit: this.state.limit, page: this.state.page });
     });
   }
@@ -108,6 +106,8 @@ class TransactionsPage extends React.Component {
 
     return (
       <div ref={this.setPageRef}>
+        <NavSignedIn />
+
         <Container textAlign='left'>
           <TransactionForm />
 
@@ -142,7 +142,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addEmail: email => { dispatch(addEmail(email)); },
   clearTransactions: () => { dispatch(clearTransactions()); },
   fetchTransactions: params => { dispatch(fetchTransactions(params)); },
 });

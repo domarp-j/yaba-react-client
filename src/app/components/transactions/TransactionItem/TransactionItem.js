@@ -101,33 +101,31 @@ class TransactionItem extends React.Component {
 
         {/* Transaction tags & CTAs */}
         <Accordion.Content active={this.state.isActive}>
-          {tags && tags.length > 0 &&
-            <div className='tags'>
-              {/* Transaction tags */}
-              {tags.map(tag => (
-                <Tag
-                  key={`${transactionId}-${tag.id}`}
-                  tagId={tag.id}
-                  tagName={tag.name}
-                  transactionId={transactionId}
-                />
-              ))}
+          <div className='tags'>
+            {/* Transaction tags */}
+            {tags && tags.length > 0 && tags.map(tag => (
+              <Tag
+                key={`${transactionId}-${tag.id}`}
+                tagId={tag.id}
+                tagName={tag.name}
+                transactionId={transactionId}
+              />
+            ))}
 
-              {/* Input to add new tag */}
-              {showAddTag && (
-                <TagForm
-                  onCancel={this.hideTagForm}
-                  transactionId={transactionId}
-                />
-              )}
+            {/* Input to add new tag */}
+            {showAddTag && (
+              <TagForm
+                onCancel={this.hideTagForm}
+                transactionId={transactionId}
+              />
+            )}
 
-              {/* Loader that shows while add-tag call is being processed */}
-              {isAddingTag && <Button className='tag-loader' loading />}
+            {/* Loader that shows while add-tag call is being processed */}
+            {isAddingTag && <Button className='tag-loader' loading />}
 
-              {/* Button that, when clicked, displays input to add new tag */}
-              {!showAddTag && this.addTagButton()}
-            </div>
-          }
+            {/* Button that, when clicked, displays input to add new tag */}
+            {!showAddTag && this.addTagButton()}
+          </div>
           <div>
             {/* Edit transaction button */}
             <Button content='Edit' color='blue' onClick={this.setEditMode} />
