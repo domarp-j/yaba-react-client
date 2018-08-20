@@ -49,7 +49,7 @@ const transactions = (
     return {
       ...state,
       isAdding: false,
-      items: [{ ...action.transaction, justAdded: true }, ...state.items],
+      items: [{ ...action.transaction, justAdded: true, tags: [] }, ...state.items],
     };
   // Editing transactions
   case TOGGLE_EDIT_STATE:
