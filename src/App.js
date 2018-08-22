@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { generateRequireSignInWrapper } from 'redux-token-auth';
 
-import TransactionsPage from './app/components/transactions/TransactionsPage';
-import SignUpPage from './app/components/sign_up/SignUpPage';
-import SignInPage from './app/components/sign_in/SignInPage';
 import routes from './app/routes';
+
+import SignInPage from './app/pages/SignInPage';
+import SignUpPage from './app/pages/SignUpPage';
+import TransactionsPage from './app/pages/TransactionsPage';
 
 import './App.css';
 

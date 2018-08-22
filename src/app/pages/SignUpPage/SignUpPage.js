@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
-import NavSignedOut from '../../navigation/NavSignedOut';
-import SignUpForm from '../SignUpForm';
-import routes from '../../../routes';
+import NavSignedOut from '../../components/navigation/NavSignedOut';
+import SignUpForm from '../../components/auth/SignUpForm';
+import routes from '../../routes';
 
 const SignUpPage = () =>  (
   <div>

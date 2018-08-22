@@ -1,21 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Loader, Segment, Dimmer } from 'semantic-ui-react';
+import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { partition } from 'ramda';
 
-import NavSignedIn from '../../navigation/NavSignedIn';
 import TransactionItem from '../TransactionItem';
-import TransactionForm from '../TransactionForm';
 import TransactionEdit from '../TransactionEdit';
 import { clearTransactions, fetchTransactions } from '../../../store/actions/transactions';
-import './TransactionsPage.css';
+
+import './TransactionList.css';
 
 class TransactionsPage extends React.Component {
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
-    email: PropTypes.string,
     fetchTransactions: PropTypes.func,
     isFetching: PropTypes.bool,
     transactions: PropTypes.arrayOf(PropTypes.shape({
@@ -106,29 +104,23 @@ class TransactionsPage extends React.Component {
 
     return (
       <div ref={this.setPageRef}>
-        <NavSignedIn />
-
-        <Container textAlign='left'>
-          <TransactionForm />
-
-          {newTransactions.length > 0 &&
+        {newTransactions.length > 0 &&
             <div className='new-transaction-section'>
               {newTransactions.map(transaction => this.renderTransaction(transaction))}
             </div>
-          }
+        }
 
-          {oldTransactions.length > 0 &&
+        {oldTransactions.length > 0 &&
             oldTransactions.map(transaction => this.renderTransaction(transaction))
-          }
+        }
 
-          {isFetching &&
+        {isFetching &&
              <Segment className='transaction-fetch-loader'>
                <Dimmer active inverted>
                  <Loader inverted>Loading</Loader>
                </Dimmer>
              </Segment>
-          }
-        </Container>
+        }
       </div>
     );
   }
@@ -136,7 +128,6 @@ class TransactionsPage extends React.Component {
 
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.allTransactionsFetched,
-  email: state.email,
   isFetching: state.transactions.isFetching,
   transactions: state.transactions.items,
 });
