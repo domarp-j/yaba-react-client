@@ -86,7 +86,7 @@ class TransactionForm extends React.Component {
     const { positiveAmount } = this.state;
 
     return (
-      <Segment>
+      <Segment basic>
         <h2>Add a transaction</h2>
 
         <Form onSubmit={this.setValuesAndSubmit}>
@@ -117,7 +117,7 @@ class TransactionForm extends React.Component {
               id='description'
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.description}
+              value={values.description || ''}
               error={allFieldsTouched(touched, fields) && !!errors.description}
               width={10}
             />
@@ -143,7 +143,7 @@ class TransactionForm extends React.Component {
                   }}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.amount}
+                  value={values.amount || ''}
                 />
               </div>
             </Form.Field>
