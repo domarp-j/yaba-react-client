@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Table, Button, Modal, Header, Icon } from 'semantic-ui-react';
+import { Accordion, Table, Button, Modal, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
+import AddTag from '../../tags/AddTag';
 import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
 import { deleteTransaction, toggleEditState } from '../../../store/actions/transactions';
@@ -48,14 +49,6 @@ class TransactionItem extends React.Component {
     this.props.deleteTransaction(this.props.transactionId);
     this.closeModal();
   }
-
-  addTagButton = () => (
-    <Button className='grouped-button margin=bottom-4' onClick={this.showTagForm}>
-      <Button.Content className='no-padding'>
-        <Icon name='plus' className='no-margin' />
-      </Button.Content>
-    </Button>
-  )
 
   removeTransactionModal = () => (
     <Modal
@@ -113,18 +106,22 @@ class TransactionItem extends React.Component {
             ))}
 
             {/* Input to add new tag */}
-            {showAddTag && (
+            {showAddTag &&
               <TagForm
                 onCancel={this.hideTagForm}
                 transactionId={transactionId}
               />
-            )}
+            }
 
             {/* Loader that shows while add-tag call is being processed */}
             {isAddingTag && <Button className='tag-loader' loading />}
 
             {/* Button that, when clicked, displays input to add new tag */}
-            {!showAddTag && this.addTagButton()}
+            {!showAddTag &&
+              <AddTag
+                onClick={this.showTagForm}
+              />
+            }
           </div>
           <div>
             {/* Edit transaction button */}
