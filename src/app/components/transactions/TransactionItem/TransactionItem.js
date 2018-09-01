@@ -6,10 +6,32 @@ import { connect } from 'react-redux';
 import AddTag from '../../tags/AddTag';
 import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
-import { deleteTransaction, toggleEditState } from '../../../store/actions/transactions';
+import {
+  deleteTransaction,
+  toggleEditState
+} from '../../../store/actions/transactions';
+import {
+  attachTagToTransaction
+} from '../../../store/actions/transactionTags';
 import './TransactionItem.css';
 
 class TransactionItem extends React.Component {
+  static propTypes = {
+    amount: PropTypes.string,
+    attachTagToTransaction: PropTypes.func,
+    date: PropTypes.string,
+    deleteTransaction: PropTypes.func,
+    description: PropTypes.string,
+    isAddingTag: PropTypes.bool,
+    tags: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      description: PropTypes.string,
+    })),
+    toggleEditState: PropTypes.func,
+    transactionId: PropTypes.number,
+  }
+
   constructor() {
     super();
     this.state = {
@@ -19,12 +41,10 @@ class TransactionItem extends React.Component {
     };
   }
 
-  toggleClick = () => {
-    this.setState(prevState => {
-      return {
-        isActive: !prevState.isActive,
-      };
-    });
+  toggleStateBool = stateKey => {
+    this.setState(prevState => ({
+      [stateKey]: !prevState[stateKey],
+    }));
   }
 
   setEditMode = () => {
@@ -37,24 +57,16 @@ class TransactionItem extends React.Component {
     }, true);
   }
 
-  openModal = () => this.setState({ openModal: true })
-
-  closeModal = () => this.setState({ openModal: false })
-
-  showTagForm = () => this.setState({ showAddTag: true })
-
-  hideTagForm = () => this.setState({ showAddTag: false })
-
   removeTransactionItem = async () => {
     this.props.deleteTransaction(this.props.transactionId);
-    this.closeModal();
+    this.toggleStateBool('openModal');
   }
 
   removeTransactionModal = () => (
     <Modal
       className='cancel-modal'
       open={this.state.openModal}
-      trigger={<Button content='Delete' color='red' onClick={this.openModal} />}
+      trigger={<Button content='Delete' color='red' onClick={() => this.toggleStateBool('openModal')} />}
     >
       <Header icon='archive' content='Are you sure you want to delete this transaction?' />
       <Modal.Content>
@@ -63,7 +75,7 @@ class TransactionItem extends React.Component {
         </p>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='blue' onClick={this.closeModal}>
+        <Button color='blue' onClick={() => this.toggleStateBool('openModal')}>
           No, keep it
         </Button>
         <Button color='red' onClick={this.removeTransactionItem}>
@@ -74,13 +86,13 @@ class TransactionItem extends React.Component {
   )
 
   render() {
-    const { amount, date, description, isAddingTag, tags, transactionId } = this.props;
+    const { amount, attachTagToTransaction, date, description, isAddingTag, tags, transactionId } = this.props;
     const { showAddTag } = this.state;
 
     return (
       <Accordion fluid styled>
         {/* Transaction information */}
-        <Accordion.Title active={this.state.isActive} onClick={this.toggleClick}>
+        <Accordion.Title active={this.state.isActive} onClick={() => this.toggleStateBool('isActive')}>
           <Table celled striped>
             <Table.Body>
               <Table.Row>
@@ -108,7 +120,8 @@ class TransactionItem extends React.Component {
             {/* Input to add new tag */}
             {showAddTag &&
               <TagForm
-                onCancel={this.hideTagForm}
+                onCancel={() => this.toggleStateBool('showAddTag')}
+                onSubmit={attachTagToTransaction}
                 transactionId={transactionId}
               />
             }
@@ -119,7 +132,7 @@ class TransactionItem extends React.Component {
             {/* Button that, when clicked, displays input to add new tag */}
             {!showAddTag &&
               <AddTag
-                onClick={this.showTagForm}
+                onClick={() => this.toggleStateBool('showAddTag')}
               />
             }
           </div>
@@ -140,23 +153,9 @@ const mapStateToProps = state => ({
   isAddingTag: state.transactions.events.isAddingTag,
 });
 const mapDispatchToProps = dispatch => ({
-  deleteTransaction: id => { dispatch(deleteTransaction(id)); },
-  toggleEditState: (transaction, editMode) => { dispatch(toggleEditState(transaction, editMode)); },
+  attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
+  deleteTransaction: id => dispatch(deleteTransaction(id)),
+  toggleEditState: (transaction, editMode) => dispatch(toggleEditState(transaction, editMode)),
 });
-
-TransactionItem.propTypes = {
-  amount: PropTypes.string,
-  date: PropTypes.string,
-  deleteTransaction: PropTypes.func,
-  description: PropTypes.string,
-  isAddingTag: PropTypes.bool,
-  tags: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    description: PropTypes.string,
-  })),
-  toggleEditState: PropTypes.func,
-  transactionId: PropTypes.number,
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionItem);

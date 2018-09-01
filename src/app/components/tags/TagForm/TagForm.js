@@ -6,8 +6,6 @@ import * as yup from 'yup';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
-import { attachTagToTransaction, modifyTransactionTag } from '../../../store/actions/transactionTags';
-
 import './TagForm.css';
 
 const maskInputAndHandleChange = (e, handleChange) => {
@@ -75,7 +73,6 @@ const TagForm = ({
 );
 
 TagForm.propTypes = {
-  editMode: PropTypes.bool,
   errors: PropTypes.shape({
     tagName: PropTypes.string,
   }),
@@ -83,6 +80,7 @@ TagForm.propTypes = {
   handleSubmit: PropTypes.func,
   isAddingTag: PropTypes.bool,
   onCancel: PropTypes.func,
+  onSubmit: PropTypes.func,
   setTouched: PropTypes.func,
   touched: PropTypes.shape({
     tagName: PropTypes.bool,
@@ -94,26 +92,17 @@ TagForm.propTypes = {
   }),
 };
 
-TagForm.defaultProps = {
-  editMode: false,
-};
-
 const schema = yup.object().shape({
   tagName: yup.string().required(),
 });
 
 const formikOptions = {
   handleSubmit: (values, { props }) => {
-    props.editMode ?
-      props.modifyTransactionTag({
-        tagId: props.tagId,
-        tagName: values.tagName,
-        transactionId: props.transactionId,
-      }) :
-      props.attachTagToTransaction({
-        tagName: values.tagName,
-        transactionId: props.transactionId,
-      });
+    props.onSubmit({
+      tagId: props.tagId,
+      tagName: values.tagName,
+      transactionId: props.transactionId,
+    });
 
     props.onCancel();
   },
@@ -127,13 +116,8 @@ const mapStateToProps = state => ({
   isAddingTag: state.transactions.events.isAddingTag,
 });
 
-const mapDispatchToProps = dispatch => ({
-  attachTagToTransaction: data => { dispatch(attachTagToTransaction(data)); },
-  modifyTransactionTag: data => { dispatch(modifyTransactionTag(data)); },
-});
-
 export { TagForm as BaseTagForm };
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   withFormik(formikOptions)
 )(TagForm);

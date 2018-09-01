@@ -5,12 +5,16 @@ import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
 import TagForm from '../TagForm';
-import { detachTagFromTransaction } from '../../../store/actions/transactionTags';
+import {
+  detachTagFromTransaction,
+  modifyTransactionTag
+} from '../../../store/actions/transactionTags';
 import './Tag.css';
 
 class Tag extends React.Component {
   static propTypes = {
     detachTagFromTransaction: PropTypes.func,
+    modifyTransactionTag: PropTypes.func,
     tagId: PropTypes.number,
     tagName: PropTypes.string,
     transactionId: PropTypes.number,
@@ -39,16 +43,16 @@ class Tag extends React.Component {
   }
 
   render() {
-    const { tagId, tagName, transactionId } = this.props;
+    const { modifyTransactionTag, tagId, tagName, transactionId } = this.props;
     const { showCTAs, showEdit } = this.state;
 
     return (
       showEdit ?
         // Editing tag
         <TagForm
-          editMode
           initialValues={{ tagName }}
           onCancel={() => this.toggleBoolState('showEdit')}
+          onSubmit={modifyTransactionTag}
           tagId={tagId}
           transactionId={transactionId}
         /> :
@@ -81,7 +85,8 @@ class Tag extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  detachTagFromTransaction: data => { dispatch(detachTagFromTransaction(data)); },
+  detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
+  modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
 });
 
 export { Tag as BaseTag };
