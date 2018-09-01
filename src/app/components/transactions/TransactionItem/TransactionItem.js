@@ -11,7 +11,9 @@ import {
   toggleEditState
 } from '../../../store/actions/transactions';
 import {
-  attachTagToTransaction
+  attachTagToTransaction,
+  detachTagFromTransaction,
+  modifyTransactionTag
 } from '../../../store/actions/transactionTags';
 import './TransactionItem.css';
 
@@ -22,7 +24,9 @@ class TransactionItem extends React.Component {
     date: PropTypes.string,
     deleteTransaction: PropTypes.func,
     description: PropTypes.string,
+    detachTagFromTransaction: PropTypes.func,
     isAddingTag: PropTypes.bool,
+    modifyTransactionTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
@@ -86,7 +90,18 @@ class TransactionItem extends React.Component {
   )
 
   render() {
-    const { amount, attachTagToTransaction, date, description, isAddingTag, tags, transactionId } = this.props;
+    const {
+      amount,
+      attachTagToTransaction,
+      date,
+      description,
+      detachTagFromTransaction,
+      isAddingTag,
+      modifyTransactionTag,
+      tags,
+      transactionId,
+    } = this.props;
+
     const { showAddTag } = this.state;
 
     return (
@@ -111,6 +126,14 @@ class TransactionItem extends React.Component {
             {tags && tags.length > 0 && tags.map(tag => (
               <Tag
                 key={`${transactionId}-${tag.id}`}
+                onDelete={() => (
+                  detachTagFromTransaction({
+                    tagId: tag.id,
+                    tagName: tag.name,
+                    transactionId: transactionId,
+                  })
+                )}
+                onEdit={modifyTransactionTag}
                 tagId={tag.id}
                 tagName={tag.name}
                 transactionId={transactionId}
@@ -155,6 +178,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
   deleteTransaction: id => dispatch(deleteTransaction(id)),
+  detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
+  modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
   toggleEditState: (transaction, editMode) => dispatch(toggleEditState(transaction, editMode)),
 });
 

@@ -1,20 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon } from 'semantic-ui-react';
-import { compose } from 'ramda';
-import { connect } from 'react-redux';
 
 import TagForm from '../TagForm';
-import {
-  detachTagFromTransaction,
-  modifyTransactionTag
-} from '../../../store/actions/transactionTags';
 import './Tag.css';
 
 class Tag extends React.Component {
   static propTypes = {
     detachTagFromTransaction: PropTypes.func,
-    modifyTransactionTag: PropTypes.func,
+    onDelete: PropTypes.func,
+    onEdit: PropTypes.func,
     tagId: PropTypes.number,
     tagName: PropTypes.string,
     transactionId: PropTypes.number,
@@ -34,16 +29,9 @@ class Tag extends React.Component {
     };
   })
 
-  handleDelete = () => {
-    this.props.detachTagFromTransaction({
-      tagId: this.props.tagId,
-      tagName: this.props.tagName,
-      transactionId: this.props.transactionId,
-    });
-  }
 
   render() {
-    const { modifyTransactionTag, tagId, tagName, transactionId } = this.props;
+    const { onDelete, onEdit, tagId, tagName, transactionId } = this.props;
     const { showCTAs, showEdit } = this.state;
 
     return (
@@ -52,7 +40,7 @@ class Tag extends React.Component {
         <TagForm
           initialValues={{ tagName }}
           onCancel={() => this.toggleBoolState('showEdit')}
-          onSubmit={modifyTransactionTag}
+          onSubmit={onEdit}
           tagId={tagId}
           transactionId={transactionId}
         /> :
@@ -73,7 +61,7 @@ class Tag extends React.Component {
 
           {/* Delete tag - attached button */}
           {showCTAs &&
-          <Button className='grouped-button' color='red' onClick={this.handleDelete}>
+          <Button className='grouped-button' color='red' onClick={onDelete}>
             <Button.Content className='no-padding'>
               <Icon name='trash' className='no-margin' />
             </Button.Content>
@@ -84,12 +72,4 @@ class Tag extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
-  modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
-});
-
-export { Tag as BaseTag };
-export default compose(
-  connect(null, mapDispatchToProps)
-)(Tag);
+export default Tag;
