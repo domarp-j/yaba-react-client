@@ -30,25 +30,28 @@ const transactions = (
   case REQUEST_TRANSACTIONS:
     return {
       ...state,
-      isFetching: true,
+      events: { ...state.events, isFetching: true },
     };
   case RECEIVE_TRANSACTIONS:
     return {
       ...state,
       allTransactionsFetched: action.transactions.length === 0,
-      isFetching: false,
+      events: { ...state.events, isFetching: false },
       items: [...state.items, ...action.transactions],
     };
   // Adding transactions
   case REQUEST_TO_ADD_TRANSACTION:
     return {
       ...state,
-      isAdding: true,
+      events: {
+        ...state.events,
+        isAdding: true,
+      },
     };
   case PUSH_NEW_TRANSACTION:
     return {
       ...state,
-      isAdding: false,
+      events: { ...state.events, isAdding: false },
       items: [{ ...action.transaction, justAdded: true, tags: [] }, ...state.items],
     };
   // Editing transactions
@@ -64,12 +67,12 @@ const transactions = (
   case REQUEST_TO_UPDATE_TRANSACTION:
     return {
       ...state,
-      isEditing: true,
+      events: { ...state.events, isEditing: true },
     };
   case EDIT_TRANSACTION:
     return {
       ...state,
-      isEditing: false,
+      events: { ...state.events, isEditing: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return { ...action.transaction, tags: item.tags };
@@ -79,31 +82,31 @@ const transactions = (
   case REQUEST_TO_DELETE_TRANSACTION:
     return {
       ...state,
-      isDeleting: true,
+      events: { ...state.events, isDeleting: true },
     };
   case REMOVE_DELETED_TRANSACTION:
     return {
       ...state,
-      isDeleting: false,
+      events: { ...state.events, isDeleting: false },
       items: filter(item => item.id !== action.transaction.id, [...state.items]),
     };
   // Clearing transactions from store
   case CLEAR_TRANSACTIONS:
     return {
       ...state,
-      isFetching: false,
+      events: { ...state.events, isFetching: false },
       items: [],
     };
   // Adding tags to transactions
   case REQUEST_ADD_TRANSACTION_TAG:
     return {
       ...state,
-      isAddingTag: true,
+      events: { ...state.events, isAddingTag: true },
     };
   case ADD_TRANSACTION_TAG:
     return {
       ...state,
-      isAddingTag: false,
+      events: { ...state.events, isAddingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return { ...item, tags: [...item.tags, action.tag] };
@@ -113,12 +116,12 @@ const transactions = (
   case REQUEST_UPDATE_TRANSACTION_TAG:
     return {
       ...state,
-      isUpdatingTag: true,
+      events: { ...state.events, isUpdatingTag: true },
     };
   case UPDATE_TRANSACTION_TAG:
     return {
       ...state,
-      isUpdatingTag: false,
+      events: { ...state.events, isUpdatingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return {
@@ -135,12 +138,12 @@ const transactions = (
   case REQUEST_REMOVE_TRANSACTION_TAG:
     return {
       ...state,
-      isRemovingTag: true,
+      events: { ...state.events, isRemovingTag: true },
     };
   case REMOVE_TRANSACTION_TAG:
     return {
       ...state,
-      isRemovingTag: false,
+      events: { ...state.events, isRemovingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return {

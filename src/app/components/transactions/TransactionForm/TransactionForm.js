@@ -197,7 +197,7 @@ const formikOptions = {
 
 
 const mapStateToProps = state => ({
-  isAdding: state.transactions.isAdding,
+  isAdding: state.transactions.events.isAdding,
 });
 
 const mapDispatchToProps = dispatch => ({

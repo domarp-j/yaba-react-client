@@ -140,7 +140,7 @@ class TransactionItem extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isAddingTag: state.transactions.isAddingTag,
+  isAddingTag: state.transactions.events.isAddingTag,
 });
 const mapDispatchToProps = dispatch => ({
   deleteTransaction: id => { dispatch(deleteTransaction(id)); },

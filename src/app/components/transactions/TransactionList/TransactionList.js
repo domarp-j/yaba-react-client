@@ -128,7 +128,7 @@ class TransactionsPage extends React.Component {
 
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.allTransactionsFetched,
-  isFetching: state.transactions.isFetching,
+  isFetching: state.transactions.events.isFetching,
   transactions: state.transactions.items,
 });
 

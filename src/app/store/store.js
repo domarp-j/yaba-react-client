@@ -20,13 +20,15 @@ const initialState = {
   transactions: {
     allTransactionsFetched: false,
     items: [],
-    isAdding: false,
-    isAddingTag: false,
-    isEditing: false,
-    isFetching: false,
-    isDeleting: false,
-    isRemovingTag: false,
-    isUpdatingTag: false,
+    events: {
+      isAdding: false,
+      isAddingTag: false,
+      isEditing: false,
+      isFetching: false,
+      isDeleting: false,
+      isRemovingTag: false,
+      isUpdatingTag: false,
+    },
   },
 };
 
