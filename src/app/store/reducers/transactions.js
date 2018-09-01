@@ -35,8 +35,11 @@ const transactions = (
   case RECEIVE_TRANSACTIONS:
     return {
       ...state,
-      allTransactionsFetched: action.transactions.length === 0,
-      events: { ...state.events, isFetching: false },
+      events: {
+        ...state.events,
+        allTransactionsFetched: action.transactions.length === 0,
+        isFetching: false,
+      },
       items: [...state.items, ...action.transactions],
     };
   // Adding transactions

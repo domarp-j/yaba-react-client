@@ -18,9 +18,9 @@ const initialState = {
     },
   },
   transactions: {
-    allTransactionsFetched: false,
     items: [],
     events: {
+      allTransactionsFetched: false,
       isAdding: false,
       isAddingTag: false,
       isEditing: false,
