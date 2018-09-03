@@ -29,6 +29,9 @@ const initialState = {
       isRemovingTag: false,
       isUpdatingTag: false,
     },
+    queries: {
+      tagNames: [],
+    },
   },
 };
 

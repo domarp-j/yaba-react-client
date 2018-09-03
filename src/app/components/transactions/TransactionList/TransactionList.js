@@ -10,12 +10,16 @@ import { clearTransactions, fetchTransactions } from '../../../store/actions/tra
 
 import './TransactionList.css';
 
-class TransactionsPage extends React.Component {
+class TransactionsPage extends React.PureComponent {
+  INITIAL_LIMIT = 20;
+  INITIAL_PAGE = 0;
+
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
     fetchTransactions: PropTypes.func,
     isFetching: PropTypes.bool,
+    queryTags: PropTypes.arrayOf(PropTypes.string),
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
@@ -33,8 +37,8 @@ class TransactionsPage extends React.Component {
     super();
 
     this.state = {
-      limit: 20,
-      page: 0,
+      limit: this.INITIAL_LIMIT,
+      page: this.INITIAL_PAGE,
     };
 
     this.pageRef = null;
@@ -53,8 +57,34 @@ class TransactionsPage extends React.Component {
       clearTransactions();
       resolve();
     }).then(() => {
-      fetchTransactions({ limit: this.state.limit, page: this.state.page });
+      fetchTransactions({
+        limit: this.state.limit,
+        page: this.state.page,
+        tagNames: this.props.queryTags,
+      });
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { clearTransactions, fetchTransactions, queryTags } = this.props;
+
+    if (prevProps.queryTags !== queryTags) {
+      new Promise(resolve => {
+        clearTransactions();
+        resolve();
+      }).then(() => {
+        this.setState(() => ({
+          limit: this.INITIAL_LIMIT,
+          page: this.INITIAL_PAGE,
+        }), () => {
+          fetchTransactions({
+            limit: this.INITIAL_LIMIT,
+            page: this.INITIAL_PAGE,
+            tagNames: this.props.queryTags,
+          });
+        });
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -67,7 +97,11 @@ class TransactionsPage extends React.Component {
     if (this.atBottom() && !this.props.allTransactionsFetched) {
       const { limit, page } = this.state;
       this.setState({ page: page + 1 });
-      this.props.fetchTransactions({ limit: limit, page: page + 1 });
+      this.props.fetchTransactions({
+        limit: limit,
+        page: page + 1,
+        tagNames: this.props.queryTags,
+      });
     }
   }
 
@@ -130,6 +164,7 @@ const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.events.allTransactionsFetched,
   isFetching: state.transactions.events.isFetching,
   transactions: state.transactions.items,
+  queryTags: state.transactions.queries.tagNames,
 });
 
 const mapDispatchToProps = dispatch => ({

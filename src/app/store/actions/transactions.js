@@ -24,8 +24,15 @@ export const receiveTransactions = transactions => ({
 export const fetchTransactions = (params={}) => dispatch => {
   dispatch(requestTransactions());
 
-  return yabaAxios.get(routes.transactions, { params })
-    .then(response => { dispatch(receiveTransactions(response.data.content)); });
+  return yabaAxios.get(routes.transactions, {
+    params: {
+      limit: params.limit,
+      page: params.page,
+      tag_names: params.tagNames,
+    },
+  }).then(response => {
+    dispatch(receiveTransactions(response.data.content));
+  });
 };
 
 // Adding transactions

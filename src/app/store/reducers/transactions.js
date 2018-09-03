@@ -1,4 +1,5 @@
 import { filter, findIndex, update } from 'ramda';
+
 import {
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
@@ -20,6 +21,11 @@ import {
   REQUEST_REMOVE_TRANSACTION_TAG,
   REMOVE_TRANSACTION_TAG
 } from '../actions/transactionTags';
+
+import {
+  ADD_TAG_NAME_TO_TRANSACTION_QUERY,
+  REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY
+} from '../actions/transactionQueries';
 
 const transactions = (
   state = {},
@@ -91,7 +97,9 @@ const transactions = (
     return {
       ...state,
       events: { ...state.events, isDeleting: false },
-      items: filter(item => item.id !== action.transaction.id, [...state.items]),
+      items: filter(item => (
+        item.id !== action.transaction.id
+      ), state.items),
     };
   // Clearing transactions from store
   case CLEAR_TRANSACTIONS:
@@ -153,9 +161,29 @@ const transactions = (
           ...item,
           tags: filter(tag => (
             tag.id !== action.tag.id && tag.name !== action.tag.name
-          ), [...item.tags]),
+          ), item.tags),
         };
       }),
+    };
+  // Adding tag name to transactions filter query
+  case ADD_TAG_NAME_TO_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        tagNames: [...state.queries.tagNames, action.tagName],
+      },
+    };
+  // Removing tag name from transactions filter query
+  case REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        tagNames: filter(tagName => (
+          tagName !== action.tagName
+        ), state.queries.tagNames),
+      },
     };
   // Fallthrough behavior
   default:
