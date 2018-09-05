@@ -3,6 +3,11 @@
   margin-bottom: 1rem;
 }
 
-.transaction-fetch-loader {
+#transaction-fetch-loader {
   height: 90px;
+}
+
+#end-of-list-indicator {
+  margin: 0 0 15px 0;
+  text-align: center;
 }

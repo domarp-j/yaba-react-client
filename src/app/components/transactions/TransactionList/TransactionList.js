@@ -130,7 +130,7 @@ class TransactionsPage extends React.PureComponent {
   )
 
   render() {
-    const { isFetching, transactions } = this.props;
+    const { allTransactionsFetched, isFetching, transactions } = this.props;
 
     const partitionedTransactions = this.separateJustAddedTransactions(transactions);
     const newTransactions = partitionedTransactions[0];
@@ -139,21 +139,31 @@ class TransactionsPage extends React.PureComponent {
     return (
       <div ref={this.setPageRef}>
         {newTransactions.length > 0 &&
-            <div className='new-transaction-section'>
-              {newTransactions.map(transaction => this.renderTransaction(transaction))}
-            </div>
+          <div className='new-transaction-section'>
+            {newTransactions.map(transaction => this.renderTransaction(transaction))}
+          </div>
         }
 
         {oldTransactions.length > 0 &&
-            oldTransactions.map(transaction => this.renderTransaction(transaction))
+          oldTransactions.map(transaction => this.renderTransaction(transaction))
         }
 
         {isFetching &&
-             <Segment className='transaction-fetch-loader'>
-               <Dimmer active inverted>
-                 <Loader inverted>Loading</Loader>
-               </Dimmer>
-             </Segment>
+          <Segment id='transaction-fetch-loader'>
+            <Dimmer active inverted>
+              <Loader inverted>Loading</Loader>
+            </Dimmer>
+          </Segment>
+        }
+
+        {allTransactionsFetched &&
+          <Segment
+            id='end-of-list-indicator'
+            color='black'
+            size='huge'
+          >
+            End of list
+          </Segment>
         }
       </div>
     );
