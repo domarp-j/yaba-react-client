@@ -10,15 +10,19 @@ export const requestTransactions = () => ({
 });
 
 export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS';
-export const receiveTransactions = transactions => ({
+export const receiveTransactions = response => ({
   type: RECEIVE_TRANSACTIONS,
-  transactions: transactions.map(transaction => ({
-    amount: floatToDollar(transaction.value),
-    description: transaction.description,
-    date: dateify(transaction.date),
-    id: transaction.id,
-    tags: transaction.tags,
-  })),
+  transactions: {
+    count: response.count,
+    totalAmount: floatToDollar(response.total_amount),
+    items: response.transactions.map(transaction => ({
+      amount: floatToDollar(transaction.value),
+      description: transaction.description,
+      date: dateify(transaction.date),
+      id: transaction.id,
+      tags: transaction.tags,
+    })),
+  },
 });
 
 export const fetchTransactions = (params={}) => dispatch => {

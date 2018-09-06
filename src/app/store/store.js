@@ -19,6 +19,8 @@ const initialState = {
   },
   transactions: {
     items: [],
+    count: 0,
+    totalAmount: '$0',
     events: {
       allTransactionsFetched: false,
       isAdding: false,

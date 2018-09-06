@@ -4,6 +4,7 @@ import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { partition } from 'ramda';
 
+import TransactionListData from '../TransactionListData';
 import TransactionItem from '../TransactionItem';
 import TransactionEdit from '../TransactionEdit';
 import { clearTransactions, fetchTransactions } from '../../../store/actions/transactions';
@@ -31,6 +32,8 @@ class TransactionsPage extends React.PureComponent {
         description: PropTypes.string,
       })),
     })),
+    transactionsCount: PropTypes.number,
+    transactionsTotal: PropTypes.string,
   };
 
   constructor() {
@@ -130,7 +133,13 @@ class TransactionsPage extends React.PureComponent {
   )
 
   render() {
-    const { allTransactionsFetched, isFetching, transactions } = this.props;
+    const {
+      allTransactionsFetched,
+      isFetching,
+      transactions,
+      transactionsCount,
+      transactionsTotal,
+    } = this.props;
 
     const partitionedTransactions = this.separateJustAddedTransactions(transactions);
     const newTransactions = partitionedTransactions[0];
@@ -138,6 +147,11 @@ class TransactionsPage extends React.PureComponent {
 
     return (
       <div ref={this.setPageRef}>
+        <TransactionListData
+          count={transactionsCount}
+          totalAmount={transactionsTotal}
+        />
+
         {newTransactions.length > 0 &&
           <div className='new-transaction-section'>
             {newTransactions.map(transaction => this.renderTransaction(transaction))}
@@ -173,8 +187,10 @@ class TransactionsPage extends React.PureComponent {
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.events.allTransactionsFetched,
   isFetching: state.transactions.events.isFetching,
-  transactions: state.transactions.items,
   queryTags: state.transactions.queries.tagNames,
+  transactions: state.transactions.items,
+  transactionsTotal: state.transactions.totalAmount,
+  transactionsCount: state.transactions.count,
 });
 
 const mapDispatchToProps = dispatch => ({

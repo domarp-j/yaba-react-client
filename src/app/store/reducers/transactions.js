@@ -43,10 +43,12 @@ const transactions = (
       ...state,
       events: {
         ...state.events,
-        allTransactionsFetched: action.transactions.length === 0,
+        allTransactionsFetched: action.transactions.items.length === 0,
         isFetching: false,
       },
-      items: [...state.items, ...action.transactions],
+      count: action.transactions.count,
+      totalAmount: action.transactions.totalAmount,
+      items: [...state.items, ...action.transactions.items],
     };
   // Adding transactions
   case REQUEST_TO_ADD_TRANSACTION:
