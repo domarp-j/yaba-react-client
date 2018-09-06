@@ -10,7 +10,7 @@ const TransactionListData = ({
 }) => (
   <Segment className='no-margin'>
     <Header as='h1' icon textAlign='center' className='no-margin'>
-      <Icon name='dollar sign' circular />
+      <Icon name='dollar' circular />
       <Header.Content id='total-amount'>{totalAmount}</Header.Content>
     </Header>
     <Header as='h3' textAlign='center'>Total for {count} transactions</Header>
