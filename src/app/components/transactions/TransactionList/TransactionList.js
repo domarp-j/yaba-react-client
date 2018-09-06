@@ -163,7 +163,7 @@ class TransactionsPage extends React.PureComponent {
         }
 
         {isFetching &&
-          <Segment id='transaction-fetch-loader'>
+          <Segment id='transaction-fetch-loader' className='no-margin'>
             <Dimmer active inverted>
               <Loader inverted>Loading</Loader>
             </Dimmer>
