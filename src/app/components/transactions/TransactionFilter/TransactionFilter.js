@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Form } from 'semantic-ui-react';
+import { Button, Segment, Form } from 'semantic-ui-react';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import Cleave from 'cleave.js/react';
@@ -15,7 +15,8 @@ import {
   modifyDescriptionForTransactionQuery,
   modifyDateForTransactionQuery,
   addTagNameToTransactionQuery,
-  removeTagNameFromTransactionQuery
+  removeTagNameFromTransactionQuery,
+  modifyMatchAllTagsTransactionQuery
 } from '../../../store/actions/transactionQueries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
 
@@ -31,8 +32,10 @@ class TransactionFilter extends React.Component {
   static propTypes = {
     addTag: PropTypes.func,
     description: PropTypes.string,
+    matchAllTags: PropTypes.bool,
     modifyDate: PropTypes.func,
     modifyDescription: PropTypes.func,
+    modifyMatchAllTags: PropTypes.func,
     removeTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.string),
   };
@@ -98,7 +101,15 @@ class TransactionFilter extends React.Component {
   }
 
   render() {
-    const { addTag, description, removeTag, tags } = this.props;
+    const {
+      addTag,
+      description,
+      matchAllTags,
+      modifyMatchAllTags,
+      removeTag,
+      tags,
+    } = this.props;
+
     const { showAddTag } = this.state;
 
     return (
@@ -197,16 +208,35 @@ class TransactionFilter extends React.Component {
               />
           }
         </div>
+        <Button.Group
+          className='margin-top-15'
+          size='small'
+        >
+          <Button
+            onClick={() => modifyMatchAllTags(true)}
+            positive={matchAllTags}
+          >
+            Match all tags
+          </Button>
+          <Button.Or />
+          <Button
+            onClick={() => modifyMatchAllTags(false)}
+            positive={!matchAllTags}
+          >
+            Match any tag
+          </Button>
+        </Button.Group>
       </Segment>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  description: state.transactions.queries.description,
-  tags: state.transactions.queries.tagNames,
   [FROM_DATE]: dateToMDY(state.transactions.queries.fromDate),
   [TO_DATE]: dateToMDY(state.transactions.queries.toDate),
+  description: state.transactions.queries.description,
+  matchAllTags: state.transactions.queries.matchAllTags,
+  tags: state.transactions.queries.tagNames,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -214,6 +244,7 @@ const mapDispatchToProps = dispatch => ({
   removeTag: tagName => dispatch(removeTagNameFromTransactionQuery(tagName)),
   modifyDate: (dateType, date) => dispatch(modifyDateForTransactionQuery(dateType, date)),
   modifyDescription: desc => dispatch(modifyDescriptionForTransactionQuery(desc)),
+  modifyMatchAllTags: bool => dispatch(modifyMatchAllTagsTransactionQuery(bool)),
 });
 
 export { TransactionFilter as BaseTransactionFilter };

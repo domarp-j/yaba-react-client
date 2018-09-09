@@ -26,7 +26,8 @@ import {
   MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY,
   ADD_TAG_NAME_TO_TRANSACTION_QUERY,
   REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
-  MODIFY_DATE_FOR_TRANSACTION_QUERY
+  MODIFY_DATE_FOR_TRANSACTION_QUERY,
+  MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY
 } from '../actions/transactionQueries';
 
 const transactions = (
@@ -205,6 +206,15 @@ const transactions = (
         tagNames: filter(tagName => (
           tagName !== action.tagName
         ), state.queries.tagNames),
+      },
+    };
+  // Modify matchAllTags bool for the transactions filter query
+  case MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        matchAllTags: action.matchAllTags,
       },
     };
   default:

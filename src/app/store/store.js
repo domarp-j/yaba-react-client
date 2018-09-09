@@ -33,8 +33,9 @@ const initialState = {
     },
     queries: {
       description: null,
-      tagNames: [],
       fromDate: null,
+      matchAllTags: true,
+      tagNames: [],
       toDate: null,
     },
   },

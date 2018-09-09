@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { partition } from 'ramda';
+import { any, identity, partition } from 'ramda';
 
 import TransactionListData from '../TransactionListData';
 import TransactionItem from '../TransactionItem';
@@ -23,6 +23,7 @@ class TransactionsPage extends React.PureComponent {
     queryDateFrom: PropTypes.string,
     queryDateTo: PropTypes.string,
     queryDescription: PropTypes.string,
+    queryMatchAllTags: PropTypes.bool,
     queryTags: PropTypes.arrayOf(PropTypes.string),
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
@@ -97,15 +98,25 @@ class TransactionsPage extends React.PureComponent {
       fromDate: this.props.queryDateFrom,
       toDate: this.props.queryDateTo,
       description: this.props.queryDescription,
+      matchAllTags: this.props.queryMatchAllTags,
     });
   }
 
-  anyQueryPropChanged = (prevProps, currProps) => (
-    prevProps.queryTags !== currProps.queryTags ||
-      prevProps.queryDateFrom !== currProps.queryDateFrom ||
-      prevProps.queryDateTo !== currProps.queryDateTo ||
-      prevProps.queryDescription !== currProps.queryDescription
-  )
+  anyQueryPropChanged = (prevProps, currProps) => {
+    const queryParams = [
+      'queryTags',
+      'queryDateFrom',
+      'queryDateTo',
+      'queryDescription',
+      'queryMatchAllTags',
+    ];
+
+    const queryChangeList = queryParams.map(queryParam => (
+      prevProps[queryParam] !== currProps[queryParam]
+    ));
+
+    return any(identity)(queryChangeList);
+  }
 
   atBottom = () => (
     this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 10
@@ -201,6 +212,7 @@ const mapStateToProps = state => ({
   queryDateFrom: state.transactions.queries.fromDate,
   queryDateTo: state.transactions.queries.toDate,
   queryDescription: state.transactions.queries.description,
+  queryMatchAllTags: state.transactions.queries.matchAllTags,
   queryTags: state.transactions.queries.tagNames,
   transactions: state.transactions.items,
   transactionsTotal: state.transactions.totalAmount,
