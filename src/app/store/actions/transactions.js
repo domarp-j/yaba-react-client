@@ -1,5 +1,6 @@
 import routes from '../../routes';
-import { floatToDollar, dateify } from '../../utils/transactions';
+import { floatToDollar } from '../../utils/dollarTools';
+import { dateify } from '../../utils/dateTools';
 import yabaAxios from '../../utils/yabaAxios';
 
 // Fetching transactions

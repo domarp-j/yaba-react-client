@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import { toggleEditState, updateTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
-import { dollarToFloat } from '../../../utils/transactions';
+import { dollarToFloat } from '../../../utils/dollarTools';
 
 const fields = ['description', 'amount', 'date'];
 
