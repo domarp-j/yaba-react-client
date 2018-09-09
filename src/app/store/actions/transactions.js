@@ -36,6 +36,7 @@ export const fetchTransactions = (params={}) => dispatch => {
       tag_names: params.tagNames,
       from_date: params.fromDate,
       to_date: params.toDate,
+      description: params.description,
     },
   }).then(response => {
     dispatch(receiveTransactions(response.data.content));

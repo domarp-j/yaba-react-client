@@ -1,17 +1,9 @@
-// Adding a tagName to the transactions filter query
+// Modify description for the transactions filter query
 
-export const ADD_TAG_NAME_TO_TRANSACTION_QUERY = 'ADD_TAG_NAME_TO_TRANSACTION_QUERY';
-export const addTagNameToTransactionQuery = options => ({
-  type: ADD_TAG_NAME_TO_TRANSACTION_QUERY,
-  tagName: options.tagName,
-});
-
-// Removing a tagName from the transactions filter query
-
-export const REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY = 'REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY';
-export const removeTagNameFromTransactionQuery = tagName => ({
-  type: REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
-  tagName,
+export const MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY = 'MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY';
+export const modifyDescriptionForTransactionQuery = description => ({
+  type: MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY,
+  description,
 });
 
 // fromDate and toDate date types that date actions below will use
@@ -26,4 +18,20 @@ export const modifyDateForTransactionQuery = (dateType, date) => ({
   type: MODIFY_DATE_FOR_TRANSACTION_QUERY,
   dateType,
   date,
+});
+
+// Adding a tagName to the transactions filter query
+
+export const ADD_TAG_NAME_TO_TRANSACTION_QUERY = 'ADD_TAG_NAME_TO_TRANSACTION_QUERY';
+export const addTagNameToTransactionQuery = options => ({
+  type: ADD_TAG_NAME_TO_TRANSACTION_QUERY,
+  tagName: options.tagName,
+});
+
+// Removing a tagName from the transactions filter query
+
+export const REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY = 'REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY';
+export const removeTagNameFromTransactionQuery = tagName => ({
+  type: REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
+  tagName,
 });

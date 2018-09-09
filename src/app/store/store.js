@@ -32,6 +32,7 @@ const initialState = {
       isUpdatingTag: false,
     },
     queries: {
+      description: null,
       tagNames: [],
       fromDate: null,
       toDate: null,

@@ -22,6 +22,7 @@ class TransactionsPage extends React.PureComponent {
     isFetching: PropTypes.bool,
     queryDateFrom: PropTypes.string,
     queryDateTo: PropTypes.string,
+    queryDescription: PropTypes.string,
     queryTags: PropTypes.arrayOf(PropTypes.string),
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
@@ -95,13 +96,15 @@ class TransactionsPage extends React.PureComponent {
       tagNames: this.props.queryTags,
       fromDate: this.props.queryDateFrom,
       toDate: this.props.queryDateTo,
+      description: this.props.queryDescription,
     });
   }
 
   anyQueryPropChanged = (prevProps, currProps) => (
     prevProps.queryTags !== currProps.queryTags ||
       prevProps.queryDateFrom !== currProps.queryDateFrom ||
-      prevProps.queryDateTo !== currProps.queryDateTo
+      prevProps.queryDateTo !== currProps.queryDateTo ||
+      prevProps.queryDescription !== currProps.queryDescription
   )
 
   atBottom = () => (
@@ -197,6 +200,7 @@ const mapStateToProps = state => ({
   isFetching: state.transactions.events.isFetching,
   queryDateFrom: state.transactions.queries.fromDate,
   queryDateTo: state.transactions.queries.toDate,
+  queryDescription: state.transactions.queries.description,
   queryTags: state.transactions.queries.tagNames,
   transactions: state.transactions.items,
   transactionsTotal: state.transactions.totalAmount,

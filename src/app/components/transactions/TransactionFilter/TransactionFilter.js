@@ -12,9 +12,10 @@ import TagForm from '../../tags/TagForm';
 import {
   FROM_DATE,
   TO_DATE,
+  modifyDescriptionForTransactionQuery,
+  modifyDateForTransactionQuery,
   addTagNameToTransactionQuery,
-  removeTagNameFromTransactionQuery,
-  modifyDateForTransactionQuery
+  removeTagNameFromTransactionQuery
 } from '../../../store/actions/transactionQueries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
 
@@ -29,7 +30,9 @@ class TransactionFilter extends React.Component {
 
   static propTypes = {
     addTag: PropTypes.func,
+    description: PropTypes.string,
     modifyDate: PropTypes.func,
+    modifyDescription: PropTypes.func,
     removeTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.string),
   };
@@ -78,6 +81,10 @@ class TransactionFilter extends React.Component {
     return true;
   }
 
+  updateDescriptionQuery = e => {
+    this.props.modifyDescription(e.target.value);
+  }
+
   updateDateQuery = (e, dateType) => {
     if (this.validDateInput(e.target.value, dateType)) {
       this.props.modifyDate(
@@ -91,12 +98,73 @@ class TransactionFilter extends React.Component {
   }
 
   render() {
-    const { addTag, removeTag, tags } = this.props;
+    const { addTag, description, removeTag, tags } = this.props;
     const { showAddTag } = this.state;
 
     return (
       <Segment basic>
         <h2>Filter transactions</h2>
+
+        <h3>By description:</h3>
+        <Form>
+          <Form.Group>
+            <Form.Field
+              width={9}
+            >
+              <div className='ui input'>
+                <Cleave
+                  id='descriptionQuery'
+                  name='descriptionQuery'
+                  onBlur={this.updateDescriptionQuery}
+                  value={description}
+                />
+              </div>
+            </Form.Field>
+          </Form.Group>
+        </Form>
+
+        <h3>By date:</h3>
+        <Form>
+          <Form.Group>
+            <Form.Field
+              width={3}
+            >
+              <label htmlFor='date'>From</label>
+              <div className='ui input'>
+                <Cleave
+                  id='dateQueryFrom'
+                  name='dateQueryFrom'
+                  onBlur={e => this.updateDateQuery(e, FROM_DATE)}
+                  onChange={e => this.onDateChange(e, FROM_DATE)}
+                  onInit={cleave =>  this.setCleaveState(cleave, FROM_DATE)}
+                  options={{
+                    date: true, datePattern: ['m', 'd', 'Y'],
+                  }}
+                  value={this.props[FROM_DATE] || this.state[FROM_DATE]}
+                />
+              </div>
+            </Form.Field>
+
+            <Form.Field
+              width={3}
+            >
+              <label htmlFor='date'>To</label>
+              <div className='ui input'>
+                <Cleave
+                  id='dateQueryTo'
+                  name='dateQueryTo'
+                  onBlur={e => this.updateDateQuery(e, TO_DATE)}
+                  onChange={e => this.setState({ [TO_DATE]: e.target.value })}
+                  onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
+                  options={{
+                    date: true, datePattern: ['m', 'd', 'Y'],
+                  }}
+                  value={this.props[TO_DATE] || this.state[TO_DATE]}
+                />
+              </div>
+            </Form.Field>
+          </Form.Group>
+        </Form>
 
         <h3>By tag:</h3>
         <div>
@@ -113,10 +181,10 @@ class TransactionFilter extends React.Component {
 
           {/* Input to add new tag */}
           {showAddTag &&
-            <TagForm
-              onCancel={() => this.toggleStateBool('showAddTag')}
-              onSubmit={addTag}
-            />
+              <TagForm
+                onCancel={() => this.toggleStateBool('showAddTag')}
+                onSubmit={addTag}
+              />
           }
 
           {/* TODO: Loader that shows while add-tag call is being processed */}
@@ -124,53 +192,10 @@ class TransactionFilter extends React.Component {
 
           {/* Button that, when clicked, displays input to add new tag */}
           {!showAddTag &&
-            <AddTag
-              onClick={() => this.toggleStateBool('showAddTag')}
-            />
+              <AddTag
+                onClick={() => this.toggleStateBool('showAddTag')}
+              />
           }
-
-          <h3>By date:</h3>
-          <Form onSubmit={this.setValuesAndSubmit}>
-            <Form.Group>
-              <Form.Field
-                width={3}
-              >
-                <label htmlFor='date'>From</label>
-                <div className='ui input'>
-                  <Cleave
-                    id='dateQueryFrom'
-                    name='dateQueryFrom'
-                    onBlur={e => this.updateDateQuery(e, FROM_DATE)}
-                    onChange={e => this.onDateChange(e, FROM_DATE)}
-                    onInit={cleave =>  this.setCleaveState(cleave, FROM_DATE)}
-                    options={{
-                      date: true, datePattern: ['m', 'd', 'Y'],
-                    }}
-                    value={this.props[FROM_DATE] || this.state[FROM_DATE]}
-                  />
-                </div>
-              </Form.Field>
-
-              <Form.Field
-                width={3}
-              >
-                <label htmlFor='date'>To</label>
-                <div className='ui input'>
-                  <Cleave
-                    id='dateQueryTo'
-                    name='dateQueryTo'
-                    onBlur={e => this.updateDateQuery(e, TO_DATE)}
-                    onChange={e => this.setState({ [TO_DATE]: e.target.value })}
-                    onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
-                    options={{
-                      date: true, datePattern: ['m', 'd', 'Y'],
-                    }}
-                    value={this.props[TO_DATE] || this.state[TO_DATE]}
-                  />
-                </div>
-              </Form.Field>
-            </Form.Group>
-          </Form>
         </div>
       </Segment>
     );
@@ -178,6 +203,7 @@ class TransactionFilter extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  description: state.transactions.queries.description,
   tags: state.transactions.queries.tagNames,
   [FROM_DATE]: dateToMDY(state.transactions.queries.fromDate),
   [TO_DATE]: dateToMDY(state.transactions.queries.toDate),
@@ -187,6 +213,7 @@ const mapDispatchToProps = dispatch => ({
   addTag: tagName => dispatch(addTagNameToTransactionQuery(tagName)),
   removeTag: tagName => dispatch(removeTagNameFromTransactionQuery(tagName)),
   modifyDate: (dateType, date) => dispatch(modifyDateForTransactionQuery(dateType, date)),
+  modifyDescription: desc => dispatch(modifyDescriptionForTransactionQuery(desc)),
 });
 
 export { TransactionFilter as BaseTransactionFilter };

@@ -23,6 +23,7 @@ import {
 } from '../actions/transactionTags';
 
 import {
+  MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY,
   ADD_TAG_NAME_TO_TRANSACTION_QUERY,
   REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
   MODIFY_DATE_FOR_TRANSACTION_QUERY
@@ -168,6 +169,24 @@ const transactions = (
         };
       }),
     };
+  // Modifying the description for the transactions filter query
+  case MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        description: action.description,
+      },
+    };
+  // Modify the fromDate or toDate for the transactions filter query
+  case MODIFY_DATE_FOR_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        [action.dateType]: action.date,
+      },
+    };
   // Adding a tag name to tje transactions filter query
   case ADD_TAG_NAME_TO_TRANSACTION_QUERY:
     return {
@@ -186,15 +205,6 @@ const transactions = (
         tagNames: filter(tagName => (
           tagName !== action.tagName
         ), state.queries.tagNames),
-      },
-    };
-  // Modify the fromDate or toDate for the transactions filter query
-  case MODIFY_DATE_FOR_TRANSACTION_QUERY:
-    return {
-      ...state,
-      queries: {
-        ...state.queries,
-        [action.dateType]: action.date,
       },
     };
   default:
