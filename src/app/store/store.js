@@ -20,7 +20,7 @@ const initialState = {
   transactions: {
     items: [],
     count: 0,
-    totalAmount: '$0',
+    totalAmount: '',
     events: {
       allTransactionsFetched: false,
       isAdding: false,
@@ -33,6 +33,8 @@ const initialState = {
     },
     queries: {
       tagNames: [],
+      fromDate: null,
+      toDate: null,
     },
   },
 };

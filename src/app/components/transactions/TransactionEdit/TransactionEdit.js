@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Segment, Form, Message, Button } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose } from 'ramda';
-import moment from 'moment';
 import * as yup from 'yup';
 import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import { connect } from 'react-redux';
 import { toggleEditState, updateTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
+import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
 
 const fields = ['description', 'amount', 'date'];
 
@@ -79,7 +79,7 @@ class TransactionEdit extends React.Component {
       setValues({
         amount: (positiveAmount ? '+' : '-') + values.amount.slice(1).replace(/\$|,/g, ''),
         description: values.description,
-        date: moment(values.date).format('YYYY-MM-DD'),
+        date: dateToYMD(values.date),
       });
       resolve();
     }).then(() => handleSubmit(e));
@@ -227,7 +227,7 @@ const formikOptions = {
   },
   mapPropsToValues: props => ({
     amount: props.amount || '',
-    date: props.date || moment().format('MM/DD/YYYY'),
+    date: props.date || currentDateMDY(),
     description: props.description || '',
   }),
   validationSchema: schema,

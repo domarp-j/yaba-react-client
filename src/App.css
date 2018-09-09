@@ -8,6 +8,10 @@
   margin: 0 !important;
 }
 
+.margin-top-30 {
+  margin-top: 30px !important;
+}
+
 .grouped-button {
   padding: 11px !important;
 }

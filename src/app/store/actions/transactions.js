@@ -1,6 +1,6 @@
 import routes from '../../routes';
 import { floatToDollar } from '../../utils/dollarTools';
-import { dateify } from '../../utils/dateTools';
+import { dateToMDY } from '../../utils/dateTools';
 import yabaAxios from '../../utils/yabaAxios';
 
 // Fetching transactions
@@ -19,7 +19,7 @@ export const receiveTransactions = response => ({
     items: response.transactions.map(transaction => ({
       amount: floatToDollar(transaction.value),
       description: transaction.description,
-      date: dateify(transaction.date),
+      date: dateToMDY(transaction.date),
       id: transaction.id,
       tags: transaction.tags,
     })),
@@ -34,6 +34,8 @@ export const fetchTransactions = (params={}) => dispatch => {
       limit: params.limit,
       page: params.page,
       tag_names: params.tagNames,
+      from_date: params.fromDate,
+      to_date: params.toDate,
     },
   }).then(response => {
     dispatch(receiveTransactions(response.data.content));
@@ -53,7 +55,7 @@ export const addTransaction = transaction => ({
   transaction: {
     amount: floatToDollar(transaction.value),
     description: transaction.description,
-    date: dateify(transaction.date),
+    date: dateToMDY(transaction.date),
     id: transaction.id,
   },
 });
@@ -87,7 +89,7 @@ export const editTransaction = transaction => ({
   type: EDIT_TRANSACTION,
   transaction: {
     amount: floatToDollar(transaction.value),
-    date: dateify(transaction.date),
+    date: dateToMDY(transaction.date),
     description: transaction.description,
     id: transaction.id,
   },

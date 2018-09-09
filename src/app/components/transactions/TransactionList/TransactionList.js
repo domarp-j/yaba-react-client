@@ -20,6 +20,8 @@ class TransactionsPage extends React.PureComponent {
     clearTransactions: PropTypes.func,
     fetchTransactions: PropTypes.func,
     isFetching: PropTypes.bool,
+    queryDateFrom: PropTypes.string,
+    queryDateTo: PropTypes.string,
     queryTags: PropTypes.arrayOf(PropTypes.string),
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
@@ -54,24 +56,20 @@ class TransactionsPage extends React.PureComponent {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
 
-    const { clearTransactions, fetchTransactions } = this.props;
+    const { clearTransactions } = this.props;
 
     new Promise(resolve => {
       clearTransactions();
       resolve();
     }).then(() => {
-      fetchTransactions({
-        limit: this.state.limit,
-        page: this.state.page,
-        tagNames: this.props.queryTags,
-      });
+      this.fetchTransRequest(this.state.limit, this.state.page);
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { clearTransactions, fetchTransactions, queryTags } = this.props;
+    const { clearTransactions } = this.props;
 
-    if (prevProps.queryTags !== queryTags) {
+    if (this.anyQueryPropChanged(prevProps, this.props)) {
       new Promise(resolve => {
         clearTransactions();
         resolve();
@@ -80,11 +78,7 @@ class TransactionsPage extends React.PureComponent {
           limit: this.INITIAL_LIMIT,
           page: this.INITIAL_PAGE,
         }), () => {
-          fetchTransactions({
-            limit: this.INITIAL_LIMIT,
-            page: this.INITIAL_PAGE,
-            tagNames: this.props.queryTags,
-          });
+          this.fetchTransRequest(this.INITIAL_LIMIT, this.INITIAL_PAGE);
         });
       });
     }
@@ -94,17 +88,31 @@ class TransactionsPage extends React.PureComponent {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  atBottom = () => this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 10;
+  fetchTransRequest = (limit, page) => {
+    this.props.fetchTransactions({
+      limit,
+      page,
+      tagNames: this.props.queryTags,
+      fromDate: this.props.queryDateFrom,
+      toDate: this.props.queryDateTo,
+    });
+  }
+
+  anyQueryPropChanged = (prevProps, currProps) => (
+    prevProps.queryTags !== currProps.queryTags ||
+      prevProps.queryDateFrom !== currProps.queryDateFrom ||
+      prevProps.queryDateTo !== currProps.queryDateTo
+  )
+
+  atBottom = () => (
+    this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 10
+  );
 
   handleScroll = () => {
     if (this.atBottom() && !this.props.allTransactionsFetched) {
       const { limit, page } = this.state;
       this.setState({ page: page + 1 });
-      this.props.fetchTransactions({
-        limit: limit,
-        page: page + 1,
-        tagNames: this.props.queryTags,
-      });
+      this.fetchTransRequest(limit, page + 1);
     }
   }
 
@@ -187,6 +195,8 @@ class TransactionsPage extends React.PureComponent {
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.events.allTransactionsFetched,
   isFetching: state.transactions.events.isFetching,
+  queryDateFrom: state.transactions.queries.fromDate,
+  queryDateTo: state.transactions.queries.toDate,
   queryTags: state.transactions.queries.tagNames,
   transactions: state.transactions.items,
   transactionsTotal: state.transactions.totalAmount,

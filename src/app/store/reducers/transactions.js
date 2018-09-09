@@ -24,7 +24,8 @@ import {
 
 import {
   ADD_TAG_NAME_TO_TRANSACTION_QUERY,
-  REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY
+  REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
+  MODIFY_DATE_FOR_TRANSACTION_QUERY
 } from '../actions/transactionQueries';
 
 const transactions = (
@@ -103,14 +104,14 @@ const transactions = (
         item.id !== action.transaction.id
       ), state.items),
     };
-  // Clearing transactions from store
+  // Clearing transactions from the store
   case CLEAR_TRANSACTIONS:
     return {
       ...state,
       events: { ...state.events, isFetching: false },
       items: [],
     };
-  // Adding tags to transactions
+  // Adding a tag to a transaction
   case REQUEST_ADD_TRANSACTION_TAG:
     return {
       ...state,
@@ -125,7 +126,7 @@ const transactions = (
         return { ...item, tags: [...item.tags, action.tag] };
       }),
     };
-  // Updating tags for transactions
+  // Updating a tag for a transaction
   case REQUEST_UPDATE_TRANSACTION_TAG:
     return {
       ...state,
@@ -147,7 +148,7 @@ const transactions = (
         };
       }),
     };
-  // Removing tags from transactions
+  // Removing a tag from a transaction
   case REQUEST_REMOVE_TRANSACTION_TAG:
     return {
       ...state,
@@ -167,7 +168,7 @@ const transactions = (
         };
       }),
     };
-  // Adding tag name to transactions filter query
+  // Adding a tag name to tje transactions filter query
   case ADD_TAG_NAME_TO_TRANSACTION_QUERY:
     return {
       ...state,
@@ -176,7 +177,7 @@ const transactions = (
         tagNames: [...state.queries.tagNames, action.tagName],
       },
     };
-  // Removing tag name from transactions filter query
+  // Removing a tag name from the transactions filter query
   case REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY:
     return {
       ...state,
@@ -187,7 +188,15 @@ const transactions = (
         ), state.queries.tagNames),
       },
     };
-  // Fallthrough behavior
+  // Modify the fromDate or toDate for the transactions filter query
+  case MODIFY_DATE_FOR_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        [action.dateType]: action.date,
+      },
+    };
   default:
     return state;
   }
