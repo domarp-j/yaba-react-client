@@ -111,6 +111,7 @@ class TransactionForm extends React.Component {
             </Form.Field>
 
             <Form.Input
+              className='margin-top-20-mobile'
               label='Description'
               type='text'
               name='description'
@@ -123,6 +124,7 @@ class TransactionForm extends React.Component {
             />
 
             <Form.Field
+              className='margin-top-20-mobile'
               error={allFieldsTouched(touched, fields) && !!errors.amount}
               width={3}
             >

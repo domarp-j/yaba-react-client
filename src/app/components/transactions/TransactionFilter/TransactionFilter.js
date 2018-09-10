@@ -157,6 +157,7 @@ class TransactionFilter extends React.Component {
             </Form.Field>
 
             <Form.Field
+              className='margin-top-20-mobile'
               width={3}
             >
               <label htmlFor='date'>To</label>

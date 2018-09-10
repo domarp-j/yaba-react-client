@@ -112,8 +112,12 @@ class TransactionItem extends React.Component {
             <Table.Body>
               <Table.Row>
                 <Table.Cell width={3}>{date}</Table.Cell>
-                <Table.Cell width={10}>{description}</Table.Cell>
-                <Table.Cell width={3}>{amount}</Table.Cell>
+                <Table.Cell width={10}>
+                  <div className='transaction-description'>{description}</div>
+                </Table.Cell>
+                <Table.Cell width={3}>
+                  <div className='transaction-amount'>{amount}</div>
+                </Table.Cell>
               </Table.Row>
             </Table.Body>
           </Table>

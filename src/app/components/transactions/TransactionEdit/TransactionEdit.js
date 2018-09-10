@@ -133,6 +133,7 @@ class TransactionEdit extends React.Component {
             </Form.Field>
 
             <Form.Input
+              className='margin-top-20-mobile'
               label='Description'
               type='text'
               name='description'
@@ -145,6 +146,7 @@ class TransactionEdit extends React.Component {
             />
 
             <Form.Field
+              className='margin-top-20-mobile'
               error={allFieldsTouched(touched, fields) && !!errors.amount}
               width={3}
             >
@@ -171,7 +173,9 @@ class TransactionEdit extends React.Component {
             </Form.Field>
           </Form.Group>
 
-          <Form.Field>
+          <Form.Field
+            className='margin-top-30-mobile'
+          >
             <Button
               color='blue'
               content='Save'

@@ -12,3 +12,15 @@
 .tag-loader {
   height: 34px;
 }
+
+@media only screen and (max-device-width: 767px) {
+  .transaction-description {
+    font-size: 24px;
+    line-height: 1.4;
+    margin: 10px 0;
+  }
+
+  .transaction-amount {
+    font-size: 20px;
+  }
+}

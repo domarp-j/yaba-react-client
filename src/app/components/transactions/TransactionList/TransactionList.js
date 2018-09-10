@@ -4,7 +4,6 @@ import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, identity, partition } from 'ramda';
 
-import TransactionListData from '../TransactionListData';
 import TransactionItem from '../TransactionItem';
 import TransactionEdit from '../TransactionEdit';
 import { clearTransactions, fetchTransactions } from '../../../store/actions/transactions';
@@ -36,8 +35,6 @@ class TransactionsPage extends React.PureComponent {
         description: PropTypes.string,
       })),
     })),
-    transactionsCount: PropTypes.number,
-    transactionsTotal: PropTypes.string,
   };
 
   constructor() {
@@ -159,8 +156,6 @@ class TransactionsPage extends React.PureComponent {
       allTransactionsFetched,
       isFetching,
       transactions,
-      transactionsCount,
-      transactionsTotal,
     } = this.props;
 
     const partitionedTransactions = this.separateJustAddedTransactions(transactions);
@@ -169,11 +164,6 @@ class TransactionsPage extends React.PureComponent {
 
     return (
       <div ref={this.setPageRef}>
-        <TransactionListData
-          count={transactionsCount}
-          totalAmount={transactionsTotal}
-        />
-
         {newTransactions.length > 0 &&
           <div className='new-transaction-section'>
             {newTransactions.map(transaction => this.renderTransaction(transaction))}
@@ -215,8 +205,6 @@ const mapStateToProps = state => ({
   queryMatchAllTags: state.transactions.queries.matchAllTags,
   queryTags: state.transactions.queries.tagNames,
   transactions: state.transactions.items,
-  transactionsTotal: state.transactions.totalAmount,
-  transactionsCount: state.transactions.count,
 });
 
 const mapDispatchToProps = dispatch => ({
