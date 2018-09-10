@@ -45,7 +45,7 @@ class TransactionsPage extends React.PureComponent {
       page: this.INITIAL_PAGE,
     };
 
-    this.pageRef = null;
+    this.pageRef = undefined;
 
     this.setPageRef = ele => {
       this.pageRef = ele;

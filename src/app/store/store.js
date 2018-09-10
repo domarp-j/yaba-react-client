@@ -13,7 +13,7 @@ const initialState = {
       isLoading: false,
       isSignedIn: false,
       attributes: {
-        username: null,
+        username: undefined,
       },
     },
   },
@@ -32,11 +32,11 @@ const initialState = {
       isUpdatingTag: false,
     },
     queries: {
-      description: null,
-      fromDate: null,
+      description: undefined,
+      fromDate: '',
       matchAllTags: true,
       tagNames: [],
-      toDate: null,
+      toDate: '',
     },
   },
 };

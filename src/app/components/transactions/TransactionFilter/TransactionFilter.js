@@ -43,10 +43,10 @@ class TransactionFilter extends React.Component {
   constructor() {
     super();
     this.state = {
-      [FROM_DATE]: '',
-      [TO_DATE]: '',
-      [this.FROM_DATE_CLEAVE]: null,
-      [this.TO_DATE_CLEAVE]: null,
+      [FROM_DATE]: undefined,
+      [TO_DATE]: undefined,
+      [this.FROM_DATE_CLEAVE]: undefined,
+      [this.TO_DATE_CLEAVE]: undefined,
       showAddTag: false,
     };
   }

@@ -143,7 +143,7 @@ const mapDispatchToProps = ({
 
 export { SignUpForm as BaseSignUpForm };
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(undefined, mapDispatchToProps),
   withRouter,
   withFormik(formikOptions)
 )(SignUpForm);

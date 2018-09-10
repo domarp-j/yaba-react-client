@@ -12,7 +12,7 @@ verifyCredentials(store);
 
 ReactDOM.render(
   <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
+    <PersistGate loading={undefined} persistor={persistor}>
       <App />
     </PersistGate>
   </Provider>,
