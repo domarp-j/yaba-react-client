@@ -1,4 +1,4 @@
-import { filter, findIndex, update } from 'ramda';
+import { findIndex, reject, update } from 'ramda';
 
 import {
   REQUEST_TRANSACTIONS,
@@ -102,8 +102,8 @@ const transactions = (
     return {
       ...state,
       events: { ...state.events, isDeleting: false },
-      items: filter(item => (
-        item.id !== action.transaction.id
+      items: reject(item => (
+        item.id === action.transaction.id
       ), state.items),
     };
   // Clearing transactions from the store
@@ -164,8 +164,8 @@ const transactions = (
         if (item.id !== action.transaction.id) return item;
         return {
           ...item,
-          tags: filter(tag => (
-            tag.id !== action.tag.id && tag.name !== action.tag.name
+          tags: reject(tag => (
+            tag.id === action.tag.id && tag.name === action.tag.name
           ), item.tags),
         };
       }),
@@ -203,8 +203,8 @@ const transactions = (
       ...state,
       queries: {
         ...state.queries,
-        tagNames: filter(tagName => (
-          tagName !== action.tagName
+        tagNames: reject(tagName => (
+          tagName === action.tagName
         ), state.queries.tagNames),
       },
     };

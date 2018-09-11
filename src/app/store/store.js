@@ -5,9 +5,11 @@ import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 
-import transactions from './reducers/transactions';
+import alertsReducer from './reducers/alerts';
+import transactionsReducer from './reducers/transactions';
 
 const initialState = {
+  alerts: [],
   reduxTokenAuth: {
     currentUser: {
       isLoading: false,
@@ -49,8 +51,9 @@ const persistConfig = {
 const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
+    alerts: alertsReducer,
     reduxTokenAuth: reduxTokenAuthReducer,
-    transactions,
+    transactions: transactionsReducer,
   })
 );
 
