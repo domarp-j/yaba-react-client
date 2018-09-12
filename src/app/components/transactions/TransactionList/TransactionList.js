@@ -19,6 +19,7 @@ class TransactionsPage extends React.PureComponent {
     clearTransactions: PropTypes.func,
     fetchTransactions: PropTypes.func,
     isFetching: PropTypes.bool,
+    noTransactionsFound: PropTypes.bool,
     queryDateFrom: PropTypes.string,
     queryDateTo: PropTypes.string,
     queryDescription: PropTypes.string,
@@ -155,6 +156,7 @@ class TransactionsPage extends React.PureComponent {
     const {
       allTransactionsFetched,
       isFetching,
+      noTransactionsFound,
       transactions,
     } = this.props;
 
@@ -182,13 +184,23 @@ class TransactionsPage extends React.PureComponent {
           </Segment>
         }
 
-        {allTransactionsFetched &&
+        {allTransactionsFetched && !noTransactionsFound &&
           <Segment
             id='end-of-list-indicator'
             color='black'
             size='huge'
           >
             End of list
+          </Segment>
+        }
+
+        {noTransactionsFound &&
+          <Segment
+            id='end-of-list-indicator'
+            color='black'
+            size='huge'
+          >
+            No transactions found
           </Segment>
         }
       </div>
@@ -199,6 +211,7 @@ class TransactionsPage extends React.PureComponent {
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.events.allTransactionsFetched,
   isFetching: state.transactions.events.isFetching,
+  noTransactionsFound: state.transactions.events.noTransactionsFound,
   queryDateFrom: state.transactions.queries.fromDate,
   queryDateTo: state.transactions.queries.toDate,
   queryDescription: state.transactions.queries.description,

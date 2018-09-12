@@ -32,6 +32,7 @@ const initialState = {
       isDeleting: false,
       isRemovingTag: false,
       isUpdatingTag: false,
+      noTransactionsFound: false,
     },
     queries: {
       description: undefined,

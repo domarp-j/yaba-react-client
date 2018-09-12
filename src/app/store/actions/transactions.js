@@ -26,6 +26,11 @@ export const receiveTransactions = response => ({
   },
 });
 
+export const REPORT_NO_TRANSACTIONS = 'REPORT_NO_TRANSACTIONS';
+export const reportNoTransactions = () => ({
+  type: REPORT_NO_TRANSACTIONS,
+});
+
 export const fetchTransactions = (params={}) => dispatch => {
   dispatch(requestTransactions());
 
@@ -41,6 +46,10 @@ export const fetchTransactions = (params={}) => dispatch => {
     },
   }).then(response => {
     dispatch(receiveTransactions(response.data.content));
+  }).catch(err => {
+    if (params.page === 0 && err.response.status === 400) {
+      dispatch(reportNoTransactions());
+    }
   });
 };
 

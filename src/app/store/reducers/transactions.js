@@ -3,6 +3,7 @@ import { findIndex, reject, update } from 'ramda';
 import {
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
+  REPORT_NO_TRANSACTIONS,
   REQUEST_TO_ADD_TRANSACTION,
   PUSH_NEW_TRANSACTION,
   TOGGLE_EDIT_STATE,
@@ -39,7 +40,11 @@ const transactions = (
   case REQUEST_TRANSACTIONS:
     return {
       ...state,
-      events: { ...state.events, isFetching: true },
+      events: {
+        ...state.events,
+        isFetching: true,
+        noTransactionsFound: false,
+      },
     };
   case RECEIVE_TRANSACTIONS:
     return {
@@ -52,6 +57,16 @@ const transactions = (
       count: action.transactions.count,
       totalAmount: action.transactions.totalAmount,
       items: [...state.items, ...action.transactions.items],
+    };
+  case REPORT_NO_TRANSACTIONS:
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        allTransactionsFetched: true,
+        isFetching: false,
+        noTransactionsFound: true,
+      },
     };
   // Adding transactions
   case REQUEST_TO_ADD_TRANSACTION:
