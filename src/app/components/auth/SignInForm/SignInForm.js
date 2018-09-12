@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import { signInUser } from '../../../store/actions/reduxTokenAuth';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import routes from '../../../routes';
+import { configureAxios } from '../../../utils/yabaAxios';
 
 const fields = ['email', 'password'];
 
@@ -97,7 +98,11 @@ const formikOptions = {
     }
   ) => {
     props.signInUser({ email: values.email, password: values.password })
-      .then(() => { props.history.push(routes.homePage); })
+      .then(() => {
+        configureAxios().then(() => {
+          props.history.push(routes.homePage);
+        });
+      })
       .catch(() => { setErrors({ saving: 'It looks like we could not sign you in. Please try again later.' }); });
   },
   validationSchema: schema,

@@ -56,10 +56,8 @@ class TransactionsPage extends React.PureComponent {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
 
-    const { clearTransactions } = this.props;
-
     new Promise(resolve => {
-      clearTransactions();
+      this.props.clearTransactions();
       resolve();
     }).then(() => {
       this.fetchTransRequest(this.state.limit, this.state.page);
@@ -67,11 +65,9 @@ class TransactionsPage extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { clearTransactions } = this.props;
-
     if (this.anyQueryPropChanged(prevProps, this.props)) {
       new Promise(resolve => {
-        clearTransactions();
+        this.props.clearTransactions();
         resolve();
       }).then(() => {
         this.setState(() => ({
