@@ -21,3 +21,14 @@ export const removeAlert = alertId => ({
   type: REMOVE_ALERT,
   alertId,
 });
+
+// Alert helpers that can be used for external calls
+
+export const serverErrorCheck = (err, dispatch,) => {
+  if (err.response.status === 500) {
+    dispatch(addAlert({
+      type: ERROR,
+      message: 'We ran into an error on our side. Please try again in a few minutes.',
+    }));
+  }
+};

@@ -15,6 +15,7 @@ import {
   detachTagFromTransaction,
   modifyTransactionTag
 } from '../../../store/actions/transactionTags';
+
 import './TransactionItem.css';
 
 class TransactionItem extends React.Component {
@@ -25,7 +26,6 @@ class TransactionItem extends React.Component {
     deleteTransaction: PropTypes.func,
     description: PropTypes.string,
     detachTagFromTransaction: PropTypes.func,
-    isAddingTag: PropTypes.bool,
     modifyTransactionTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
@@ -96,7 +96,6 @@ class TransactionItem extends React.Component {
       date,
       description,
       detachTagFromTransaction,
-      isAddingTag,
       modifyTransactionTag,
       tags,
       transactionId,
@@ -153,8 +152,8 @@ class TransactionItem extends React.Component {
               />
             }
 
-            {/* Loader that shows while add-tag call is being processed */}
-            {isAddingTag && <Button className='tag-loader' loading />}
+            {/* TODO: Loader that shows while add-tag call is being processed */}
+            {/* {isAddingTag && <Button className='tag-loader' loading />} */}
 
             {/* Button that, when clicked, displays input to add new tag */}
             {!showAddTag &&
@@ -176,9 +175,6 @@ class TransactionItem extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isAddingTag: state.transactions.events.isAddingTag,
-});
 const mapDispatchToProps = dispatch => ({
   attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
   deleteTransaction: id => dispatch(deleteTransaction(id)),
@@ -187,4 +183,4 @@ const mapDispatchToProps = dispatch => ({
   toggleEditState: (transaction, editMode) => dispatch(toggleEditState(transaction, editMode)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionItem);
+export default connect(undefined, mapDispatchToProps)(TransactionItem);

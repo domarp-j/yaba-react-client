@@ -15,11 +15,8 @@ import {
 } from '../actions/transactions';
 
 import {
-  REQUEST_ADD_TRANSACTION_TAG,
   ADD_TRANSACTION_TAG,
-  REQUEST_UPDATE_TRANSACTION_TAG,
   UPDATE_TRANSACTION_TAG,
-  REQUEST_REMOVE_TRANSACTION_TAG,
   REMOVE_TRANSACTION_TAG
 } from '../actions/transactionTags';
 
@@ -129,30 +126,18 @@ const transactions = (
       items: [],
     };
   // Adding a tag to a transaction
-  case REQUEST_ADD_TRANSACTION_TAG:
-    return {
-      ...state,
-      events: { ...state.events, isAddingTag: true },
-    };
   case ADD_TRANSACTION_TAG:
     return {
       ...state,
-      events: { ...state.events, isAddingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return { ...item, tags: [...item.tags, action.tag] };
       }),
     };
   // Updating a tag for a transaction
-  case REQUEST_UPDATE_TRANSACTION_TAG:
-    return {
-      ...state,
-      events: { ...state.events, isUpdatingTag: true },
-    };
   case UPDATE_TRANSACTION_TAG:
     return {
       ...state,
-      events: { ...state.events, isUpdatingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return {
@@ -166,15 +151,9 @@ const transactions = (
       }),
     };
   // Removing a tag from a transaction
-  case REQUEST_REMOVE_TRANSACTION_TAG:
-    return {
-      ...state,
-      events: { ...state.events, isRemovingTag: true },
-    };
   case REMOVE_TRANSACTION_TAG:
     return {
       ...state,
-      events: { ...state.events, isRemovingTag: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return {

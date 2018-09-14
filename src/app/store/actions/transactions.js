@@ -2,6 +2,7 @@ import routes from '../../routes';
 import { floatToDollar } from '../../utils/dollarTools';
 import { dateToMDY } from '../../utils/dateTools';
 import yabaAxios from '../../utils/yabaAxios';
+import { ERROR, addAlert, serverErrorCheck } from './alerts';
 
 // Fetching transactions
 
@@ -49,7 +50,14 @@ export const fetchTransactions = (params={}) => dispatch => {
   }).catch(err => {
     if (params.page === 0 && err.response.status === 400) {
       dispatch(reportNoTransactions());
+    } else {
+      dispatch(addAlert({
+        type: ERROR,
+        message: 'There was an error while trying to fetch your transactions. Please try again later.',
+      }));
     }
+
+    serverErrorCheck(err, dispatch);
   });
 };
 
@@ -78,7 +86,17 @@ export const createTransaction = (data={}) => dispatch => {
     date: data.date,
     description: data.description,
     value: data.amount,
-  }).then(response => { dispatch(addTransaction(response.data.content)); });
+  }).then(response => {
+    dispatch(addTransaction(response.data.content));
+  }).catch(err => {
+    if (err.response.status === 400) {
+      dispatch(addAlert({
+        type: ERROR,
+        message: 'There was an error while trying to create a transaction. Please check your inputs and try again.',
+      }));
+    }
+    serverErrorCheck(err, dispatch);
+  });
 };
 
 // Updating transactions
@@ -114,7 +132,21 @@ export const updateTransaction = (data={}) => dispatch => {
     description: data.description,
     id: data.id,
     value: data.amount,
-  }).then(response => { dispatch(editTransaction(response.data.content)); });
+  }).then(response => {
+    dispatch(editTransaction(response.data.content));
+  }).catch(err => {
+    if (err.response.status >= 400) {
+      const message = err.response.status === 404 ?
+        'We could not find the transaction you were trying to update.' :
+        'There was an error while trying to update your transaction. Please check your inputs and try again.';
+
+      dispatch(addAlert({
+        type: ERROR,
+        message,
+      }));
+    }
+    serverErrorCheck(err, dispatch);
+  });
 };
 
 // Deleting transactions
@@ -136,7 +168,17 @@ export const deleteTransaction = id => dispatch => {
   dispatch(requestDeleteTransaction());
 
   return yabaAxios.post(routes.deleteTransaction, { id })
-    .then(response => { dispatch(removeDeletedTransaction(response.data.content)); });
+    .then(response => {
+      dispatch(removeDeletedTransaction(response.data.content));
+    }).catch(err => {
+      if (err.response.status === 400) {
+        dispatch(addAlert({
+          type: ERROR,
+          message: 'It looks like the transaction you are trying to delete does not exist. Please refresh the page.',
+        }));
+      }
+      serverErrorCheck(err, dispatch);
+    });
 };
 
 // Clearing transactions from store

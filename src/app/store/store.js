@@ -26,12 +26,9 @@ const initialState = {
     events: {
       allTransactionsFetched: false,
       isAdding: false,
-      isAddingTag: false,
       isEditing: false,
       isFetching: false,
       isDeleting: false,
-      isRemovingTag: false,
-      isUpdatingTag: false,
       noTransactionsFound: false,
     },
     queries: {
@@ -47,6 +44,9 @@ const initialState = {
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: [
+    'alerts',
+  ],
 };
 
 const persistedReducer = persistReducer(

@@ -200,7 +200,7 @@ class TransactionFilter extends React.Component {
           }
 
           {/* TODO: Loader that shows while add-tag call is being processed */}
-          {/* isAddingTag && <Button className='tag-loader' loading /> */}
+          {/* addingTag && <Button className='tag-loader' loading /> */}
 
           {/* Button that, when clicked, displays input to add new tag */}
           {!showAddTag &&

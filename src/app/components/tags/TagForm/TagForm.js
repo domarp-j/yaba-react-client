@@ -4,7 +4,6 @@ import { Button, Icon, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 import { compose } from 'ramda';
-import { connect } from 'react-redux';
 
 import './TagForm.css';
 
@@ -30,7 +29,6 @@ const TagForm = ({
   errors,
   handleChange,
   handleSubmit,
-  isAddingTag,
   onCancel,
   setTouched,
   touched,
@@ -52,7 +50,7 @@ const TagForm = ({
     <Button
       className='grouped-button'
       color='green'
-      loading={isAddingTag}
+      // loading={isAddingTag} TODO: Add loader?
       onClick={e => submitTagForm(e, handleSubmit, setTouched)}
     >
       <Button.Content className='no-padding'>
@@ -78,7 +76,6 @@ TagForm.propTypes = {
   }),
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
-  isAddingTag: PropTypes.bool,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
   setTouched: PropTypes.func,
@@ -112,12 +109,7 @@ const formikOptions = {
   validationSchema: schema,
 };
 
-const mapStateToProps = state => ({
-  isAddingTag: state.transactions.events.isAddingTag,
-});
-
 export { TagForm as BaseTagForm };
 export default compose(
-  connect(mapStateToProps),
   withFormik(formikOptions)
 )(TagForm);
