@@ -89,7 +89,7 @@ export const createTransaction = (data={}) => dispatch => {
   }).then(response => {
     dispatch(addTransaction(response.data.content));
   }).catch(err => {
-    if (err.response.status === 400) {
+    if (err.response.status >= 400) {
       dispatch(addAlert({
         type: ERROR,
         message: 'There was an error while trying to create a transaction. Please check your inputs and try again.',
@@ -171,7 +171,7 @@ export const deleteTransaction = id => dispatch => {
     .then(response => {
       dispatch(removeDeletedTransaction(response.data.content));
     }).catch(err => {
-      if (err.response.status === 400) {
+      if (err.response.status >= 404) {
         dispatch(addAlert({
           type: ERROR,
           message: 'It looks like the transaction you are trying to delete does not exist. Please refresh the page.',

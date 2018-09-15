@@ -57,7 +57,7 @@ export const modifyTransactionTag = (data={}) => dispatch => {
       const tagAfterUpdate = response.data.content;
       dispatch(updateTransactionTag(tagBeforeUpdate, tagAfterUpdate));
     }).catch(err => {
-      if (err.response.status === 400) {
+      if (err.response.status >= 400) {
         dispatch(addAlert({
           type: ERROR,
           message: 'We could not update your tag. Please make sure the tag name does not contain any spaces.',
@@ -88,7 +88,7 @@ export const detachTagFromTransaction = (data={}) => dispatch => {
   }).then(response => {
     dispatch(removeTransactionTag(response.data.content));
   }).catch(err => {
-    if (err.response.status === 400) {
+    if (err.response.status >= 400) {
       dispatch(addAlert({
         type: ERROR,
         message: 'We could not delete your tag.',
