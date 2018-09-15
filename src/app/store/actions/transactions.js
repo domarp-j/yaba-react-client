@@ -6,6 +6,8 @@ import { ERROR, addAlert, serverErrorCheck } from './alerts';
 
 // Fetching transactions
 
+export const DEFAULT_FETCH_LIMIT = 20;
+
 export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS';
 export const requestTransactions = () => ({
   type: REQUEST_TRANSACTIONS,

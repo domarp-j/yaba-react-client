@@ -1,5 +1,7 @@
 import { findIndex, reject, update } from 'ramda';
 
+import { initialState } from '../store';
+
 import {
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
@@ -25,11 +27,13 @@ import {
   ADD_TAG_NAME_TO_TRANSACTION_QUERY,
   REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY,
   MODIFY_DATE_FOR_TRANSACTION_QUERY,
-  MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY
+  REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY,
+  MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY,
+  CLEAR_TRANSACTION_QUERIES
 } from '../actions/transactionQueries';
 
 const transactions = (
-  state = {},
+  state = initialState.transactions,
   action
 ) => {
   switch (action.type) {
@@ -182,7 +186,7 @@ const transactions = (
         [action.dateType]: action.date,
       },
     };
-  // Adding a tag name to tje transactions filter query
+  // Adding a tag name to the transactions filter query
   case ADD_TAG_NAME_TO_TRANSACTION_QUERY:
     return {
       ...state,
@@ -202,6 +206,15 @@ const transactions = (
         ), state.queries.tagNames),
       },
     };
+  // Replacing all tag names for the transactions filter query
+  case REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY:
+    return {
+      ...state,
+      queries: {
+        ...state.queries,
+        tagNames: action.tagNames,
+      },
+    };
   // Modify matchAllTags bool for the transactions filter query
   case MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY:
     return {
@@ -210,6 +223,12 @@ const transactions = (
         ...state.queries,
         matchAllTags: action.matchAllTags,
       },
+    };
+  // Clearing transactions filter query
+  case CLEAR_TRANSACTION_QUERIES:
+    return {
+      ...state,
+      queries: initialState.transactions.queries,
     };
   default:
     return state;

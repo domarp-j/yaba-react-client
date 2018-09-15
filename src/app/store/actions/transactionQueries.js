@@ -36,10 +36,25 @@ export const removeTagNameFromTransactionQuery = tagName => ({
   tagName,
 });
 
+// Replacing tagNames
+
+export const REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY = 'REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY';
+export const replaceTagNamesInTransactionQuery = tagNames => ({
+  type: REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY,
+  tagNames,
+});
+
 // Modifying matchAllTags bool
 
 export const MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY = 'MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY';
 export const modifyMatchAllTagsTransactionQuery = matchAllTags => ({
   type: MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY,
   matchAllTags,
+});
+
+// Clearing all queries
+
+export const CLEAR_TRANSACTION_QUERIES = 'CLEAR_TRANSACTION_QUERIES';
+export const clearTransactionQueries = () => ({
+  type: CLEAR_TRANSACTION_QUERIES,
 });

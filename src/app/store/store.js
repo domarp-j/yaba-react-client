@@ -70,4 +70,4 @@ const yabaStore = createStore(
 
 const persistor = persistStore(yabaStore);
 
-export { yabaStore as store, persistor };
+export { yabaStore as store, persistor, initialState };

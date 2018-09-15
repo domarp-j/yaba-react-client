@@ -6,14 +6,15 @@ import { any, identity, partition } from 'ramda';
 
 import TransactionItem from '../TransactionItem';
 import TransactionEdit from '../TransactionEdit';
-import { clearTransactions, fetchTransactions } from '../../../store/actions/transactions';
+import {
+  DEFAULT_FETCH_LIMIT,
+  clearTransactions,
+  fetchTransactions
+} from '../../../store/actions/transactions';
 
 import './TransactionList.css';
 
 class TransactionsPage extends React.PureComponent {
-  INITIAL_LIMIT = 20;
-  INITIAL_PAGE = 0;
-
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
@@ -42,8 +43,8 @@ class TransactionsPage extends React.PureComponent {
     super();
 
     this.state = {
-      limit: this.INITIAL_LIMIT,
-      page: this.INITIAL_PAGE,
+      limit: DEFAULT_FETCH_LIMIT,
+      page: 0,
     };
 
     this.pageRef = undefined;
@@ -71,10 +72,10 @@ class TransactionsPage extends React.PureComponent {
         resolve();
       }).then(() => {
         this.setState(() => ({
-          limit: this.INITIAL_LIMIT,
-          page: this.INITIAL_PAGE,
+          limit: DEFAULT_FETCH_LIMIT,
+          page: 0,
         }), () => {
-          this.fetchTransRequest(this.INITIAL_LIMIT, this.INITIAL_PAGE);
+          this.fetchTransRequest(DEFAULT_FETCH_LIMIT, 0);
         });
       });
     }

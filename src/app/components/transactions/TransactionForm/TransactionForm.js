@@ -156,9 +156,11 @@ class TransactionForm extends React.Component {
             </Form.Field>
           </Form.Group>
 
-          <Form.Group className='cta-buttons'>
-            <Form.Button
-              className='margin-top-15'
+          <div className='margin-top-30-mobile'>
+            {/* <Form.Group> */}
+            {/* <Form.Field className='full-width-mobile margin-top-20-mobile'> */}
+            <Button
+              className='full-width-mobile margin-top-10-mobile margin-top-15'
               color='green'
               content='Add'
               disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
@@ -166,14 +168,18 @@ class TransactionForm extends React.Component {
               onClick={() => { setTouched(touchAllFields(fields)); }}
               size='large'
             />
+            {/* </Form.Field> */}
 
-            <Form.Button
-              className='margin-top-15'
+            {/* <Form.Field className='full-width-mobile'> */}
+            <Button
+              className='full-width-mobile margin-top-10-mobile margin-top-15'
               content='Cancel'
               onClick={e => { e.preventDefault(); onCancel(); }}
               size='large'
             />
-          </Form.Group>
+            {/* </Form.Field> */}
+            {/* </Form.Group> */}
+          </div>
         </Form>
 
         <Message
