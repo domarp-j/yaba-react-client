@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Icon, Segment } from 'semantic-ui-react';
+import { Header, Icon, Segment } from 'semantic-ui-react';
 
-import './TransactionListData.css';
+import './TransactionDashboard.css';
 
-const TransactionListData = ({
+const TransactionDashboard = ({
+  addButton,
   count,
-  onManageClick,
+  filterButton,
   totalAmount,
 }) => (
   <Segment className='no-margin'>
@@ -28,16 +29,18 @@ const TransactionListData = ({
       Total for {count} transactions
     </Header>
 
-    <div className='center-horizontally margin-top-bottom-15'>
-      <Button color='blue' size='large' onClick={onManageClick}>Manage transactions</Button>
+    <div className='center-horizontally'>
+      {addButton()}
+      {filterButton()}
     </div>
   </Segment>
 );
 
-TransactionListData.propTypes = {
+TransactionDashboard.propTypes = {
+  addButton: PropTypes.func,
   count: PropTypes.number,
-  onManageClick: PropTypes.func,
+  filterButton: PropTypes.func,
   totalAmount: PropTypes.string,
 };
 
-export default TransactionListData;
+export default TransactionDashboard;

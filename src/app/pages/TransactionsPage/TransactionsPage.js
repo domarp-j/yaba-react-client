@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Tab } from 'semantic-ui-react';
+import { Button, Container, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import NavSignedIn from '../../components/navigation/NavSignedIn';
 import TransactionList from '../../components/transactions/TransactionList';
-import TransactionListData from '../../components/transactions/TransactionListData';
+import TransactionDashboard from '../../components/transactions/TransactionDashboard';
 import TransactionForm from '../../components/transactions/TransactionForm';
 import TransactionFilter from '../../components/transactions/TransactionFilter';
 
@@ -18,49 +18,67 @@ class TransactionsPage extends React.Component {
   constructor() {
     super();
     this.state = {
-      showManageView: true,
+      openAddModal: false,
+      openFilterModal: false,
     };
   }
 
-  toggleManageView = () => {
+  toggleStateBool = stateKey => {
     this.setState(prevState => ({
-      showManageView: !prevState.showManageView,
+      [stateKey]: !prevState[stateKey],
     }));
   }
 
-  miniNavigation = (
-    <Tab
-      panes={[
-        {
-          menuItem: 'Add a transaction',
-          render: () => (
-            <Tab.Pane><TransactionForm /></Tab.Pane>
-          ),
-        },
-        {
-          menuItem: 'Filter transactions',
-          render: () => (
-            <Tab.Pane><TransactionFilter /></Tab.Pane>
-          ),
-        },
-      ]}
-    />
+  manageTransactionModal = ({
+    buttonColor,
+    buttonIcon,
+    TransactionComponent,
+    stateKey,
+  }) => (
+    <Modal
+      className='yaba-modal'
+      open={this.state[stateKey]}
+      trigger={
+        <Button
+          circular
+          className='margin-5'
+          color={buttonColor}
+          onClick={() => this.toggleStateBool(stateKey)}
+          size='huge'
+          icon={buttonIcon}
+        />
+      }
+    >
+      <TransactionComponent
+        onCancel={() => this.toggleStateBool(stateKey)}
+        onSave={() => this.toggleStateBool(stateKey)}
+      />
+    </Modal>
   )
 
   render() {
     const { count, totalAmount } = this.props;
-    const { showManageView } = this.state;
 
     return (
       <div>
         <NavSignedIn />
         <Container textAlign='left'>
-          <TransactionListData
+          <TransactionDashboard
+            addButton={() => this.manageTransactionModal({
+              buttonIcon: 'plus',
+              buttonColor: 'green',
+              stateKey: 'openAddModal',
+              TransactionComponent: TransactionForm,
+            })}
             count={count}
-            onManageClick={this.toggleManageView}
+            filterButton={() => this.manageTransactionModal({
+              buttonIcon: 'filter',
+              buttonColor: 'blue',
+              stateKey: 'openFilterModal',
+              TransactionComponent: TransactionFilter,
+            })}
             totalAmount={totalAmount}
           />
-          {!showManageView && this.miniNavigation}
           <TransactionList />
         </Container>
       </div>

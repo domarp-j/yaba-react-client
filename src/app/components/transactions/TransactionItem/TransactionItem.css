@@ -2,13 +2,6 @@
   margin-bottom: 12px !important;
 }
 
-.cancel-modal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%);
-}
-
 .tag-loader {
   height: 34px;
 }

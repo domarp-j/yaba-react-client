@@ -68,7 +68,7 @@ class TransactionItem extends React.Component {
 
   removeTransactionModal = () => (
     <Modal
-      className='cancel-modal'
+      className='yaba-modal'
       open={this.state.openModal}
       trigger={<Button content='Delete' color='red' onClick={() => this.toggleStateBool('openModal')} />}
     >

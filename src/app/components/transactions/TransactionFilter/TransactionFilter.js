@@ -36,6 +36,7 @@ class TransactionFilter extends React.Component {
     modifyDate: PropTypes.func,
     modifyDescription: PropTypes.func,
     modifyMatchAllTags: PropTypes.func,
+    onCancel: PropTypes.func,
     removeTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.string),
   };
@@ -106,6 +107,7 @@ class TransactionFilter extends React.Component {
       description,
       matchAllTags,
       modifyMatchAllTags,
+      onCancel,
       removeTag,
       tags,
     } = this.props;
@@ -113,7 +115,7 @@ class TransactionFilter extends React.Component {
     const { showAddTag } = this.state;
 
     return (
-      <Segment basic>
+      <Segment className='padding-30'>
         <h2>Filter transactions</h2>
 
         <h3>By description:</h3>
@@ -227,6 +229,13 @@ class TransactionFilter extends React.Component {
             Match any tag
           </Button>
         </Button.Group>
+
+        <Form.Button
+          className='margin-top-30'
+          content='Cancel'
+          onClick={onCancel}
+          size='large'
+        />
       </Segment>
     );
   }

@@ -11,6 +11,8 @@ import { createTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
 
+import './TransactionForm.css';
+
 const fields = ['description', 'amount', 'date'];
 
 class TransactionForm extends React.Component {
@@ -24,6 +26,8 @@ class TransactionForm extends React.Component {
     handleBlur: PropTypes.func,
     handleChange: PropTypes.func,
     handleSubmit: PropTypes.func,
+    onCancel: PropTypes.func,
+    onSave: PropTypes.func,
     isAdding: PropTypes.bool,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
@@ -78,6 +82,7 @@ class TransactionForm extends React.Component {
       handleBlur,
       handleChange,
       isAdding,
+      onCancel,
       setTouched,
       touched,
       values,
@@ -86,7 +91,7 @@ class TransactionForm extends React.Component {
     const { positiveAmount } = this.state;
 
     return (
-      <Segment basic>
+      <Segment className='padding-30'>
         <h2>Add a transaction</h2>
 
         <Form onSubmit={this.setValuesAndSubmit}>
@@ -151,15 +156,24 @@ class TransactionForm extends React.Component {
             </Form.Field>
           </Form.Group>
 
-          <Form.Button
-            className='margin-top-30'
-            color='green'
-            content='Add'
-            disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
-            loading={isAdding}
-            onClick={() => { setTouched(touchAllFields(fields)); }}
-            size='large'
-          />
+          <Form.Group className='cta-buttons'>
+            <Form.Button
+              className='margin-top-15'
+              color='green'
+              content='Add'
+              disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
+              loading={isAdding}
+              onClick={() => { setTouched(touchAllFields(fields)); }}
+              size='large'
+            />
+
+            <Form.Button
+              className='margin-top-15'
+              content='Cancel'
+              onClick={e => { e.preventDefault(); onCancel(); }}
+              size='large'
+            />
+          </Form.Group>
         </Form>
 
         <Message
@@ -190,6 +204,7 @@ const formikOptions = {
     }).then(() => {
       setValues({});
       resetForm();
+      props.onSave();
     });
   },
   mapPropsToValues: () => ({
