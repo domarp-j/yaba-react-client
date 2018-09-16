@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Segment, Form } from 'semantic-ui-react';
+import { Button, Segment, Form, Tab } from 'semantic-ui-react';
 import { compose, reject } from 'ramda';
 import { connect } from 'react-redux';
 import Cleave from 'cleave.js/react';
@@ -18,22 +18,77 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/transactionQueries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
+import { filterQueryText } from '../../../utils/queryTools';
+
+import './TransactionFilter.css';
 
 class TransactionFilter extends React.Component {
-  FROM_DATE_CLEAVE = `${FROM_DATE}Cleave`;
-  TO_DATE_CLEAVE = `${TO_DATE}Cleave`;
+  /*
+    We will keep track of the initial state of all of our
+      query fields.
 
-  dateTypeToCleave = {
-    [FROM_DATE]: this.FROM_DATE_CLEAVE,
-    [TO_DATE]: this.TO_DATE_CLEAVE,
-  };
-
+    That will make it easier for us to reset the form when
+      the user decides to clear out all of their current
+      filter queries.
+  */
   initialFieldsState = {
     [FROM_DATE]: undefined,
     [TO_DATE]: undefined,
     description: '',
     tags: [],
   };
+
+  /*
+    To properly handle what is displayed in the Cleave inputs,
+      we need direct control of the Cleaves.
+
+    Therefore, we must define our own custom Cleaves that we
+      will save to state and mainpulate directly.
+  */
+  FROM_DATE_CLEAVE = `${FROM_DATE}Cleave`;
+  TO_DATE_CLEAVE = `${TO_DATE}Cleave`;
+
+  /*
+    This is a quick & easy way to map a date type (FROM, TO)
+      to it's respective cleave.
+  */
+  dateTypeToCleave = {
+    [FROM_DATE]: this.FROM_DATE_CLEAVE,
+    [TO_DATE]: this.TO_DATE_CLEAVE,
+  };
+
+  /*
+    The user will be able to choose the filter type (description,
+      date, tags, etc) by selecting a tab via the "Tab" Semantic UI
+      component
+
+    This object defines the panes for each tab, including the tab
+      label and the rendered component when the tab is selected
+
+    The "Tab" component itself, however, requires an array, so an
+      ordered version of the panes has also been defined.
+  */
+  panes = {
+    desc: {
+      menuItem: 'By description',
+      render: () => (
+        <Tab.Pane attached={false}>{this.descriptionField()}</Tab.Pane>
+      ),
+    },
+    dates: {
+      menuItem: 'By date',
+      render: () => (
+        <Tab.Pane attached={false}>{this.dateFields()}</Tab.Pane>
+      ),
+    },
+    tags: {
+      menuItem: 'By tags',
+      render: () => (
+        <Tab.Pane attached={false}>{this.tagFields()}</Tab.Pane>
+      ),
+    },
+  }
+  paneList = [this.panes.desc, this.panes.dates, this.panes.tags]
 
   static propTypes = {
     description: PropTypes.string,
@@ -54,6 +109,7 @@ class TransactionFilter extends React.Component {
       [this.TO_DATE_CLEAVE]: undefined,
       matchAllTags: true,
       showAddTag: false,
+      activeTab: this.paneList.indexOf(this.panes.desc),
     };
   }
 
@@ -69,10 +125,16 @@ class TransactionFilter extends React.Component {
       ...this.initialFieldsState,
     }));
 
-    [FROM_DATE, TO_DATE].forEach(dateType => {
-      this.state[this.dateTypeToCleave[dateType]]
-        .setRawValue('');
-    });
+    /*
+      Reset the Cleave date fields by overriding their raw input values
+
+      It is crucial that the dates tab is active when overriding the
+        Cleave values. Otherwise, some buggy JS behavior could result.
+    */
+    if (this.state.activeTab === this.paneList.indexOf(this.panes.dates)) {
+      this.state[this.dateTypeToCleave[FROM_DATE]].setRawValue('');
+      this.state[this.dateTypeToCleave[TO_DATE]].setRawValue('');
+    }
   }
 
   componentDidMount = () => {
@@ -85,12 +147,125 @@ class TransactionFilter extends React.Component {
     });
   }
 
-  setCleaveState = (cleave, dateType) => {
-    this.setState({ [this.dateTypeToCleave[dateType]]: cleave });
+  descriptionField = () => (
+    <div>
+      <Form>
+        <Form.Group>
+          <Form.Input
+            id='descriptionQuery'
+            label='Description'
+            name='descriptionQuery'
+            onChange={this.handleDescChange}
+            value={this.state.description}
+            width={9}
+          />
+        </Form.Group>
+      </Form>
+    </div>
+  )
+
+  dateFields = () => (
+    <div>
+      <Form>
+        <Form.Group>
+          <Form.Field
+            width={3}
+          >
+            <label htmlFor='date'>From</label>
+            <div className='ui input'>
+              <Cleave
+                id='dateQueryFrom'
+                name='dateQueryFrom'
+                onBlur={e => this.handleDateBlur(e, FROM_DATE)}
+                onChange={e => this.handleDateChange(e, FROM_DATE)}
+                onInit={cleave => this.setCleaveState(cleave, FROM_DATE)}
+                options={{
+                  date: true, datePattern: ['m', 'd', 'Y'],
+                }}
+                value={this.state[FROM_DATE]}
+              />
+            </div>
+          </Form.Field>
+
+          <Form.Field
+            className='margin-top-20-mobile'
+            width={3}
+          >
+            <label htmlFor='date'>To</label>
+            <div className='ui input'>
+              <Cleave
+                id='dateQueryTo'
+                name='dateQueryTo'
+                onBlur={e => this.handleDateBlur(e, TO_DATE)}
+                onChange={e => this.setState({ [TO_DATE]: e.target.value })}
+                onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
+                options={{
+                  date: true, datePattern: ['m', 'd', 'Y'],
+                }}
+                value={this.state[TO_DATE]}
+              />
+            </div>
+          </Form.Field>
+        </Form.Group>
+      </Form>
+    </div>
+  )
+
+  tagFields = () => {
+    const { matchAllTags, showAddTag, tags } = this.state;
+
+    return (
+      <div>
+        <div>
+          {/* Transaction query tags */}
+          {tags && tags.length > 0 && tags.map(tag => (
+            <Tag
+              key={`query-tag-${tag}`}
+              onDelete={() => this.handleRemoveTag(tag)}
+              tagName={tag}
+            />
+          ))}
+
+          {/* Input to add new tag */}
+          {showAddTag &&
+            <TagForm
+              onCancel={() => this.toggleStateBool('showAddTag')}
+              onSubmit={this.handleAddTag}
+            />
+          }
+
+          {/* Button that, when clicked, displays input to add new tag */}
+          {!showAddTag &&
+            <AddTag
+              onClick={() => this.toggleStateBool('showAddTag')}
+            />
+          }
+        </div>
+
+        <Button.Group
+          className='margin-top-15'
+          size='tiny'
+        >
+          <Button
+            onClick={() => this.setState({ matchAllTags: true })}
+            positive={matchAllTags}
+          >
+            Match all tags
+          </Button>
+          <Button.Or />
+          <Button
+            onClick={() => this.setState({ matchAllTags: false })}
+            positive={!matchAllTags}
+          >
+            Match any tag
+          </Button>
+        </Button.Group>
+      </div>
+    );
   }
 
-  handleDateChange = (e, dateType) => {
-    this.setState({ [dateType]: e.target.value });
+  setCleaveState = (cleave, dateType) => {
+    this.setState({ [this.dateTypeToCleave[dateType]]: cleave });
   }
 
   // TODO: Display alert for any scenario where this method returns false
@@ -111,6 +286,10 @@ class TransactionFilter extends React.Component {
     }
 
     return true;
+  }
+
+  handleDateChange = (e, dateType) => {
+    this.setState({ [dateType]: e.target.value });
   }
 
   handleDescChange = e => {
@@ -149,143 +328,67 @@ class TransactionFilter extends React.Component {
     this.props.onCancel();
   }
 
+  filterText = () => {
+    const {
+      description,
+      [FROM_DATE]: fromDate,
+      [TO_DATE]: toDate,
+      tags,
+      matchAllTags,
+    } = this.state;
+
+    const filters = filterQueryText({
+      description, fromDate, toDate, tags, matchAllTags,
+    });
+
+    return (
+      <span>
+        {filters.length > 0 && filters.map(filterSentence => filterSentence)}
+      </span>
+    );
+  }
+
   render() {
     const { onCancel } = this.props;
-    const { description, matchAllTags, showAddTag, tags } = this.state;
 
     return (
       <Segment className='padding-30'>
         <h2>Filter transactions</h2>
 
-        <h3>By description:</h3>
-        <Form>
-          <Form.Group>
-            <Form.Input
-              id='descriptionQuery'
-              name='descriptionQuery'
-              onChange={this.handleDescChange}
-              value={description}
-              width={9}
-            />
-          </Form.Group>
-        </Form>
+        <Tab
+          onTabChange={(e, data) => this.setState({ activeTab: data.activeIndex })}
+          menu={{ secondary: true, pointing: true }}
+          panes={this.paneList}
+        />
 
-        <h3>By date:</h3>
-        <Form>
-          <Form.Group>
-            <Form.Field
-              width={3}
-            >
-              <label htmlFor='date'>From</label>
-              <div className='ui input'>
-                <Cleave
-                  id='dateQueryFrom'
-                  name='dateQueryFrom'
-                  onBlur={e => this.handleDateBlur(e, FROM_DATE)}
-                  onChange={e => this.handleDateChange(e, FROM_DATE)}
-                  onInit={cleave =>  this.setCleaveState(cleave, FROM_DATE)}
-                  options={{
-                    date: true, datePattern: ['m', 'd', 'Y'],
-                  }}
-                  value={this.props[FROM_DATE] || this.state[FROM_DATE]}
-                />
-              </div>
-            </Form.Field>
-
-            <Form.Field
-              className='margin-top-20-mobile'
-              width={3}
-            >
-              <label htmlFor='date'>To</label>
-              <div className='ui input'>
-                <Cleave
-                  id='dateQueryTo'
-                  name='dateQueryTo'
-                  onBlur={e => this.handleDateBlur(e, TO_DATE)}
-                  onChange={e => this.setState({ [TO_DATE]: e.target.value })}
-                  onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
-                  options={{
-                    date: true, datePattern: ['m', 'd', 'Y'],
-                  }}
-                  value={this.props[TO_DATE] || this.state[TO_DATE]}
-                />
-              </div>
-            </Form.Field>
-          </Form.Group>
-        </Form>
-
-        <h3>By tag:</h3>
-        <div>
-          {/* Transaction query tags */}
-          {tags && tags.length > 0 && tags.map(tag => (
-            <Tag
-              key={`query-tag-${tag}`}
-              onDelete={() => this.handleRemoveTag(tag)}
-              tagName={tag}
-            />
-          ))}
-
-          {/* Input to add new tag */}
-          {showAddTag &&
-            <TagForm
-              onCancel={() => this.toggleStateBool('showAddTag')}
-              onSubmit={this.handleAddTag}
-            />
-          }
-
-          {/* Button that, when clicked, displays input to add new tag */}
-          {!showAddTag &&
-            <AddTag
-              onClick={() => this.toggleStateBool('showAddTag')}
-            />
-          }
-        </div>
-
-        <Button.Group
-          className='margin-top-15'
-          size='small'
-        >
-          <Button
-            onClick={() => this.setState({ matchAllTags: true })}
-            positive={matchAllTags}
-          >
-            Match all tags
-          </Button>
-          <Button.Or />
-          <Button
-            onClick={() => this.setState({ matchAllTags: false })}
-            positive={!matchAllTags}
-          >
-            Match any tag
-          </Button>
-        </Button.Group>
+        <p id='filter-text' className='margin-top-15'>
+          Display all of my transactions {this.filterText()}
+        </p>
 
         <br />
 
-        <div className='margin-top-30'>
-          <Button
-            className='full-width-mobile margin-top-10-mobile'
-            color='blue'
-            content='Filter'
-            onClick={this.handleFilterSubmit}
-            size='large'
-          />
+        <Button
+          className='full-width-mobile'
+          color='blue'
+          content='Filter'
+          onClick={this.handleFilterSubmit}
+          size='large'
+        />
 
-          <Button
-            className='full-width-mobile margin-top-10-mobile'
-            color='red'
-            content='Clear'
-            onClick={this.resetFields}
-            size='large'
-          />
+        <Button
+          className='full-width-mobile margin-top-10-mobile'
+          color='red'
+          content='Clear'
+          onClick={this.resetFields}
+          size='large'
+        />
 
-          <Button
-            className='full-width-mobile margin-top-10-mobile'
-            content='Cancel'
-            onClick={onCancel}
-            size='large'
-          />
-        </div>
+        <Button
+          className='full-width-mobile margin-top-10-mobile'
+          content='Cancel'
+          onClick={onCancel}
+          size='large'
+        />
       </Segment>
     );
   }

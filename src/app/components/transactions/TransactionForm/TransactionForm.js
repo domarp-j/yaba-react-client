@@ -157,8 +157,6 @@ class TransactionForm extends React.Component {
           </Form.Group>
 
           <div className='margin-top-30-mobile'>
-            {/* <Form.Group> */}
-            {/* <Form.Field className='full-width-mobile margin-top-20-mobile'> */}
             <Button
               className='full-width-mobile margin-top-10-mobile margin-top-15'
               color='green'
@@ -168,17 +166,13 @@ class TransactionForm extends React.Component {
               onClick={() => { setTouched(touchAllFields(fields)); }}
               size='large'
             />
-            {/* </Form.Field> */}
 
-            {/* <Form.Field className='full-width-mobile'> */}
             <Button
               className='full-width-mobile margin-top-10-mobile margin-top-15'
               content='Cancel'
               onClick={e => { e.preventDefault(); onCancel(); }}
               size='large'
             />
-            {/* </Form.Field> */}
-            {/* </Form.Group> */}
           </div>
         </Form>
 

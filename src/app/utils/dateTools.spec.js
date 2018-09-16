@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { currentDateMDY, dateToMDY, dateToYMD } from './dateTools';
+import { currentDateMDY, dateToMDY, dateToYMD, friendlyDate } from './dateTools';
 
 describe('currentDateMDY', () => {
   it('returns the current date in MM/DD/YYYY', () => {
@@ -33,6 +33,20 @@ describe('dateToYMD', () => {
   it('converts date from MM/DD/YYYY to YYYY-MM-DD', () => {
     const expected = '2017-09-11';
     const actual = dateToYMD('09/11/2017');
+    expect(expected).toEqual(actual);
+  });
+});
+
+describe('friendlyDate', () => {
+  it('converts date from MM/DD/YYYY to a human-readable format', () => {
+    const expected = 'August 18, 2019';
+    const actual = friendlyDate('08/18/2019');
+    expect(expected).toEqual(actual);
+  });
+
+  it('converts date from YYYY-MM-DD to a human-readable format', () => {
+    const expected = 'November 13, 2010';
+    const actual = friendlyDate('2010-11-13');
     expect(expected).toEqual(actual);
   });
 });

@@ -3,6 +3,7 @@ import { findIndex, reject, update } from 'ramda';
 import { initialState } from '../store';
 
 import {
+  DEFAULT_FETCH_LIMIT,
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
   REPORT_NO_TRANSACTIONS,
@@ -52,7 +53,7 @@ const transactions = (
       ...state,
       events: {
         ...state.events,
-        allTransactionsFetched: action.transactions.items.length === 0,
+        allTransactionsFetched: action.transactions.items.length < DEFAULT_FETCH_LIMIT,
         isFetching: false,
       },
       count: action.transactions.count,

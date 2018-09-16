@@ -13,3 +13,7 @@ export const dateToMDY = date => (
 export const dateToYMD = date => (
   date && moment(date).utc().format('YYYY-MM-DD')
 );
+
+export const friendlyDate = date => (
+  date && moment(date).utc().format('MMMM D, YYYY')
+);
