@@ -9,6 +9,7 @@ import moment from 'moment';
 import AddTag from '../../tags/AddTag';
 import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
+import TransactionFilterText from '../TransactionFilterText';
 import {
   FROM_DATE,
   TO_DATE,
@@ -18,7 +19,6 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/transactionQueries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
-import { filterQueryText } from '../../../utils/queryTools';
 
 import './TransactionFilter.css';
 
@@ -32,8 +32,8 @@ class TransactionFilter extends React.Component {
       filter queries.
   */
   initialFieldsState = {
-    [FROM_DATE]: undefined,
-    [TO_DATE]: undefined,
+    [FROM_DATE]: '',
+    [TO_DATE]: '',
     description: '',
     tags: [],
   };
@@ -72,19 +72,25 @@ class TransactionFilter extends React.Component {
     desc: {
       menuItem: 'By description',
       render: () => (
-        <Tab.Pane attached={false}>{this.descriptionField()}</Tab.Pane>
+        <Tab.Pane as='div' className='margin-top-bottom-30'>
+          {this.descriptionField()}
+        </Tab.Pane>
       ),
     },
     dates: {
       menuItem: 'By date',
       render: () => (
-        <Tab.Pane attached={false}>{this.dateFields()}</Tab.Pane>
+        <Tab.Pane as='div' className='margin-top-bottom-30'>
+          {this.dateFields()}
+        </Tab.Pane>
       ),
     },
     tags: {
       menuItem: 'By tags',
       render: () => (
-        <Tab.Pane attached={false}>{this.tagFields()}</Tab.Pane>
+        <Tab.Pane as='div' className='margin-top-bottom-30'>
+          {this.tagFields()}
+        </Tab.Pane>
       ),
     },
   }
@@ -328,28 +334,9 @@ class TransactionFilter extends React.Component {
     this.props.onCancel();
   }
 
-  filterText = () => {
-    const {
-      description,
-      [FROM_DATE]: fromDate,
-      [TO_DATE]: toDate,
-      tags,
-      matchAllTags,
-    } = this.state;
-
-    const filters = filterQueryText({
-      description, fromDate, toDate, tags, matchAllTags,
-    });
-
-    return (
-      <span>
-        {filters.length > 0 && filters.map(filterSentence => filterSentence)}
-      </span>
-    );
-  }
-
   render() {
     const { onCancel } = this.props;
+    const { description, tags, [FROM_DATE]: fromDate, [TO_DATE]: toDate } = this.state;
 
     return (
       <Segment className='padding-30'>
@@ -357,12 +344,20 @@ class TransactionFilter extends React.Component {
 
         <Tab
           onTabChange={(e, data) => this.setState({ activeTab: data.activeIndex })}
-          menu={{ secondary: true, pointing: true }}
+          menu={{ borderless: true, pointing: true }}
           panes={this.paneList}
         />
 
-        <p id='filter-text' className='margin-top-15'>
-          Display all of my transactions {this.filterText()}
+        <p id='filter-text-modal' className='margin-top-15'>
+          {(!description && !fromDate && !toDate && tags.length === 0) ?
+            <span>Display <b>all</b> of my transactions</span> :
+            <span>
+              Display transactions {<TransactionFilterText
+                tagNames={this.state.tags}
+                {...this.state}
+              />}
+            </span>
+          }
         </p>
 
         <br />

@@ -2,3 +2,15 @@
   margin: 20px 0 0 0;
   font-size: 36px;
 }
+
+#filter-text {
+  font-size: 1.2em;
+}
+
+
+@media only screen and (min-device-width: 768px) {
+  #filter-text {
+    text-align: center;
+  }
+}
+
