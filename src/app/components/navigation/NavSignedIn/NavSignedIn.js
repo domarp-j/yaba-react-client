@@ -4,47 +4,41 @@ import { Menu } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import { compose } from 'ramda';
 
+import NavBase from '../NavBase';
 import routes from '../../../routes';
 import { persistor } from '../../../store/store';
-// TODO: Get redux-token-auth signOutUser to work? Honestly, it's not super reliable.
 
-class NavSignedIn extends React.Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func,
-    }),
-  }
+const signOut = (e, history) => {
+  e.preventDefault();
 
-  signOut = e => {
-    const { history } = this.props;
+  new Promise((resolve, reject) => {
+    // Delete localStorage items used by redux-token-auth
+    ['access-token', 'client', 'expiry', 'token-type', 'uid'].forEach(key => {
+      localStorage.removeItem(key);
+    });
 
-    e.preventDefault();
+    // Clear out redux state persisted in storage
+    persistor.purge()
+      .then(() => resolve())
+      .catch(() => reject());
+  }).then(() => history.push(routes.signInPage));
+};
 
-    new Promise((resolve, reject) => {
-      // Delete localStorage items used by redux-token-auth
-      ['access-token', 'client', 'expiry', 'token-type', 'uid'].forEach(key => {
-        localStorage.removeItem(key);
-      });
+const NavSignedIn = ({
+  history,
+}) => (
+  <NavBase>
+    <Menu.Item
+      name='Sign out'
+      onClick={e => signOut(e, history)}>
+    </Menu.Item>
+  </NavBase>
+);
 
-      // Clear out redux state persisted in storage
-      persistor.purge()
-        .then(() => resolve())
-        .catch(() => reject());
-    })
-      .then(() => history.push(routes.signInPage));
-
-  };
-
-  render() {
-    return (
-      <Menu secondary>
-        <Menu.Item name='yaba' />
-        <Menu.Menu position='right'>
-          <Menu.Item name='Sign out' onClick={this.signOut}></Menu.Item>
-        </Menu.Menu>
-      </Menu>
-    );
-  }
-}
+NavSignedIn.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
 
 export default compose(withRouter)(NavSignedIn);

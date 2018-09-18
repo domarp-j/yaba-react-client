@@ -60,6 +60,7 @@
     "space-in-parens": [
       "error",
       "never"
-    ]
+    ],
+    "react/display-name": 0
   }
 }

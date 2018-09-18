@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Menu } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 
+import NavBase from '../NavBase';
+
 const handleAction = (actionUrl, history) => {
   history.push(actionUrl);
 };
@@ -13,12 +15,14 @@ const NavSignedOut = ({
   history,
 }) => {
   return (
-    <Menu secondary>
-      <Menu.Item name='yaba' />
-      <Menu.Menu position='right'>
-        <Menu.Item name={actionText} onClick={() => { handleAction(actionUrl, history); }}></Menu.Item>
-      </Menu.Menu>
-    </Menu>
+    <NavBase>
+      <Menu.Item
+        name={actionText}
+        onClick={() => {
+          handleAction(actionUrl, history);
+        }}>
+      </Menu.Item>
+    </NavBase>
   );
 };
 
