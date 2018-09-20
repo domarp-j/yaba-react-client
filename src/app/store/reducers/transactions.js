@@ -33,6 +33,11 @@ import {
   CLEAR_TRANSACTION_QUERIES
 } from '../actions/transactionQueries';
 
+import {
+  MODIFY_SORT_CATEGORY,
+  MODIFY_SORT_ORDER
+} from '../actions/transactionSorting';
+
 const transactions = (
   state = initialState.transactions,
   action
@@ -230,6 +235,24 @@ const transactions = (
     return {
       ...state,
       queries: initialState.transactions.queries,
+    };
+  // Modify sort category
+  case MODIFY_SORT_CATEGORY:
+    return {
+      ...state,
+      sorting: {
+        ...state.sorting,
+        category: action.category,
+      },
+    };
+  // Modify sort order
+  case MODIFY_SORT_ORDER:
+    return {
+      ...state,
+      sorting: {
+        ...state.sorting,
+        order: action.order,
+      },
     };
   default:
     return state;

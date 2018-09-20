@@ -32,6 +32,7 @@ const TransactionDashboard = ({
   count,
   filterButton,
   queries,
+  sortButton,
   totalAmount,
 }) => (
   <div>
@@ -59,12 +60,13 @@ const TransactionDashboard = ({
       <div className='center-horizontally'>
         {addButton()}
         {filterButton()}
+        {sortButton()}
         {anyQueryPresent(queries) &&
           <Button
             circular
             className='margin-5'
             color='red'
-            icon='undo alternate'
+            icon='undo'
             onClick={clearQueries}
             size='huge'
           />
@@ -87,6 +89,7 @@ TransactionDashboard.propTypes = {
   count: PropTypes.number,
   filterButton: PropTypes.func,
   queries: PropTypes.object,
+  sortButton: PropTypes.func,
   totalAmount: PropTypes.string,
 };
 

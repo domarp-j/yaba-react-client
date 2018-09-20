@@ -8,6 +8,7 @@ import TransactionList from '../../components/transactions/TransactionList';
 import TransactionDashboard from '../../components/transactions/TransactionDashboard';
 import TransactionForm from '../../components/transactions/TransactionForm';
 import TransactionFilter from '../../components/transactions/TransactionFilter';
+import TransactionSort from '../../components/transactions/TransactionSort';
 
 class TransactionsPage extends React.Component {
   static propTypes = {
@@ -20,6 +21,7 @@ class TransactionsPage extends React.Component {
     this.state = {
       openAddModal: false,
       openFilterModal: false,
+      openSortModal: false,
     };
   }
 
@@ -65,17 +67,23 @@ class TransactionsPage extends React.Component {
         <Container textAlign='left'>
           <TransactionDashboard
             addButton={() => this.manageTransactionModal({
-              buttonIcon: 'plus',
               buttonColor: 'green',
+              buttonIcon: 'plus',
               stateKey: 'openAddModal',
               TransactionComponent: TransactionForm,
             })}
             count={count}
             filterButton={() => this.manageTransactionModal({
-              buttonIcon: 'filter',
               buttonColor: 'blue',
+              buttonIcon: 'filter',
               stateKey: 'openFilterModal',
               TransactionComponent: TransactionFilter,
+            })}
+            sortButton={() => this.manageTransactionModal({
+              buttonColor: 'yellow',
+              buttonIcon: 'sort',
+              stateKey: 'openSortModal',
+              TransactionComponent: TransactionSort,
             })}
             totalAmount={totalAmount}
           />

@@ -103,6 +103,7 @@ class TransactionFilter extends React.Component {
     modifyDescription: PropTypes.func,
     modifyMatchAllTags: PropTypes.func,
     onCancel: PropTypes.func,
+    onSave: PropTypes.func,
     replaceTagNames: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.string),
   };
@@ -331,7 +332,7 @@ class TransactionFilter extends React.Component {
     this.props.modifyDate(TO_DATE, dateToYMD(this.state[TO_DATE]));
     this.props.modifyMatchAllTags(this.state.matchAllTags);
     this.props.replaceTagNames(this.state.tags);
-    this.props.onCancel();
+    this.props.onSave();
   }
 
   render() {

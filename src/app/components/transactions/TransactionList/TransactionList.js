@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { any, identity, partition } from 'ramda';
+import { any, identity, keys, merge, partition } from 'ramda';
 
 import TransactionItem from '../TransactionItem';
 import TransactionEdit from '../TransactionEdit';
@@ -21,11 +21,8 @@ class TransactionsPage extends React.PureComponent {
     fetchTransactions: PropTypes.func,
     isFetching: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
-    queryDateFrom: PropTypes.string,
-    queryDateTo: PropTypes.string,
-    queryDescription: PropTypes.string,
-    queryMatchAllTags: PropTypes.bool,
-    queryTags: PropTypes.arrayOf(PropTypes.string),
+    queries: PropTypes.object,
+    sorting: PropTypes.object,
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
@@ -65,8 +62,12 @@ class TransactionsPage extends React.PureComponent {
     });
   }
 
+  /*
+    Check if a transaction query param or sort param has changed.
+    If so, clear out the current transactions and fetch a fresh batch.
+  */
   componentDidUpdate(prevProps) {
-    if (this.anyQueryPropChanged(prevProps, this.props)) {
+    if (this.queryOrSortChanged(prevProps, this.props)) {
       new Promise(resolve => {
         this.props.clearTransactions();
         resolve();
@@ -89,29 +90,20 @@ class TransactionsPage extends React.PureComponent {
     this.props.fetchTransactions({
       limit,
       page,
-      tagNames: this.props.queryTags,
-      fromDate: this.props.queryDateFrom,
-      toDate: this.props.queryDateTo,
-      description: this.props.queryDescription,
-      matchAllTags: this.props.queryMatchAllTags,
+      ...this.props.queries,
+      ...this.props.sorting,
     });
   }
 
-  anyQueryPropChanged = (prevProps, currProps) => {
-    const queryParams = [
-      'queryTags',
-      'queryDateFrom',
-      'queryDateTo',
-      'queryDescription',
-      'queryMatchAllTags',
-    ];
-
-    const queryChangeList = queryParams.map(queryParam => (
-      prevProps[queryParam] !== currProps[queryParam]
-    ));
-
-    return any(identity)(queryChangeList);
-  }
+  // Check if a transaction query param or sort param has changed
+  queryOrSortChanged = (prevProps, currProps) => (
+    any(identity)(
+      keys(merge(prevProps.queries, prevProps.sorting)).map(param => (
+        merge(prevProps.queries, prevProps.sorting)[param] !==
+          merge(currProps.queries, currProps.sorting)[param]
+      ))
+    )
+  )
 
   atBottom = () => (
     this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 10
@@ -209,11 +201,8 @@ const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.events.allTransactionsFetched,
   isFetching: state.transactions.events.isFetching,
   noTransactionsFound: state.transactions.events.noTransactionsFound,
-  queryDateFrom: state.transactions.queries.fromDate,
-  queryDateTo: state.transactions.queries.toDate,
-  queryDescription: state.transactions.queries.description,
-  queryMatchAllTags: state.transactions.queries.matchAllTags,
-  queryTags: state.transactions.queries.tagNames,
+  queries: state.transactions.queries,
+  sorting: state.transactions.sorting,
   transactions: state.transactions.items,
 });
 

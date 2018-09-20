@@ -7,6 +7,8 @@ import { createLogger } from 'redux-logger';
 
 import alertsReducer from './reducers/alerts';
 import transactionsReducer from './reducers/transactions';
+import { SORT_CATEGORIES, SORT_ORDERS } from './actions/transactionSorting';
+
 
 const initialState = {
   alerts: [],
@@ -37,6 +39,10 @@ const initialState = {
       matchAllTags: true,
       tagNames: [],
       toDate: '',
+    },
+    sorting: {
+      category: SORT_CATEGORIES.date,
+      order: SORT_ORDERS.desc,
     },
   },
 };

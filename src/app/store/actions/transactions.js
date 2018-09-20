@@ -46,6 +46,8 @@ export const fetchTransactions = (params={}) => dispatch => {
       to_date: params.toDate,
       description: params.description,
       match_all_tags: params.matchAllTags,
+      sort_attribute: params.category,
+      sort_order: params.order,
     },
   }).then(response => {
     dispatch(receiveTransactions(response.data.content));

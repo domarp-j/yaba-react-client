@@ -1,16 +1,17 @@
 import { reject } from 'ramda';
 
+import { initialState } from '../store';
+
 import {
   ADD_ALERT,
   REMOVE_ALERT
 } from '../actions/alerts';
 
 const alerts = (
-  state = [],
+  state = initialState.alerts,
   action
 ) => {
   switch (action.type) {
-  // Adding an alert
   case ADD_ALERT:
     return [
       ...state, {
@@ -19,7 +20,6 @@ const alerts = (
         message: action.alertMessage,
       },
     ];
-  // Removing an alert
   case REMOVE_ALERT:
     return reject(alert => (
       alert.id === action.alertId
