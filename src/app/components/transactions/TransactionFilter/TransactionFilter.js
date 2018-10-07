@@ -164,7 +164,7 @@ class TransactionFilter extends React.Component {
             name='descriptionQuery'
             onChange={this.handleDescChange}
             value={this.state.description}
-            width={9}
+            width={16}
           />
         </Form.Group>
       </Form>
@@ -176,7 +176,7 @@ class TransactionFilter extends React.Component {
       <Form>
         <Form.Group>
           <Form.Field
-            width={3}
+            width={6}
           >
             <label htmlFor='date'>From</label>
             <div className='ui input'>
@@ -196,7 +196,7 @@ class TransactionFilter extends React.Component {
 
           <Form.Field
             className='margin-top-20-mobile'
-            width={3}
+            width={6}
           >
             <label htmlFor='date'>To</label>
             <div className='ui input'>

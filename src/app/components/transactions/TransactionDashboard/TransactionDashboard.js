@@ -30,6 +30,7 @@ const TransactionDashboard = ({
   addButton,
   clearQueries,
   count,
+  csvButton,
   filterButton,
   queries,
   sortButton,
@@ -61,6 +62,7 @@ const TransactionDashboard = ({
         {addButton()}
         {filterButton()}
         {sortButton()}
+        {csvButton()}
         {anyQueryPresent(queries) &&
           <Button
             circular
@@ -87,6 +89,7 @@ TransactionDashboard.propTypes = {
   addButton: PropTypes.func,
   clearQueries: PropTypes.func,
   count: PropTypes.number,
+  csvButton: PropTypes.func,
   filterButton: PropTypes.func,
   queries: PropTypes.object,
   sortButton: PropTypes.func,

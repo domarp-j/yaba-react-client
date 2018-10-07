@@ -125,13 +125,13 @@ class TransactionForm extends React.Component {
               onBlur={handleBlur}
               value={values.description || ''}
               error={allFieldsTouched(touched, fields) && !!errors.description}
-              width={10}
+              width={9}
             />
 
             <Form.Field
               className='margin-top-20-mobile'
               error={allFieldsTouched(touched, fields) && !!errors.amount}
-              width={3}
+              width={4}
             >
               <label htmlFor='date'>Amount</label>
               <div className='ui left action input'>

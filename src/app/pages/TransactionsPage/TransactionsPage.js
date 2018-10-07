@@ -4,10 +4,11 @@ import { Button, Container, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import NavSignedIn from '../../components/navigation/NavSignedIn';
-import TransactionList from '../../components/transactions/TransactionList';
+import TransactionCsv from '../../components/transactions/TransactionCsv';
 import TransactionDashboard from '../../components/transactions/TransactionDashboard';
-import TransactionForm from '../../components/transactions/TransactionForm';
 import TransactionFilter from '../../components/transactions/TransactionFilter';
+import TransactionForm from '../../components/transactions/TransactionForm';
+import TransactionList from '../../components/transactions/TransactionList';
 import TransactionSort from '../../components/transactions/TransactionSort';
 
 class TransactionsPage extends React.Component {
@@ -20,6 +21,7 @@ class TransactionsPage extends React.Component {
     super();
     this.state = {
       openAddModal: false,
+      openCsvModal: false,
       openFilterModal: false,
       openSortModal: false,
     };
@@ -34,12 +36,14 @@ class TransactionsPage extends React.Component {
   manageTransactionModal = ({
     buttonColor,
     buttonIcon,
-    TransactionComponent,
+    size,
     stateKey,
+    TransactionComponent,
   }) => (
     <Modal
       className='yaba-modal'
       open={this.state[stateKey]}
+      size={size}
       trigger={
         <Button
           circular
@@ -73,15 +77,24 @@ class TransactionsPage extends React.Component {
               TransactionComponent: TransactionForm,
             })}
             count={count}
+            csvButton={() => this.manageTransactionModal({
+              buttonColor: 'purple',
+              buttonIcon: 'file',
+              size: 'tiny',
+              stateKey: 'openCsvModal',
+              TransactionComponent: TransactionCsv,
+            })}
             filterButton={() => this.manageTransactionModal({
               buttonColor: 'blue',
               buttonIcon: 'filter',
+              size: 'tiny',
               stateKey: 'openFilterModal',
               TransactionComponent: TransactionFilter,
             })}
             sortButton={() => this.manageTransactionModal({
               buttonColor: 'yellow',
               buttonIcon: 'sort',
+              size: 'tiny',
               stateKey: 'openSortModal',
               TransactionComponent: TransactionSort,
             })}
