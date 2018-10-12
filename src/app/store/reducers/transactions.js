@@ -21,7 +21,7 @@ import {
   ADD_TRANSACTION_TAG,
   UPDATE_TRANSACTION_TAG,
   REMOVE_TRANSACTION_TAG
-} from '../actions/transactionTags';
+} from '../actions/tags';
 
 import {
   MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY,
@@ -31,12 +31,12 @@ import {
   REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY,
   MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY,
   CLEAR_TRANSACTION_QUERIES
-} from '../actions/transactionQueries';
+} from '../actions/queries';
 
 import {
   MODIFY_SORT_CATEGORY,
   MODIFY_SORT_ORDER
-} from '../actions/transactionSorting';
+} from '../actions/sorting';
 
 const transactions = (
   state = initialState.transactions,

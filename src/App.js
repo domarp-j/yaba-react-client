@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { generateRequireSignInWrapper } from 'redux-token-auth';
 
 import routes from './app/routes';
-import Alerts from './app/components/alerts/Alerts';
+import Alerts from './app/components/misc/Alerts';
 import SignInPage from './app/pages/SignInPage';
 import SignUpPage from './app/pages/SignUpPage';
 import TransactionsPage from './app/pages/TransactionsPage';

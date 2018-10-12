@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Button, Header, Icon, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import TransactionFilterText from '../TransactionFilterText';
-import { clearTransactionQueries } from '../../../store/actions/transactionQueries';
+import FilterText from '../FilterText';
+import { clearTransactionQueries } from '../../../store/actions/queries';
 
-import './TransactionDashboard.css';
+import './Dashboard.css';
 
 /*
   This is a dashboard that shows important transaction data such as
@@ -26,7 +26,7 @@ const anyQueryPresent = ({
   description || fromDate || (tags && tags.length > 0) || toDate
 );
 
-const TransactionDashboard = ({
+const Dashboard = ({
   addButton,
   clearQueries,
   count,
@@ -79,13 +79,13 @@ const TransactionDashboard = ({
     {/* Current filter query */}
     {anyQueryPresent(queries) &&
         <Segment id='filter-text' className='no-margin'>
-          Displaying transactions <TransactionFilterText {...queries} />
+          Displaying transactions <FilterText {...queries} />
         </Segment>
     }
   </div>
 );
 
-TransactionDashboard.propTypes = {
+Dashboard.propTypes = {
   addButton: PropTypes.func,
   clearQueries: PropTypes.func,
   count: PropTypes.number,
@@ -107,4 +107,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TransactionDashboard);
+)(Dashboard);

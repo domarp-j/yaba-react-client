@@ -4,12 +4,12 @@ import { Button, Container, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import NavSignedIn from '../../components/navigation/NavSignedIn';
-import TransactionCsv from '../../components/transactions/TransactionCsv';
-import TransactionDashboard from '../../components/transactions/TransactionDashboard';
-import TransactionFilter from '../../components/transactions/TransactionFilter';
-import TransactionForm from '../../components/transactions/TransactionForm';
-import TransactionList from '../../components/transactions/TransactionList';
-import TransactionSort from '../../components/transactions/TransactionSort';
+import CsvDownload from '../../components/transactions/CsvDownload';
+import Dashboard from '../../components/transactions/Dashboard';
+import Filter from '../../components/transactions/Filter';
+import TransForm from '../../components/transactions/TransForm';
+import TransList from '../../components/transactions/TransList';
+import Sorter from '../../components/transactions/Sorter';
 
 class TransactionsPage extends React.Component {
   static propTypes = {
@@ -69,12 +69,12 @@ class TransactionsPage extends React.Component {
       <div>
         <NavSignedIn />
         <Container textAlign='left'>
-          <TransactionDashboard
+          <Dashboard
             addButton={() => this.manageTransactionModal({
               buttonColor: 'green',
               buttonIcon: 'plus',
               stateKey: 'openAddModal',
-              TransactionComponent: TransactionForm,
+              TransactionComponent: TransForm,
             })}
             count={count}
             csvButton={() => this.manageTransactionModal({
@@ -82,25 +82,25 @@ class TransactionsPage extends React.Component {
               buttonIcon: 'file',
               size: 'tiny',
               stateKey: 'openCsvModal',
-              TransactionComponent: TransactionCsv,
+              TransactionComponent: CsvDownload,
             })}
             filterButton={() => this.manageTransactionModal({
               buttonColor: 'blue',
               buttonIcon: 'filter',
               size: 'tiny',
               stateKey: 'openFilterModal',
-              TransactionComponent: TransactionFilter,
+              TransactionComponent: Filter,
             })}
             sortButton={() => this.manageTransactionModal({
               buttonColor: 'yellow',
               buttonIcon: 'sort',
               size: 'tiny',
               stateKey: 'openSortModal',
-              TransactionComponent: TransactionSort,
+              TransactionComponent: Sorter,
             })}
             totalAmount={totalAmount}
           />
-          <TransactionList />
+          <TransList />
         </Container>
       </div>
     );

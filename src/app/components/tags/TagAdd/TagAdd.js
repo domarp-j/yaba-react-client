@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon } from 'semantic-ui-react';
 
-const AddTag = ({
+const TagAdd = ({
   onClick,
 }) => (
   <Button className='grouped-button' onClick={onClick}>
@@ -12,8 +12,8 @@ const AddTag = ({
   </Button>
 );
 
-AddTag.propTypes = {
+TagAdd.propTypes = {
   onClick: PropTypes.func,
 };
 
-export default AddTag;
+export default TagAdd;

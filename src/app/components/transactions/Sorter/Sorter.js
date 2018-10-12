@@ -9,11 +9,11 @@ import {
   SORT_ORDERS,
   modifySortCategory,
   modifySortOrder
-} from '../../../store/actions/transactionSorting';
+} from '../../../store/actions/sorting';
 
-import './TransactionSort.css';
+import './Sorter.css';
 
-class TransactionSort extends React.Component {
+class Sorter extends React.Component {
   static propTypes = {
     category: PropTypes.string,
     modifyCategory: PropTypes.func,
@@ -122,4 +122,4 @@ const mapDispatchToProps = dispatch => ({
   modifyOrder: order => dispatch(modifySortOrder(order)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionSort);
+export default connect(mapStateToProps, mapDispatchToProps)(Sorter);

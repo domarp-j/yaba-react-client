@@ -5,9 +5,9 @@ import { Button, Icon, Segment } from 'semantic-ui-react';
 import yabaAxios from '../../../utils/yabaAxios';
 import routes from '../../../routes';
 
-import './TransactionCsv.css';
+import './CsvDownload.css';
 
-class TransactionCsv extends React.Component {
+class CsvDownload extends React.Component {
   static propTypes = {
     onCancel: PropTypes.func,
   };
@@ -82,4 +82,4 @@ class TransactionCsv extends React.Component {
   }
 }
 
-export default TransactionCsv;
+export default CsvDownload;

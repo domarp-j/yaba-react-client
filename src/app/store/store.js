@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 
 import alertsReducer from './reducers/alerts';
 import transactionsReducer from './reducers/transactions';
-import { SORT_CATEGORIES, SORT_ORDERS } from './actions/transactionSorting';
+import { SORT_CATEGORIES, SORT_ORDERS } from './actions/sorting';
 
 
 const initialState = {

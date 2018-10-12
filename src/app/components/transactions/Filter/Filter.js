@@ -6,10 +6,10 @@ import { connect } from 'react-redux';
 import Cleave from 'cleave.js/react';
 import moment from 'moment';
 
-import AddTag from '../../tags/AddTag';
+import TagAdd from '../../tags/TagAdd';
 import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
-import TransactionFilterText from '../TransactionFilterText';
+import FilterText from '../FilterText';
 import {
   FROM_DATE,
   TO_DATE,
@@ -17,12 +17,12 @@ import {
   modifyDateForTransactionQuery,
   modifyMatchAllTagsTransactionQuery,
   replaceTagNamesInTransactionQuery
-} from '../../../store/actions/transactionQueries';
+} from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
 
-import './TransactionFilter.css';
+import './Filter.css';
 
-class TransactionFilter extends React.Component {
+class Filter extends React.Component {
   /*
     We will keep track of the initial state of all of our
       query fields.
@@ -115,7 +115,7 @@ class TransactionFilter extends React.Component {
       [this.FROM_DATE_CLEAVE]: undefined,
       [this.TO_DATE_CLEAVE]: undefined,
       matchAllTags: true,
-      showAddTag: false,
+      showTagAdd: false,
       activeTab: this.paneList.indexOf(this.panes.desc),
     };
   }
@@ -219,7 +219,7 @@ class TransactionFilter extends React.Component {
   )
 
   tagFields = () => {
-    const { matchAllTags, showAddTag, tags } = this.state;
+    const { matchAllTags, showTagAdd, tags } = this.state;
 
     return (
       <div>
@@ -234,17 +234,17 @@ class TransactionFilter extends React.Component {
           ))}
 
           {/* Input to add new tag */}
-          {showAddTag &&
+          {showTagAdd &&
             <TagForm
-              onCancel={() => this.toggleStateBool('showAddTag')}
-              onSubmit={this.handleAddTag}
+              onCancel={() => this.toggleStateBool('showTagAdd')}
+              onSubmit={this.handleTagAdd}
             />
           }
 
           {/* Button that, when clicked, displays input to add new tag */}
-          {!showAddTag &&
-            <AddTag
-              onClick={() => this.toggleStateBool('showAddTag')}
+          {!showTagAdd &&
+            <TagAdd
+              onClick={() => this.toggleStateBool('showTagAdd')}
             />
           }
         </div>
@@ -314,7 +314,7 @@ class TransactionFilter extends React.Component {
     }
   }
 
-  handleAddTag = tag => {
+  handleTagAdd = tag => {
     this.setState(prevState => ({
       tags: prevState.tags.concat(tag.tagName),
     }));
@@ -353,7 +353,7 @@ class TransactionFilter extends React.Component {
           {(!description && !fromDate && !toDate && tags.length === 0) ?
             <span>Display <b>all</b> of my transactions</span> :
             <span>
-              Display transactions {<TransactionFilterText
+              Display transactions {<FilterText
                 tagNames={this.state.tags}
                 {...this.state}
               />}
@@ -405,7 +405,7 @@ const mapDispatchToProps = dispatch => ({
   replaceTagNames: tagNames => dispatch(replaceTagNamesInTransactionQuery(tagNames)),
 });
 
-export { TransactionFilter as BaseTransactionFilter };
+export { Filter as BaseFilter };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-)(TransactionFilter);
+)(Filter);

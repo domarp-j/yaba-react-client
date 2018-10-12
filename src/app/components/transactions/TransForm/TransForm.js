@@ -7,18 +7,17 @@ import * as yup from 'yup';
 import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 
-import { toggleEditState, updateTransaction } from '../../../store/actions/transactions';
+import { createTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
-import { dollarToFloat } from '../../../utils/dollarTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
+
+import './TransForm.css';
 
 const fields = ['description', 'amount', 'date'];
 
-class TransactionEdit extends React.Component {
+class TransForm extends React.Component {
   static propTypes = {
-    amount: PropTypes.string,
-    date: PropTypes.string,
-    description: PropTypes.string,
+    createTransaction: PropTypes.func,
     errors: PropTypes.shape({
       description: PropTypes.string,
       amount: PropTypes.string,
@@ -27,20 +26,18 @@ class TransactionEdit extends React.Component {
     handleBlur: PropTypes.func,
     handleChange: PropTypes.func,
     handleSubmit: PropTypes.func,
-    isEditing: PropTypes.bool,
+    onCancel: PropTypes.func,
+    onSave: PropTypes.func,
+    isAdding: PropTypes.bool,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
-    tags: PropTypes.arrayOf(PropTypes.string),
-    toggleEditState: PropTypes.func,
     touched: PropTypes.shape({
       amount: PropTypes.bool,
       date: PropTypes.bool,
       description: PropTypes.bool,
     }),
-    transactionId: PropTypes.number,
-    updateTransaction: PropTypes.func,
     values: PropTypes.shape({
-      amount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      amount: PropTypes.string,
       date: PropTypes.string,
       description: PropTypes.string,
     }),
@@ -49,14 +46,8 @@ class TransactionEdit extends React.Component {
   constructor() {
     super();
     this.state = {
-      positiveAmount: false,
+      positiveAmount: true,
     };
-  }
-
-  componentDidMount() {
-    this.setState({
-      positiveAmount: dollarToFloat(this.props.amount) >= 0,
-    });
   }
 
   amountButton = {
@@ -77,7 +68,7 @@ class TransactionEdit extends React.Component {
 
     new Promise(resolve => {
       setValues({
-        amount: (positiveAmount ? '+' : '-') + values.amount.slice(1).replace(/\$|,/g, ''),
+        amount: (positiveAmount ? '+' : '-') + values.amount.replace(/\$|,/g, ''),
         description: values.description,
         date: dateToYMD(values.date),
       });
@@ -85,23 +76,13 @@ class TransactionEdit extends React.Component {
     }).then(() => handleSubmit(e));
   }
 
-  handleCancel = e => {
-    e.preventDefault();
-    this.props.toggleEditState({
-      amount: this.props.amount,
-      date: this.props.date,
-      description: this.props.description,
-      id: this.props.transactionId,
-      tags: this.props.tags,
-    }, false);
-  }
-
   render() {
     const {
       errors,
       handleBlur,
       handleChange,
-      isEditing,
+      isAdding,
+      onCancel,
       setTouched,
       touched,
       values,
@@ -110,7 +91,9 @@ class TransactionEdit extends React.Component {
     const { positiveAmount } = this.state;
 
     return (
-      <Segment>
+      <Segment className='padding-30'>
+        <h2>Add a transaction</h2>
+
         <Form onSubmit={this.setValuesAndSubmit}>
           <Form.Group>
             <Form.Field
@@ -140,15 +123,15 @@ class TransactionEdit extends React.Component {
               id='description'
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.description}
+              value={values.description || ''}
               error={allFieldsTouched(touched, fields) && !!errors.description}
-              width={10}
+              width={9}
             />
 
             <Form.Field
               className='margin-top-20-mobile'
               error={allFieldsTouched(touched, fields) && !!errors.amount}
-              width={3}
+              width={4}
             >
               <label htmlFor='date'>Amount</label>
               <div className='ui left action input'>
@@ -167,30 +150,30 @@ class TransactionEdit extends React.Component {
                   }}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.amount}
+                  value={values.amount || ''}
                 />
               </div>
             </Form.Field>
           </Form.Group>
 
-          <Form.Field
-            className='margin-top-30-mobile'
-          >
+          <div className='margin-top-30-mobile'>
             <Button
-              color='blue'
-              content='Save'
+              className='full-width-mobile margin-top-10-mobile margin-top-15'
+              color='green'
+              content='Add'
               disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
-              loading={isEditing}
+              loading={isAdding}
               onClick={() => { setTouched(touchAllFields(fields)); }}
-              size='medium'
+              size='large'
             />
 
             <Button
+              className='full-width-mobile margin-top-10-mobile margin-top-15'
               content='Cancel'
-              onClick={this.handleCancel}
-              size='medium'
+              onClick={e => { e.preventDefault(); onCancel(); }}
+              size='large'
             />
-          </Form.Field>
+          </div>
         </Form>
 
         <Message
@@ -216,39 +199,31 @@ const schema = yup.object().shape({
 const formikOptions = {
   handleSubmit: (values, { props, resetForm, setValues }) => {
     new Promise(resolve => {
-      props.updateTransaction({
-        amount: values.amount,
-        date: values.date,
-        description: values.description,
-        id: props.transactionId,
-        tags: props.tags,
-      });
+      props.createTransaction(values);
       resolve();
     }).then(() => {
       setValues({});
       resetForm();
+      props.onSave();
     });
   },
-  mapPropsToValues: props => ({
-    amount: props.amount || '',
-    date: props.date || currentDateMDY(),
-    description: props.description || '',
+  mapPropsToValues: () => ({
+    date: currentDateMDY(),
   }),
   validationSchema: schema,
 };
 
 
 const mapStateToProps = state => ({
-  isEditing: state.transactions.events.isEditing,
+  isAdding: state.transactions.events.isAdding,
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggleEditState: (transaction, editMode) => { dispatch(toggleEditState(transaction, editMode)); },
-  updateTransaction: data => { dispatch(updateTransaction(data)); },
+  createTransaction: data => { dispatch(createTransaction(data)); },
 });
 
-export { TransactionEdit as BaseTransactionEdit };
+export { TransForm as BaseTransForm };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withFormik(formikOptions)
-)(TransactionEdit);
+)(TransForm);

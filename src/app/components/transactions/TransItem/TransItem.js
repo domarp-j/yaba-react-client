@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Accordion, Table, Button, Modal, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import AddTag from '../../tags/AddTag';
+import TagAdd from '../../tags/TagAdd';
 import Tag from '../../tags/Tag';
 import TagForm from '../../tags/TagForm';
 import {
@@ -14,11 +14,11 @@ import {
   attachTagToTransaction,
   detachTagFromTransaction,
   modifyTransactionTag
-} from '../../../store/actions/transactionTags';
+} from '../../../store/actions/tags';
 
-import './TransactionItem.css';
+import './TransItem.css';
 
-class TransactionItem extends React.Component {
+class TransItem extends React.Component {
   static propTypes = {
     amount: PropTypes.string,
     attachTagToTransaction: PropTypes.func,
@@ -41,7 +41,7 @@ class TransactionItem extends React.Component {
     this.state = {
       isActive: false,
       openModal: false,
-      showAddTag: false,
+      showTagAdd: false,
     };
   }
 
@@ -61,7 +61,7 @@ class TransactionItem extends React.Component {
     }, true);
   }
 
-  removeTransactionItem = async () => {
+  removeTransItem = async () => {
     this.props.deleteTransaction(this.props.transactionId);
     this.toggleStateBool('openModal');
   }
@@ -82,7 +82,7 @@ class TransactionItem extends React.Component {
         <Button color='blue' onClick={() => this.toggleStateBool('openModal')}>
           No, keep it
         </Button>
-        <Button color='red' onClick={this.removeTransactionItem}>
+        <Button color='red' onClick={this.removeTransItem}>
           Yes, delete it
         </Button>
       </Modal.Actions>
@@ -101,7 +101,7 @@ class TransactionItem extends React.Component {
       transactionId,
     } = this.props;
 
-    const { showAddTag } = this.state;
+    const { showTagAdd } = this.state;
 
     return (
       <Accordion fluid styled>
@@ -144,9 +144,9 @@ class TransactionItem extends React.Component {
             ))}
 
             {/* Input to add new tag */}
-            {showAddTag &&
+            {showTagAdd &&
               <TagForm
-                onCancel={() => this.toggleStateBool('showAddTag')}
+                onCancel={() => this.toggleStateBool('showTagAdd')}
                 onSubmit={attachTagToTransaction}
                 transactionId={transactionId}
               />
@@ -156,9 +156,9 @@ class TransactionItem extends React.Component {
             {/* {isAddingTag && <Button className='tag-loader' loading />} */}
 
             {/* Button that, when clicked, displays input to add new tag */}
-            {!showAddTag &&
-              <AddTag
-                onClick={() => this.toggleStateBool('showAddTag')}
+            {!showTagAdd &&
+              <TagAdd
+                onClick={() => this.toggleStateBool('showTagAdd')}
               />
             }
           </div>
@@ -183,4 +183,4 @@ const mapDispatchToProps = dispatch => ({
   toggleEditState: (transaction, editMode) => dispatch(toggleEditState(transaction, editMode)),
 });
 
-export default connect(undefined, mapDispatchToProps)(TransactionItem);
+export default connect(undefined, mapDispatchToProps)(TransItem);

@@ -4,17 +4,17 @@ import { Loader, Segment, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, identity, keys, merge, partition } from 'ramda';
 
-import TransactionItem from '../TransactionItem';
-import TransactionEdit from '../TransactionEdit';
+import TransItem from '../TransItem';
+import TransEdit from '../TransEdit';
 import {
   DEFAULT_FETCH_LIMIT,
   clearTransactions,
   fetchTransactions
 } from '../../../store/actions/transactions';
 
-import './TransactionList.css';
+import './TransList.css';
 
-class TransactionsPage extends React.PureComponent {
+class TransList extends React.PureComponent {
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
@@ -123,7 +123,7 @@ class TransactionsPage extends React.PureComponent {
 
   renderTransaction = transaction => (
     transaction.editMode ?
-      <TransactionEdit
+      <TransEdit
         amount={transaction.amount}
         date={transaction.date}
         description={transaction.description}
@@ -131,7 +131,7 @@ class TransactionsPage extends React.PureComponent {
         tags={transaction.tags}
         transactionId={transaction.id}
       /> :
-      <TransactionItem
+      <TransItem
         amount={transaction.amount}
         date={transaction.date}
         description={transaction.description}
@@ -211,4 +211,4 @@ const mapDispatchToProps = dispatch => ({
   fetchTransactions: params => { dispatch(fetchTransactions(params)); },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(TransList);

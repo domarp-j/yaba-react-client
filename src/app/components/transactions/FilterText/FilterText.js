@@ -8,7 +8,7 @@ import { friendlyDate } from '../../../utils/dateTools';
   This component takes transaction query values as props
     and turns them into a human-readable format.
 */
-const TransactionFilterText = ({
+const FilterText = ({
   description,
   fromDate,
   matchAllTags,
@@ -35,7 +35,7 @@ const TransactionFilterText = ({
   );
 };
 
-TransactionFilterText.propTypes = {
+FilterText.propTypes = {
   description: PropTypes.string,
   fromDate: PropTypes.string,
   matchAllTags: PropTypes.bool,
@@ -43,4 +43,4 @@ TransactionFilterText.propTypes = {
   toDate: PropTypes.string,
 };
 
-export default TransactionFilterText;
+export default FilterText;
