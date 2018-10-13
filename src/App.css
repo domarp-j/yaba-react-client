@@ -1,4 +1,4 @@
-/* Universal styles */
+/* Universal Styles */
 
 /* Padding */
 
@@ -34,7 +34,6 @@
   margin-bottom: 30px !important;
 }
 
-
 .margin-left-15 {
   margin-left: 15px !important;
 }
@@ -63,7 +62,15 @@
   text-align: center;
 }
 
-/* Components */
+/* Sizing */
+
+@media only screen and (max-device-width: 767px) {
+  .full-width-mobile {
+    width: 100%;
+  }
+}
+
+/* Miscellaneous */
 
 .grouped-button {
   padding: 11px !important;
@@ -74,12 +81,4 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%);
-}
-
-/* Sizing */
-
-@media only screen and (max-device-width: 767px) {
-  .full-width-mobile {
-    width: 100%;
-  }
 }
