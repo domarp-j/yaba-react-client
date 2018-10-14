@@ -5,8 +5,6 @@ import { withFormik } from 'formik';
 import * as yup from 'yup';
 import { compose } from 'ramda';
 
-import './TagForm.css';
-
 const maskInputAndHandleChange = (e, handleChange) => {
   e.target.value = e.target.value.replace(/\s/, '');
   handleChange(e);

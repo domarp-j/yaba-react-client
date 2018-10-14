@@ -20,8 +20,6 @@ import {
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
 
-import './Filter.css';
-
 class Filter extends React.Component {
   /*
     We will keep track of the initial state of all of our
@@ -349,7 +347,7 @@ class Filter extends React.Component {
           panes={this.paneList}
         />
 
-        <p id='filter-text-modal' className='margin-top-15'>
+        <p className='margin-top-15 yaba-text-size'>
           {(!description && !fromDate && !toDate && tags.length === 0) ?
             <span>Display <b>all</b> of my transactions</span> :
             <span>

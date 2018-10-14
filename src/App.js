@@ -8,8 +8,6 @@ import SignInPage from './app/pages/SignInPage';
 import SignUpPage from './app/pages/SignUpPage';
 import TransactionsPage from './app/pages/TransactionsPage';
 
-import './App.css';
-
 const requireSignIn = generateRequireSignInWrapper({
   redirectPathIfNotSignedIn: routes.signInPage,
 });

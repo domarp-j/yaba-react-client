@@ -11,8 +11,6 @@ import { createTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
 
-import './TransForm.css';
-
 const fields = ['description', 'amount', 'date'];
 
 class TransForm extends React.Component {

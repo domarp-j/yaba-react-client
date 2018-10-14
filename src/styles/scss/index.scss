@@ -1,0 +1,12 @@
+@import 'App';
+
+// TODO: Traverse src/components, automatically find .scss files, and append to this file?
+@import '../../app/components/misc/Alerts/Alerts';
+@import '../../app/components/tags/Tag/Tag';
+@import '../../app/components/tags/TagForm/TagForm';
+@import '../../app/components/transactions/CsvDownload/CsvDownload';
+@import '../../app/components/transactions/Dashboard/Dashboard';
+@import '../../app/components/transactions/TransForm/TransForm';
+@import '../../app/components/transactions/TransItem/TransItem';
+@import '../../app/components/transactions/TransList/TransList';
+

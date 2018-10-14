@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Icon } from 'semantic-ui-react';
 
 import TagForm from '../TagForm';
-import './Tag.css';
 
 class Tag extends React.Component {
   static propTypes = {

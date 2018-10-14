@@ -16,8 +16,6 @@ import {
   modifyTransactionTag
 } from '../../../store/actions/tags';
 
-import './TransItem.css';
-
 class TransItem extends React.Component {
   static propTypes = {
     amount: PropTypes.string,
@@ -124,7 +122,7 @@ class TransItem extends React.Component {
 
         {/* Transaction tags & CTAs */}
         <Accordion.Content active={this.state.isActive}>
-          <div className='tags'>
+          <div className='transaction-tags'>
             {/* Transaction tags */}
             {tags && tags.length > 0 && tags.map(tag => (
               <Tag

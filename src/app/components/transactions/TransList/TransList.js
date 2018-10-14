@@ -12,8 +12,6 @@ import {
   fetchTransactions
 } from '../../../store/actions/transactions';
 
-import './TransList.css';
-
 class TransList extends React.PureComponent {
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,

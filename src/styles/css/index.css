@@ -1,0 +1,142 @@
+/* Padding */
+.no-padding {
+  padding: 0 !important; }
+
+.padding-30 {
+  padding: 30px !important; }
+
+/* Margins */
+.no-margin {
+  margin: 0 !important; }
+
+.margin-5 {
+  margin: 5px !important; }
+
+.margin-top-15 {
+  margin-top: 15px !important; }
+
+.margin-top-bottom-15 {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important; }
+
+.margin-top-bottom-30 {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important; }
+
+.margin-left-15 {
+  margin-left: 15px !important; }
+
+.margin-top-30 {
+  margin-top: 30px !important; }
+
+@media only screen and (max-device-width: 767px) {
+  .margin-top-10-mobile {
+    margin-top: 10px !important; }
+  .margin-top-20-mobile {
+    margin-top: 20px !important; }
+  .margin-top-30-mobile {
+    margin-top: 30px !important; } }
+
+/* Positioning */
+.center-horizontally {
+  text-align: center; }
+
+/* Width */
+@media only screen and (max-device-width: 767px) {
+  .full-width-mobile {
+    width: 100%; } }
+
+/* Text */
+.yaba-text-size {
+  font-size: 1.2em; }
+
+/* Miscellaneous */
+.grouped-button {
+  padding: 11px !important; }
+
+.yaba-modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%); }
+
+.alert-list {
+  position: fixed;
+  margin-top: 30px;
+  width: 100%;
+  z-index: 1; }
+
+.alert {
+  margin: auto !important;
+  margin-bottom: 10px !important;
+  width: 80%;
+  max-width: 767px;
+  opacity: 0.93; }
+
+@media only screen and (max-device-width: 767px) {
+  .margin-top-20-mobile {
+    margin-top: 20px !important; }
+  .margin-top-30-mobile {
+    margin-top: 30px !important; }
+  .alert-list {
+    margin-top: 45px; } }
+
+.tag {
+  margin-right: 4px !important;
+  margin-bottom: 4px !important; }
+
+.tag-form {
+  height: 35px; }
+
+#csv-upload-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; }
+
+#csv-upload-input:hover {
+  cursor: pointer; }
+
+#total-amount {
+  margin: 20px 0 0 0;
+  font-size: 36px; }
+
+#filter-text {
+  font-size: 1.2em; }
+
+@media only screen and (min-device-width: 768px) {
+  #filter-text {
+    text-align: center; } }
+
+@media only screen and (max-device-width: 767px) {
+  .cta-buttons {
+    margin-top: 20px !important; } }
+
+.transaction-tags {
+  margin-bottom: 12px !important; }
+
+.tag-loader {
+  height: 34px; }
+
+@media only screen and (max-device-width: 767px) {
+  .transaction-description {
+    font-size: 24px;
+    line-height: 1.4;
+    margin: 10px 0; }
+  .transaction-amount {
+    font-size: 20px; } }
+
+.new-transaction-section {
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+
+#transaction-fetch-loader {
+  height: 90px; }
+
+#end-of-list-indicator {
+  margin: 0 0 15px 0;
+  text-align: center; }
+
+/*# sourceMappingURL=index.css.map */

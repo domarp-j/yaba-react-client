@@ -11,8 +11,6 @@ import {
   modifySortOrder
 } from '../../../store/actions/sorting';
 
-import './Sorter.css';
-
 class Sorter extends React.Component {
   static propTypes = {
     category: PropTypes.string,
@@ -73,8 +71,7 @@ class Sorter extends React.Component {
         <h2>Sort transactions</h2>
 
         <div
-          className='margin-top-bottom-30'
-          id='sort-text'
+          className='margin-top-bottom-30 yaba-text-size'
         >
           Sort by <Dropdown
             inline

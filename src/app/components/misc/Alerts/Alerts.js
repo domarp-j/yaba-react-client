@@ -11,8 +11,6 @@ import {
   removeAlert
 } from '../../../store/actions/alerts';
 
-import './Alerts.css';
-
 const AlertList = ({ alerts, removeAlert }) => (
   <div className='alert-list'>
     {alerts.length > 0 &&

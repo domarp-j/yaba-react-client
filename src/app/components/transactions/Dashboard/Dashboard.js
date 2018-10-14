@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import FilterText from '../FilterText';
 import { clearTransactionQueries } from '../../../store/actions/queries';
 
-import './Dashboard.css';
-
 /*
   This is a dashboard that shows important transaction data such as
     total amount & total number of transactions.
