@@ -45,7 +45,7 @@ class Tag extends React.Component {
         /> :
 
         // Displaying tag
-        <Button.Group className='tag'>
+        <Button.Group className='tag tag-spacing'>
           {/* Button displaying tag name */}
           <Button content={tagName} onClick={() => this.toggleBoolState('showCTAs')} />
 

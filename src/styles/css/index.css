@@ -60,6 +60,7 @@
   top: 50%;
   transform: translate(-50%); }
 
+/* Alerts */
 .alert-list {
   position: fixed;
   margin-top: 30px;
@@ -81,13 +82,16 @@
   .alert-list {
     margin-top: 45px; } }
 
-.tag {
+/* Tag */
+.tag-spacing {
   margin-right: 4px !important;
   margin-bottom: 4px !important; }
 
+/* Tag Form */
 .tag-form {
   height: 35px; }
 
+/* CSV Download */
 #csv-upload-input {
   position: absolute;
   left: 0;
@@ -99,6 +103,7 @@
 #csv-upload-input:hover {
   cursor: pointer; }
 
+/* Dashboard */
 #total-amount {
   margin: 20px 0 0 0;
   font-size: 36px; }
@@ -110,10 +115,12 @@
   #filter-text {
     text-align: center; } }
 
+/* Transaction Form */
 @media only screen and (max-device-width: 767px) {
   .cta-buttons {
     margin-top: 20px !important; } }
 
+/* Transaction Item */
 .transaction-tags {
   margin-bottom: 12px !important; }
 
@@ -128,6 +135,7 @@
   .transaction-amount {
     font-size: 20px; } }
 
+/* Transaction List */
 .new-transaction-section {
   margin-top: 1rem;
   margin-bottom: 1rem; }
