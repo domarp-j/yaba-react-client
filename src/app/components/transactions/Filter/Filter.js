@@ -7,7 +7,7 @@ import Cleave from 'cleave.js/react';
 import moment from 'moment';
 
 import TagAdd from '../../tags/TagAdd';
-import Tag from '../../tags/Tag';
+import TagButton from '../../tags/TagButton';
 import TagForm from '../../tags/TagForm';
 import FilterText from '../FilterText';
 import {
@@ -224,7 +224,7 @@ class Filter extends React.Component {
         <div>
           {/* Transaction query tags */}
           {tags && tags.length > 0 && tags.map(tag => (
-            <Tag
+            <TagButton
               key={`query-tag-${tag}`}
               onDelete={() => this.handleRemoveTag(tag)}
               tagName={tag}

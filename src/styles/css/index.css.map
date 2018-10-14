@@ -5,7 +5,7 @@
 		"../scss/index.scss",
 		"../scss/App.scss",
 		"../../app/components/misc/Alerts/Alerts.scss",
-		"../../app/components/tags/Tag/Tag.scss",
+		"../../app/components/tags/TagButton/TagButton.scss",
 		"../../app/components/tags/TagForm/TagForm.scss",
 		"../../app/components/transactions/CsvDownload/CsvDownload.scss",
 		"../../app/components/transactions/Dashboard/Dashboard.scss",

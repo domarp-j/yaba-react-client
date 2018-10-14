@@ -1,8 +1,10 @@
+$accent-color: #265C00;
+
 @import 'App';
 
 // TODO: Traverse src/components, automatically find .scss files, and append to this file?
 @import '../../app/components/misc/Alerts/Alerts';
-@import '../../app/components/tags/Tag/Tag';
+@import '../../app/components/tags/TagButton/TagButton';
 @import '../../app/components/tags/TagForm/TagForm';
 @import '../../app/components/transactions/CsvDownload/CsvDownload';
 @import '../../app/components/transactions/Dashboard/Dashboard';

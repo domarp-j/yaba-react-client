@@ -4,7 +4,7 @@ import { Button, Icon } from 'semantic-ui-react';
 
 import TagForm from '../TagForm';
 
-class Tag extends React.Component {
+class TagButton extends React.Component {
   static propTypes = {
     detachTagFromTransaction: PropTypes.func,
     onDelete: PropTypes.func,
@@ -71,4 +71,4 @@ class Tag extends React.Component {
   }
 }
 
-export default Tag;
+export default TagButton;

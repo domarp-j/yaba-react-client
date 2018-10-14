@@ -4,7 +4,7 @@ import { Accordion, Table, Button, Modal, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import TagAdd from '../../tags/TagAdd';
-import Tag from '../../tags/Tag';
+import TagButton from '../../tags/TagButton';
 import TagForm from '../../tags/TagForm';
 import {
   deleteTransaction,
@@ -125,7 +125,7 @@ class TransItem extends React.Component {
           <div className='transaction-tags'>
             {/* Transaction tags */}
             {tags && tags.length > 0 && tags.map(tag => (
-              <Tag
+              <TagButton
                 key={`${transactionId}-${tag.id}`}
                 onDelete={() => (
                   detachTagFromTransaction({
