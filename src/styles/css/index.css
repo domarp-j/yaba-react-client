@@ -60,6 +60,12 @@
   top: 50%;
   transform: translate(-50%); }
 
+/*
+  Imports below are automatically generated.
+  Any changes made after the following comment will be
+    overwritten during Sass compile.
+*/
+/* buildSassIndex */
 /* Alerts */
 .alert-list {
   position: fixed;

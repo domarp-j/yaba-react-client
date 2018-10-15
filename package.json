@@ -32,9 +32,9 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
-    "sass:build": "node-sass src/styles/scss -o src/styles/css --source-map true",
-    "sass:watch": "node-sass -w src/styles/scss -o src/styles/css"
-
+    "sass:build": "yarn yaba:sass && node-sass src/styles/scss -o src/styles/css --source-map true",
+    "sass:watch": "yarn yaba:sass && node-sass -w src/styles/scss -o src/styles/css",
+    "yaba:sass": "node scripts/buildSassIndex.js"
   },
   "devDependencies": {
     "eslint": "^4.18.2",

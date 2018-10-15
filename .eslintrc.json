@@ -61,6 +61,7 @@
       "error",
       "never"
     ],
+    "no-console": 1,
     "react/display-name": 0
   }
 }

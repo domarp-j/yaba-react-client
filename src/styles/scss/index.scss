@@ -1,14 +1,107 @@
 $accent-color: #265C00;
 
-@import 'App';
+/* Padding */
 
-// TODO: Traverse src/components, automatically find .scss files, and append to this file?
-@import 'src/app/components/misc/Alerts/Alerts';
-@import 'src/app/components/tags/TagButton/TagButton';
-@import 'src/app/components/tags/TagForm/TagForm';
-@import 'src/app/components/transactions/CsvDownload/CsvDownload';
-@import 'src/app/components/transactions/Dashboard/Dashboard';
-@import 'src/app/components/transactions/TransForm/TransForm';
-@import 'src/app/components/transactions/TransItem/TransItem';
-@import 'src/app/components/transactions/TransList/TransList';
+.no-padding {
+  padding: 0 !important;
+}
 
+.padding-30 {
+  padding: 30px !important;
+}
+
+/* Margins */
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.margin-5 {
+  margin: 5px !important;
+}
+
+.margin-top-15 {
+  margin-top: 15px !important;
+}
+
+.margin-top-bottom-15 {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+.margin-top-bottom-30 {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+}
+
+.margin-left-15 {
+  margin-left: 15px !important;
+}
+
+.margin-top-30 {
+  margin-top: 30px !important;
+}
+
+@media only screen and (max-device-width: 767px) {
+  .margin-top-10-mobile {
+    margin-top: 10px !important;
+  }
+
+  .margin-top-20-mobile {
+    margin-top: 20px !important;
+  }
+
+  .margin-top-30-mobile {
+    margin-top: 30px !important;
+  }
+}
+
+/* Positioning */
+
+.center-horizontally {
+  text-align: center;
+}
+
+/* Width */
+
+@media only screen and (max-device-width: 767px) {
+  .full-width-mobile {
+    width: 100%;
+  }
+}
+
+/* Text */
+
+.yaba-text-size {
+  font-size: 1.2em;
+}
+
+/* Miscellaneous */
+
+.grouped-button {
+  padding: 11px !important;
+}
+
+.yaba-modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%);
+}
+
+/*
+  Imports below are automatically generated.
+  Any changes made after the following comment will be
+    overwritten during Sass compile.
+*/
+
+/* buildSassIndex */
+
+@import 'src/app/components/misc/Alerts/Alerts.scss';
+@import 'src/app/components/tags/TagButton/TagButton.scss';
+@import 'src/app/components/tags/TagForm/TagForm.scss';
+@import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';
+@import 'src/app/components/transactions/Dashboard/Dashboard.scss';
+@import 'src/app/components/transactions/TransForm/TransForm.scss';
+@import 'src/app/components/transactions/TransItem/TransItem.scss';
+@import 'src/app/components/transactions/TransList/TransList.scss';
