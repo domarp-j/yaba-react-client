@@ -21,7 +21,11 @@ Follow the setup instructions on the [yaba-infrastructure](https://github.com/do
 
 ## Styling
 
-This app uses [node-sass](https://www.npmjs.com/package/node-sass) to compile Sass files into `css` files. If you are making any style changes, run `yarn sass:watch` so that changes to Sass files are automatically registered.
+This app uses [node-sass](https://www.npmjs.com/package/node-sass) to compile Sass files into `css` files. If you are making any style changes:
+
+- Open up a new terminal
+- Bash into the `yaba-react-client` container (see Running Commands section)
+- Run `yarn sass:watch` so that changes to Sass files are automatically registered
 
 Important note: If you add any Sass files to the `src/app/components` directory, run `yarn sass:build`. Doing so will run a script that automatically adds the necessary imports to the main `index.scss` file.
 

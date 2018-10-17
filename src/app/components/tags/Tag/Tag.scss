@@ -1,0 +1,60 @@
+/* Tag */
+
+$triangle-spacing: 13px;
+$triangle-size: 13px;
+$font-size: 14px;
+$border-radius: 3px 6px 6px 3px;
+
+.yaba-tag {
+  display: inline-block;
+
+  background-color: $accent-color;
+	color: white;
+
+	border-radius: $border-radius;
+	-webkit-border-radius: $border-radius;
+	-moz-border-radius: $border-radius;
+
+  border-left: 1px solid $accent-color;
+
+  margin-left: $triangle-spacing;
+  padding: 6px;
+
+  position: relative;
+
+  font-size: $font-size;
+
+  &:before {
+    content: "";
+
+    display: block;
+
+    position: absolute;
+    left: -$triangle-spacing;
+    top: 0;
+
+    width: 0;
+    height: 0;
+
+    border-top: $triangle-size solid transparent;
+    border-bottom: $triangle-size solid transparent;
+    border-right: $triangle-size solid $accent-color;
+  }
+
+  &:after {
+    content: "";
+
+    display: block;
+
+    background-color: white;
+
+    position: absolute;
+    top: 11px;
+    left: -6px;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+  }
+}

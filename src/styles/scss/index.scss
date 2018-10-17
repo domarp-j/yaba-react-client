@@ -98,6 +98,7 @@ $accent-color: #265C00;
 /* buildSassIndex */
 
 @import 'src/app/components/misc/Alerts/Alerts.scss';
+@import 'src/app/components/tags/Tag/Tag.scss';
 @import 'src/app/components/tags/TagButton/TagButton.scss';
 @import 'src/app/components/tags/TagForm/TagForm.scss';
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';

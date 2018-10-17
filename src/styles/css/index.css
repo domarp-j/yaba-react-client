@@ -89,6 +89,41 @@
     margin-top: 45px; } }
 
 /* Tag */
+.yaba-tag {
+  display: inline-block;
+  background-color: #265C00;
+  color: white;
+  border-radius: 3px 6px 6px 3px;
+  -webkit-border-radius: 3px 6px 6px 3px;
+  -moz-border-radius: 3px 6px 6px 3px;
+  border-left: 1px solid #265C00;
+  margin-left: 13px;
+  padding: 6px;
+  position: relative;
+  font-size: 14px; }
+  .yaba-tag:before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: -13px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-right: 13px solid #265C00; }
+  .yaba-tag:after {
+    content: "";
+    display: block;
+    background-color: white;
+    position: absolute;
+    top: 11px;
+    left: -6px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%; }
+
+/* Tag Button */
 .tag-spacing {
   margin-right: 4px !important;
   margin-bottom: 4px !important; }
@@ -152,5 +187,3 @@
 #end-of-list-indicator {
   margin: 0 0 15px 0;
   text-align: center; }
-
-/*# sourceMappingURL=index.css.map */
