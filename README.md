@@ -2,18 +2,28 @@
 
 The React front-end for yaba, a simple but intuitive budgeting app.
 
-Check it out at [yaba.netlify.com](https://yaba.netlify.com)!
+Check out yaba at [yaba.netlify.com](https://yaba.netlify.com)!
 
 ## Setup
 
-Follow the setup instructions on `yaba-infrastructure`'s README. This will set up all of the services needed (including this one) to get the app running.
+Follow the setup instructions on the [yaba-infrastructure](https://github.com/domarp-j/yaba-infrastructure) README. This will set up all of the services needed to get yaba running.
 
-Note: You will have to prepend app-specific commands with `docker-compose run react-client`. To make life less tedious, you can run `docker-compose run react-client bash` and run commands as normal from within the `react-client` container
+## Running Commands
+
+- After setup, go to your `yaba-infrastructure` directory
+- Run `docker-compose run react-client bash` to bash into the `yaba-react-client` container
+- Run commands as needed (i.e. the static analysis & testing commands below)
 
 ## Static Analysis & Testing
 
-- ESLint `docker-compose run react-client yarn lint`
-- Jest `docker-compose run react-client yarn test`
+- ESLint `yarn lint`
+- Jest `yarn test`
+
+## Styling
+
+This app uses [node-sass](https://www.npmjs.com/package/node-sass) to compile Sass files into `css` files. If you are making any style changes, run `yarn sass:watch` so that changes to Sass files are automatically registered.
+
+Important note: If you add any Sass files to the `src/app/components` directory, run `yarn sass:build`. Doing so will run a script that automatically adds the necessary imports to the main `index.scss` file.
 
 ## Deploys
 
