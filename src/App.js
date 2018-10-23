@@ -4,8 +4,7 @@ import { generateRequireSignInWrapper } from 'redux-token-auth';
 
 import routes from './app/routes';
 import Alerts from './app/components/misc/Alerts';
-import SignInPage from './app/pages/SignInPage';
-import SignUpPage from './app/pages/SignUpPage';
+import AuthPage from './app/pages/AuthPage';
 import TransactionsPage from './app/pages/TransactionsPage';
 
 const requireSignIn = generateRequireSignInWrapper({
@@ -20,8 +19,8 @@ const App = () => {
       <BrowserRouter>
         <Switch>
           <Route exact path={routes.homePage} component={requireSignIn(TransactionsPage)} />
-          <Route path={routes.signUpPage} component={SignUpPage} />
-          <Route path={routes.signInPage} component={SignInPage} />
+          <Route path={routes.signUpPage} render={() => <AuthPage authType='signUp' />} />
+          <Route path={routes.signInPage} render={() => <AuthPage authType='signIn' />} />
         </Switch>
       </BrowserRouter>
     </div>
