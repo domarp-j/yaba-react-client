@@ -4,12 +4,8 @@ import routes from '../../routes';
 // Config for redux-token-auth
 const config = {
   authUrl: routes.signUp,
-  userAttributes: {
-    username: 'username',
-  },
-  userRegistrationAttributes: {
-    username: 'username',
-  },
+  userAttributes: {},
+  userRegistrationAttributes: {},
 };
 
 // Generate thunk actions via redux-token-auth

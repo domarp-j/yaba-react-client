@@ -16,9 +16,7 @@ const initialState = {
     currentUser: {
       isLoading: false,
       isSignedIn: false,
-      attributes: {
-        username: undefined,
-      },
+      attributes: {},
     },
   },
   transactions: {

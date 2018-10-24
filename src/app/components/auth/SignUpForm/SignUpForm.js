@@ -11,7 +11,7 @@ import { registerUser } from '../../../store/actions/reduxTokenAuth';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import routes from '../../../routes';
 
-const fields = ['username', 'email', 'password', 'passwordConfirm'];
+const fields = ['email', 'password', 'passwordConfirm'];
 
 const SignUpForm = ({
   values,
@@ -24,17 +24,6 @@ const SignUpForm = ({
 }) => {
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Input
-        label='Username'
-        type='text'
-        name='username'
-        id='username'
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={values.username}
-        error={allFieldsTouched(touched, fields) && !!errors.username}
-      />
-
       <Form.Input
         label='Email'
         type='email'
@@ -87,7 +76,6 @@ const SignUpForm = ({
 
 SignUpForm.propTypes = {
   errors: PropTypes.shape({
-    username: PropTypes.string,
     email: PropTypes.string,
     password: PropTypes.string,
     passwordConfirm: PropTypes.string,
@@ -97,13 +85,11 @@ SignUpForm.propTypes = {
   handleSubmit: PropTypes.func,
   setTouched: PropTypes.func,
   touched: PropTypes.shape({
-    username: PropTypes.bool,
     email: PropTypes.bool,
     password: PropTypes.bool,
     passwordConfirm: PropTypes.bool,
   }),
   values: PropTypes.shape({
-    username: PropTypes.string,
     email: PropTypes.string,
     password: PropTypes.string,
     passwordConfirm: PropTypes.string,
@@ -111,8 +97,6 @@ SignUpForm.propTypes = {
 };
 
 const schema = yup.object().shape({
-  username: yup.string()
-    .required('A username is required'),
   email: yup.string()
     .required('An email address is required'),
   password: yup.string()
@@ -130,7 +114,7 @@ const formikOptions = {
       setErrors,
     }
   ) => {
-    props.registerUser({ username: values.username, email: values.email, password: values.password })
+    props.registerUser({ email: values.email, password: values.password })
       .then(() => { props.history.push(routes.homePage); })
       .catch(() => { setErrors({ saving: 'It looks like we could not save your sign-up information. Please try again later.' }); });
   },
