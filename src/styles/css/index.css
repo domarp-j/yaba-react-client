@@ -1,3 +1,6 @@
+body {
+  background-color: #FDFFFF; }
+
 /* Padding */
 .no-padding {
   padding: 0 !important; }
@@ -25,6 +28,9 @@
 
 .margin-left-15 {
   margin-left: 15px !important; }
+
+.margin-right-15 {
+  margin-right: 15px !important; }
 
 .margin-top-30 {
   margin-top: 30px !important; }
@@ -60,10 +66,26 @@
   top: 50%;
   transform: translate(-50%); }
 
+.auth-button {
+  width: 100%;
+  color: #FDFFFF !important;
+  background-color: #006D5B !important;
+  height: 60px;
+  font-size: 24px !important;
+  padding: 0 !important;
+  margin-top: 30px !important;
+  font-family: 'Abel' !important; }
+
+.yaba-button {
+  color: #FDFFFF !important;
+  background-color: #006D5B !important;
+  padding: 8px !important; }
+
 /*
   Imports below are automatically generated.
   Any changes made after the following comment will be
     overwritten during Sass compile.
+  Do not modify anything below this line!
 */
 /* buildSassIndex */
 /* Alerts */
@@ -91,16 +113,17 @@
 /* Tag */
 .yaba-tag {
   display: inline-block;
-  background-color: #265C00;
+  background-color: #006D5B;
   color: white;
   border-radius: 3px 6px 6px 3px;
   -webkit-border-radius: 3px 6px 6px 3px;
   -moz-border-radius: 3px 6px 6px 3px;
-  border-left: 1px solid #265C00;
+  border-left: 1px solid #006D5B;
   margin-left: 13px;
   padding: 6px;
   position: relative;
-  font-size: 14px; }
+  font-size: 14px;
+  font-family: 'Playfair Display'; }
   .yaba-tag:before {
     content: "";
     display: block;
@@ -111,7 +134,7 @@
     height: 0;
     border-top: 13px solid transparent;
     border-bottom: 13px solid transparent;
-    border-right: 13px solid #265C00; }
+    border-right: 13px solid #006D5B; }
   .yaba-tag:after {
     content: "";
     display: block;
@@ -187,3 +210,30 @@
 #end-of-list-indicator {
   margin: 0 0 15px 0;
   text-align: center; }
+
+.header-catch-phrase {
+  text-align: center;
+  font-family: 'Playfair Display';
+  font-size: 42px;
+  font-weight: 100; }
+  @media only screen and (max-device-width: 767px) {
+    .header-catch-phrase {
+      font-size: 32px; } }
+
+.what-is-yaba {
+  text-align: center;
+  font-family: 'Abel';
+  font-size: 24px;
+  max-width: 520px;
+  margin: 0 auto;
+  color: #666; }
+  @media only screen and (max-device-width: 767px) {
+    .what-is-yaba {
+      font-size: 18px; } }
+
+.auth-form-wrapper .auth-form-segment {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto; }
+
+/*# sourceMappingURL=index.css.map */

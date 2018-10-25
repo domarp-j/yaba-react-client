@@ -1,15 +1,15 @@
 const fs = require('fs');
 
 /*
-  Return absolute path for any file in React component dir
+  Return absolute path for any file in React app dir
 */
-const componentRootDir = subPath => (
-  `src/app/components/${subPath || ''}`
+const appDir = subPath => (
+  `src/app/${subPath || ''}`
 );
 
 /*
-  Retrieve collection of Sass files in React components dir
-  Wrapper for the recursive populateSassFiles function
+  Generate collection of Sass files in React app dir
+  This is a wrapper for the recursive populateSassFiles function
 */
 const fetchSassFiles = () => {
   const sassFiles = [];
@@ -18,15 +18,15 @@ const fetchSassFiles = () => {
 };
 
 /*
-  Recursively search through React components dir for Sass files
+  Recursively search through React app dir for Sass files
   Populate @sassFiles with any Sass files that are found
 */
 const populateSassFiles = (subPath, sassFiles) => {
   let compDir, newPath, fstat;
-  const files = fs.readdirSync(componentRootDir(subPath));
+  const files = fs.readdirSync(appDir(subPath));
   files.forEach(f => {
     newPath = subPath ? `${subPath}/${f}` : f;
-    compDir = componentRootDir(newPath);
+    compDir = appDir(newPath);
     fstat = fs.statSync(compDir);
     if (fstat.isDirectory()) populateSassFiles(newPath, sassFiles);
     if (f.match(/.scss/)) sassFiles.push(compDir);
@@ -35,7 +35,7 @@ const populateSassFiles = (subPath, sassFiles) => {
 
 /*
   Rewrite Sass file at @indexFile with new imports
-  Does NOT rewrite if React component Sass files have not changed
+  Does NOT rewrite if React app Sass files have not changed
   New @indexFile is written by:
   - Splitting the contents of @indexFile based on a @marker string
   - Writing a new @indexFile that:
@@ -51,7 +51,7 @@ const buildSassIndex = (indexFile, marker, sassFiles) => {
     return;
   }
 
-  console.log('Change in React component Sass files detected');
+  console.log('Change in React Sass files detected');
   console.log(`Rewriting ${indexFile} with new imports...`);
   const newContent = preservedContent +
     `${marker}\n\n` +
@@ -65,7 +65,7 @@ const buildSassIndex = (indexFile, marker, sassFiles) => {
 /*
   Compare and determine if there is a difference between:
   - @oldSassImports: string of imports currently in Sass index file
-  - @newSassFiles: component Sass files identified by this script
+  - @newSassFiles: Sass files identified by this script
 */
 const changeInComponentSass = (oldSassImports, newSassFiles) => {
   const oldSassFiles = oldSassImports.split('\n').filter(ei => ei).map(ei => (

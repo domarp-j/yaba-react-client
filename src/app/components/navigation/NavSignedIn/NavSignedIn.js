@@ -29,6 +29,7 @@ const NavSignedIn = ({
 }) => (
   <NavBase>
     <Menu.Item
+      className='yaba-button margin-right-15'
       name='Sign out'
       onClick={e => signOut(e, history)}>
     </Menu.Item>

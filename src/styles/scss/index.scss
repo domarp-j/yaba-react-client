@@ -1,4 +1,11 @@
-$accent-color: #265C00;
+$accent-color: #006D5B;
+$white-base: #FDFFFF;
+$subtle-gray: #666;
+$mobile-width: 767px;
+
+body {
+  background-color: $white-base;
+}
 
 /* Padding */
 
@@ -38,11 +45,15 @@ $accent-color: #265C00;
   margin-left: 15px !important;
 }
 
+.margin-right-15 {
+  margin-right: 15px !important;
+}
+
 .margin-top-30 {
   margin-top: 30px !important;
 }
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-device-width: $mobile-width) {
   .margin-top-10-mobile {
     margin-top: 10px !important;
   }
@@ -64,7 +75,7 @@ $accent-color: #265C00;
 
 /* Width */
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-device-width: $mobile-width) {
   .full-width-mobile {
     width: 100%;
   }
@@ -89,10 +100,28 @@ $accent-color: #265C00;
   transform: translate(-50%);
 }
 
+.auth-button {
+  width: 100%;
+  color: $white-base !important;
+  background-color: $accent-color !important;
+  height: 60px;
+  font-size: 24px !important;
+  padding: 0 !important;
+  margin-top: 30px !important;
+  font-family: 'Abel' !important;
+}
+
+.yaba-button {
+  color: $white-base !important;
+  background-color: $accent-color !important;
+  padding: 8px !important;
+}
+
 /*
   Imports below are automatically generated.
   Any changes made after the following comment will be
     overwritten during Sass compile.
+  Do not modify anything below this line!
 */
 
 /* buildSassIndex */
@@ -106,3 +135,4 @@ $accent-color: #265C00;
 @import 'src/app/components/transactions/TransForm/TransForm.scss';
 @import 'src/app/components/transactions/TransItem/TransItem.scss';
 @import 'src/app/components/transactions/TransList/TransList.scss';
+@import 'src/app/pages/AuthPage/AuthPage.scss';

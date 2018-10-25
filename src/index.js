@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import WebFont from 'webfontloader';
 
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -12,6 +13,15 @@ import 'semantic-ui-css/semantic.min.css';
 import './styles/css/index.css';
 
 verifyCredentials(store);
+
+WebFont.load({
+  google: {
+    families: [
+      'Playfair Display',
+      'Abel',
+    ],
+  },
+});
 
 ReactDOM.render(
   <Provider store={store}>

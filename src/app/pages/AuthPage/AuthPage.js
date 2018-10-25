@@ -12,13 +12,11 @@ const signUp = 'signUp';
 
 const authConfig = {
   [signIn]: {
-    headerText: 'Sign in',
     oppositeActionText: 'Sign up',
     oppositeActionUrl: routes.signUpPage,
     form: SignInForm,
   },
   [signUp]: {
-    headerText: 'Sign up',
     oppositeActionText: 'Sign in',
     oppositeActionUrl: routes.signInPage,
     form: SignUpForm,
@@ -35,10 +33,17 @@ const AuthPage = ({ authType }) =>  {
         actionUrl={authConfig[authType].oppositeActionUrl}
       />
       <Container text textAlign='left'>
-        <Segment>
-          <h1>{authConfig[authType].headerText}</h1>
-          <AuthForm />
-        </Segment>
+        <h1 className='header-catch-phrase'>
+          Simplify Your Budget.
+        </h1>
+        <div className='what-is-yaba'>
+          Yaba is Yet Another Budget App. Tag your transactions and gain perspective on your spending habits.
+        </div>
+        <div className='auth-form-wrapper margin-top-30'>
+          <Segment className='auth-form-segment'>
+            <AuthForm />
+          </Segment>
+        </div>
       </Container>
     </div>
   );

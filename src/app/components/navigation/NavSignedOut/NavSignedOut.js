@@ -17,6 +17,7 @@ const NavSignedOut = ({
   return (
     <NavBase>
       <Menu.Item
+        className='yaba-button margin-right-15'
         name={actionText}
         onClick={() => {
           handleAction(actionUrl, history);

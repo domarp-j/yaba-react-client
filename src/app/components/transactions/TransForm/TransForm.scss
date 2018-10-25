@@ -1,6 +1,6 @@
 /* Transaction Form */
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-device-width: $mobile-width) {
   .cta-buttons {
     margin-top: 20px !important;
   }

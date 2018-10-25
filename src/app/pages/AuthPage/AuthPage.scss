@@ -1,0 +1,31 @@
+.header-catch-phrase {
+  text-align: center;
+  font-family: 'Playfair Display';
+  font-size: 42px;
+  font-weight: 100;
+
+  @media only screen and (max-device-width: $mobile-width) {
+    font-size: 32px;
+  }
+}
+
+.what-is-yaba {
+  text-align: center;
+  font-family: 'Abel';
+  font-size: 24px;
+  max-width: 520px;
+  margin: 0 auto;
+  color: $subtle-gray;
+
+  @media only screen and (max-device-width: $mobile-width) {
+    font-size: 18px;
+  }
+}
+
+.auth-form-wrapper {
+  .auth-form-segment {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}

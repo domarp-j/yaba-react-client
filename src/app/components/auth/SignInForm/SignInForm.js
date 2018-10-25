@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Message } from 'semantic-ui-react';
+import { Button, Form, Message } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose } from 'ramda';
 import { withRouter } from 'react-router';
@@ -47,11 +47,14 @@ const SignInForm = ({
         error={allFieldsTouched(touched, fields) && !!errors.password}
       />
 
-      <Form.Button
-        disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
-        content='Sign in'
-        onClick={() => { setTouched(touchAllFields(fields)); }}
-      />
+      <Form.Field>
+        <Button
+          className='auth-button'
+          disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
+          content='Sign in'
+          onClick={() => { setTouched(touchAllFields(fields)); }}
+        />
+      </Form.Field>
 
       <Message
         error
