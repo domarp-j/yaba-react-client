@@ -154,9 +154,7 @@ class TransList extends React.PureComponent {
     return (
       <div ref={this.setPageRef}>
         {newTransactions.length > 0 &&
-          <div className='new-transaction-section'>
-            {newTransactions.map(transaction => this.renderTransaction(transaction))}
-          </div>
+          newTransactions.map(transaction => this.renderTransaction(transaction))
         }
 
         {oldTransactions.length > 0 &&

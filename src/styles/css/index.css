@@ -168,12 +168,24 @@ body {
   cursor: pointer; }
 
 /* Dashboard */
+#dashboard {
+  max-width: 500px;
+  border-left: 8px solid #006D5B;
+  margin: 0 auto;
+  margin-bottom: 30px; }
+
 #total-amount {
   margin: 20px 0 0 0;
-  font-size: 36px; }
+  font-size: 40px;
+  font-family: 'Abel'; }
+
+#transaction-count {
+  font-size: 22px;
+  font-family: 'Abel'; }
 
 #filter-text {
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  font-family: 'Abel'; }
 
 @media only screen and (min-device-width: 768px) {
   #filter-text {
@@ -200,10 +212,6 @@ body {
     font-size: 20px; } }
 
 /* Transaction List */
-.new-transaction-section {
-  margin-top: 1rem;
-  margin-bottom: 1rem; }
-
 #transaction-fetch-loader {
   height: 90px; }
 
@@ -235,5 +243,12 @@ body {
   width: 100%;
   max-width: 360px;
   margin: 0 auto; }
+
+#transactions-page {
+  max-width: 900px !important; }
+
+.console-button {
+  color: #FDFFFF !important;
+  background-color: #006D5B !important; }
 
 /*# sourceMappingURL=index.css.map */

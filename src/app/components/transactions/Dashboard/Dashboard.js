@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Icon, Segment } from 'semantic-ui-react';
+import { Button, Header, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import FilterText from '../FilterText';
@@ -36,15 +36,16 @@ const Dashboard = ({
 }) => (
   <div>
     {/* Display transaction data */}
-    <Segment className='no-margin'>
+    <Segment id='dashboard'>
       <Header
         as='h1'
         className='no-margin'
         icon
         textAlign='center'
       >
-        <Icon name='dollar' circular />
-        <Header.Content id='total-amount'>{totalAmount}</Header.Content>
+        <Header.Content id='total-amount'>
+          {totalAmount}
+        </Header.Content>
       </Header>
 
       <Header
@@ -52,7 +53,9 @@ const Dashboard = ({
         textAlign='center'
         className='margin-top-15'
       >
-          Total for {count} transactions
+        <Header.Content id='transaction-count'>
+          for {count} transactions
+        </Header.Content>
       </Header>
 
       {/* Transaction CTAs */}
@@ -68,7 +71,7 @@ const Dashboard = ({
             color='red'
             icon='undo'
             onClick={clearQueries}
-            size='huge'
+            size='large'
           />
         }
       </div>
@@ -76,9 +79,9 @@ const Dashboard = ({
 
     {/* Current filter query */}
     {anyQueryPresent(queries) &&
-        <Segment id='filter-text' className='no-margin'>
-          Displaying transactions <FilterText {...queries} />
-        </Segment>
+      <Segment id='filter-text' className='no-margin'>
+        Displaying transactions <FilterText {...queries} />
+      </Segment>
     }
   </div>
 );

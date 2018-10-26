@@ -34,7 +34,6 @@ class TransactionsPage extends React.Component {
   }
 
   manageTransactionModal = ({
-    buttonColor,
     buttonIcon,
     size,
     stateKey,
@@ -47,10 +46,9 @@ class TransactionsPage extends React.Component {
       trigger={
         <Button
           circular
-          className='margin-5'
-          color={buttonColor}
+          className='margin-5 console-button'
           onClick={() => this.toggleStateBool(stateKey)}
-          size='huge'
+          size='large'
           icon={buttonIcon}
         />
       }
@@ -68,31 +66,27 @@ class TransactionsPage extends React.Component {
     return (
       <div>
         <NavSignedIn />
-        <Container textAlign='left'>
+        <Container textAlign='left' id='transactions-page'>
           <Dashboard
             addButton={() => this.manageTransactionModal({
-              buttonColor: 'green',
               buttonIcon: 'plus',
               stateKey: 'openAddModal',
               TransactionComponent: TransForm,
             })}
             count={count}
             csvButton={() => this.manageTransactionModal({
-              buttonColor: 'purple',
               buttonIcon: 'file',
               size: 'tiny',
               stateKey: 'openCsvModal',
               TransactionComponent: CsvDownload,
             })}
             filterButton={() => this.manageTransactionModal({
-              buttonColor: 'blue',
               buttonIcon: 'filter',
               size: 'tiny',
               stateKey: 'openFilterModal',
               TransactionComponent: Filter,
             })}
             sortButton={() => this.manageTransactionModal({
-              buttonColor: 'yellow',
               buttonIcon: 'sort',
               size: 'tiny',
               stateKey: 'openSortModal',

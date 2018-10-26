@@ -1,14 +1,26 @@
 /* Dashboard */
 
+#dashboard {
+  max-width: 500px;
+  border-left: 8px solid $accent-color;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
 #total-amount {
   margin: 20px 0 0 0;
-  font-size: 36px;
+  font-size: 40px;
+  font-family: 'Abel';
+}
+
+#transaction-count {
+  font-size: 22px;
+  font-family: 'Abel'
 }
 
 #filter-text {
   font-size: 1.2em;
 }
-
 
 @media only screen and (min-device-width: 768px) {
   #filter-text {
