@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loader, Segment, Dimmer } from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Segment  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, identity, keys, merge, partition } from 'ramda';
 
@@ -153,13 +153,15 @@ class TransList extends React.PureComponent {
 
     return (
       <div ref={this.setPageRef}>
-        {newTransactions.length > 0 &&
-          newTransactions.map(transaction => this.renderTransaction(transaction))
-        }
+        <Card.Group>
+          {newTransactions.length > 0 &&
+            newTransactions.map(transaction => this.renderTransaction(transaction))
+          }
 
-        {oldTransactions.length > 0 &&
-          oldTransactions.map(transaction => this.renderTransaction(transaction))
-        }
+          {oldTransactions.length > 0 &&
+            oldTransactions.map(transaction => this.renderTransaction(transaction))
+          }
+        </Card.Group>
 
         {isFetching &&
           <Segment id='transaction-fetch-loader' className='no-margin'>

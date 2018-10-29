@@ -1,6 +1,27 @@
 /* Tag Button */
 
-.tag-spacing {
-  margin-right: 4px !important;
+.yaba-tag-button {
   margin-bottom: 4px !important;
+  margin-right: 4px !important;
+  color: $grey-base-dark !important;
+  padding: 6px !important;
+  font-weight: 100 !important;
+
+  &.with-edit {
+    margin-right: 0px !important;
+  }
+}
+
+.yaba-tag-edit, .yaba-tag-delete {
+  padding: 0 !important;
+  height: 26px;
+  width: 26px;
+
+  .icon {
+    font-size: 10px;
+  }
+}
+
+.yaba-tag-delete {
+  margin-right: 4px !important;
 }

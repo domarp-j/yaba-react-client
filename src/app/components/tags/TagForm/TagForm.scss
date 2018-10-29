@@ -1,5 +1,20 @@
 /* Tag Form */
 
 .tag-form {
-  height: 35px;
+  height: 30px;
+  margin-bottom: 4px !important;
+
+  .tag-form-input {
+    padding-left: 6px !important;
+    width: 150px;
+  }
+
+  .cta-accept, .cta-cancel {
+    padding: 0 0 0 8px !important;
+    width: 30px;
+
+    .icon {
+      font-size: 12px;
+    }
+  }
 }

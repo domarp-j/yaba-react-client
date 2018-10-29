@@ -5,7 +5,7 @@ import { Button, Icon } from 'semantic-ui-react';
 const TagAdd = ({
   onClick,
 }) => (
-  <Button className='grouped-button' onClick={onClick}>
+  <Button className='yaba-tag-add' onClick={onClick}>
     <Button.Content className='no-padding'>
       <Icon name='plus' className='no-margin' />
     </Button.Content>

@@ -8,14 +8,14 @@ $border-radius: 3px 6px 6px 3px;
 .yaba-tag {
   display: inline-block;
 
-  background-color: $accent-color;
-	color: white;
+  background-color: $primary-color;
+  color: white;
 
-	border-radius: $border-radius;
-	-webkit-border-radius: $border-radius;
-	-moz-border-radius: $border-radius;
+  border-radius: $border-radius;
+  -webkit-border-radius: $border-radius;
+  -moz-border-radius: $border-radius;
 
-  border-left: 1px solid $accent-color;
+  border-left: 1px solid $primary-color;
 
   margin-left: $triangle-spacing;
   padding: 6px;
@@ -39,7 +39,7 @@ $border-radius: 3px 6px 6px 3px;
 
     border-top: $triangle-size solid transparent;
     border-bottom: $triangle-size solid transparent;
-    border-right: $triangle-size solid $accent-color;
+    border-right: $triangle-size solid $primary-color;
   }
 
   &:after {

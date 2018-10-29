@@ -1,8 +1,10 @@
-$accent-color: #006D5B;
+$primary-color: #006d5b;
 $white-base: #FDFFFF;
-$subtle-gray: #666;
-$mobile-width: 767px;
+$grey-base-dark: #333;
 $dark-base: #0F1B07;
+$red-base: #D72C16;
+
+$mobile-width: 767px;
 
 body {
   background-color: $white-base;
@@ -28,18 +30,16 @@ body {
   margin: 5px !important;
 }
 
+.margin-top-5 {
+  margin-top: 5px !important;
+}
+
 .margin-top-15 {
   margin-top: 15px !important;
 }
 
-.margin-top-bottom-15 {
-  margin-top: 15px !important;
+.margin-bottom-15 {
   margin-bottom: 15px !important;
-}
-
-.margin-top-bottom-30 {
-  margin-top: 30px !important;
-  margin-bottom: 30px !important;
 }
 
 .margin-left-15 {
@@ -50,8 +50,18 @@ body {
   margin-right: 15px !important;
 }
 
+.margin-top-bottom-15 {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
 .margin-top-30 {
   margin-top: 30px !important;
+}
+
+.margin-top-bottom-30 {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
 }
 
 @media only screen and (max-device-width: $mobile-width) {
@@ -68,10 +78,24 @@ body {
   }
 }
 
+/* Display */
+
+.inline-block {
+  display: inline-block !important;
+}
+
 /* Positioning */
 
 .center-horizontally {
   text-align: center;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
 }
 
 /* Width */
@@ -90,10 +114,6 @@ body {
 
 /* Miscellaneous */
 
-.grouped-button {
-  padding: 11px !important;
-}
-
 .yaba-modal {
   position: absolute;
   left: 50%;
@@ -104,7 +124,7 @@ body {
 .auth-button {
   width: 100%;
   color: $white-base !important;
-  background-color: $accent-color !important;
+  background-color: $primary-color !important;
   height: 60px;
   font-size: 24px !important;
   padding: 0 !important;
@@ -114,7 +134,7 @@ body {
 
 .yaba-button {
   color: $white-base !important;
-  background-color: $accent-color !important;
+  background-color: $primary-color !important;
   padding: 8px !important;
 }
 
@@ -129,6 +149,7 @@ body {
 
 @import 'src/app/components/misc/Alerts/Alerts.scss';
 @import 'src/app/components/tags/Tag/Tag.scss';
+@import 'src/app/components/tags/TagAdd/TagAdd.scss';
 @import 'src/app/components/tags/TagButton/TagButton.scss';
 @import 'src/app/components/tags/TagForm/TagForm.scss';
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';

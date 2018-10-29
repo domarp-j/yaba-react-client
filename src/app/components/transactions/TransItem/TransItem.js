@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Table, Button, Modal, Header } from 'semantic-ui-react';
+import { Card, Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import TagAdd from '../../tags/TagAdd';
@@ -15,6 +15,7 @@ import {
   detachTagFromTransaction,
   modifyTransactionTag
 } from '../../../store/actions/tags';
+import { dollarToFloat, floatToDollar } from '../../../utils/dollarTools';
 
 class TransItem extends React.Component {
   static propTypes = {
@@ -39,7 +40,8 @@ class TransItem extends React.Component {
     this.state = {
       isActive: false,
       openModal: false,
-      showTagAdd: false,
+      showTagForm: false,
+      showCTAs: false,
     };
   }
 
@@ -68,7 +70,14 @@ class TransItem extends React.Component {
     <Modal
       className='yaba-modal'
       open={this.state.openModal}
-      trigger={<Button content='Delete' color='red' onClick={() => this.toggleStateBool('openModal')} />}
+      trigger={
+        <Button
+          className='trans-cta-button'
+          content='Delete'
+          color='red'
+          onClick={() => this.toggleStateBool('openModal')}
+        />
+      }
     >
       <Header icon='archive' content='Are you sure you want to delete this transaction?' />
       <Modal.Content>
@@ -99,76 +108,80 @@ class TransItem extends React.Component {
       transactionId,
     } = this.props;
 
-    const { showTagAdd } = this.state;
+    const { showCTAs, showTagForm } = this.state;
+
+    const amountFloat = dollarToFloat(amount);
 
     return (
-      <Accordion fluid styled>
-        {/* Transaction information */}
-        <Accordion.Title active={this.state.isActive} onClick={() => this.toggleStateBool('isActive')}>
-          <Table celled striped>
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell width={3}>{date}</Table.Cell>
-                <Table.Cell width={10}>
-                  <div className='transaction-description'>{description}</div>
-                </Table.Cell>
-                <Table.Cell width={3}>
-                  <div className='transaction-amount'>{amount}</div>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-        </Accordion.Title>
-
-        {/* Transaction tags & CTAs */}
-        <Accordion.Content active={this.state.isActive}>
-          <div className='transaction-tags'>
-            {/* Transaction tags */}
-            {tags && tags.length > 0 && tags.map(tag => (
-              <TagButton
-                key={`${transactionId}-${tag.id}`}
-                onDelete={() => (
-                  detachTagFromTransaction({
-                    tagId: tag.id,
-                    tagName: tag.name,
-                    transactionId: transactionId,
-                  })
-                )}
-                onEdit={modifyTransactionTag}
-                tagId={tag.id}
-                tagName={tag.name}
-                transactionId={transactionId}
-              />
-            ))}
-
-            {/* Input to add new tag */}
-            {showTagAdd &&
-              <TagForm
-                onCancel={() => this.toggleStateBool('showTagAdd')}
-                onSubmit={attachTagToTransaction}
-                transactionId={transactionId}
-              />
-            }
-
-            {/* TODO: Loader that shows while add-tag call is being processed */}
-            {/* {isAddingTag && <Button className='tag-loader' loading />} */}
-
-            {/* Button that, when clicked, displays input to add new tag */}
-            {!showTagAdd &&
-              <TagAdd
-                onClick={() => this.toggleStateBool('showTagAdd')}
-              />
+      <Card
+        className={`trans-item amount-${amountFloat >= 0 ? 'pos' : 'neg'}`}
+        raised
+      >
+        <Card.Content>
+          <Card.Header className='trans-header'>
+            <div className='float-left'>{date}</div>
+            <div className='float-right'>
+              {floatToDollar(Math.abs(amountFloat))} {amountFloat >= 0 ?
+                <Icon name='arrow circle up' className='amount-pos-icon no-margin' /> :
+                <Icon name='arrow circle down' className='amount-neg-icon no-margin' />
+              }
+            </div>
+          </Card.Header>
+          <Card.Description className={`trans-description ${showCTAs ? 'margin-bottom-15' : ''}`}>
+            {description}
+          </Card.Description>
+          <div className={`inline-block ${!showCTAs ? 'margin-top-15' : ''}`}>
+            {tags && tags.length > 0 &&
+              tags.map(tag => (
+                <TagButton
+                  key={`${transactionId}-${tag.id}`}
+                  onDelete={() => (
+                    detachTagFromTransaction({
+                      tagId: tag.id,
+                      tagName: tag.name,
+                      transactionId: transactionId,
+                    })
+                  )}
+                  onEdit={modifyTransactionTag}
+                  tagId={tag.id}
+                  tagName={tag.name}
+                  transactionId={transactionId}
+                />
+              ))
             }
           </div>
-          <div>
-            {/* Edit transaction button */}
-            <Button content='Edit' color='blue' onClick={this.setEditMode} />
-
-            {/* Delete transaction button */}
-            {this.removeTransactionModal()}
-          </div>
-        </Accordion.Content>
-      </Accordion>
+          {showCTAs &&
+            <React.Fragment>
+              <div className='inline-block'>
+                {showTagForm ?
+                  <TagForm
+                    onCancel={() => this.toggleStateBool('showTagForm')}
+                    onSubmit={attachTagToTransaction}
+                    transactionId={transactionId}
+                  /> :
+                  <TagAdd
+                    onClick={() => this.toggleStateBool('showTagForm')}
+                  />
+                }
+              </div>
+              <div className='margin-top-5'>
+                <Button
+                  className='trans-cta-button'
+                  content='Edit'
+                  color='blue'
+                  // onClick={this.setEditMode}
+                />
+                {this.removeTransactionModal()}
+              </div>
+            </React.Fragment>
+          }
+        </Card.Content>
+        <Button
+          className='show-cta-button'
+          icon={`angle ${showCTAs ? 'up' : 'down'}`}
+          onClick={() => this.toggleStateBool('showCTAs')}
+        />
+      </Card>
     );
   }
 }

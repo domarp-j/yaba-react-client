@@ -43,25 +43,23 @@ const TagForm = ({
     type='text'
     value={values.tagName}
   >
-    <input />
-
+    <input className='tag-form-input' />
     <Button
-      className='grouped-button'
+      className='cta-accept'
       color='green'
       // loading={isAddingTag} TODO: Add loader?
       onClick={e => submitTagForm(e, handleSubmit, setTouched)}
     >
-      <Button.Content className='no-padding'>
+      <Button.Content>
         <Icon name='checkmark' className='no-margin' />
       </Button.Content>
     </Button>
-
     <Button
-      className='grouped-button'
+      className='cta-cancel'
       color='red'
       onClick={e => cancelTagForm(e, onCancel) }
     >
-      <Button.Content className='no-padding'>
+      <Button.Content>
         <Icon name='cancel' className='no-margin' />
       </Button.Content>
     </Button>

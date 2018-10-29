@@ -15,16 +15,14 @@ body {
 .margin-5 {
   margin: 5px !important; }
 
+.margin-top-5 {
+  margin-top: 5px !important; }
+
 .margin-top-15 {
   margin-top: 15px !important; }
 
-.margin-top-bottom-15 {
-  margin-top: 15px !important;
+.margin-bottom-15 {
   margin-bottom: 15px !important; }
-
-.margin-top-bottom-30 {
-  margin-top: 30px !important;
-  margin-bottom: 30px !important; }
 
 .margin-left-15 {
   margin-left: 15px !important; }
@@ -32,8 +30,16 @@ body {
 .margin-right-15 {
   margin-right: 15px !important; }
 
+.margin-top-bottom-15 {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important; }
+
 .margin-top-30 {
   margin-top: 30px !important; }
+
+.margin-top-bottom-30 {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important; }
 
 @media only screen and (max-device-width: 767px) {
   .margin-top-10-mobile {
@@ -43,9 +49,19 @@ body {
   .margin-top-30-mobile {
     margin-top: 30px !important; } }
 
+/* Display */
+.inline-block {
+  display: inline-block !important; }
+
 /* Positioning */
 .center-horizontally {
   text-align: center; }
+
+.float-right {
+  float: right; }
+
+.float-left {
+  float: left; }
 
 /* Width */
 @media only screen and (max-device-width: 767px) {
@@ -57,9 +73,6 @@ body {
   font-size: 1.2em; }
 
 /* Miscellaneous */
-.grouped-button {
-  padding: 11px !important; }
-
 .yaba-modal {
   position: absolute;
   left: 50%;
@@ -69,7 +82,7 @@ body {
 .auth-button {
   width: 100%;
   color: #FDFFFF !important;
-  background-color: #006D5B !important;
+  background-color: #006d5b !important;
   height: 60px;
   font-size: 24px !important;
   padding: 0 !important;
@@ -78,7 +91,7 @@ body {
 
 .yaba-button {
   color: #FDFFFF !important;
-  background-color: #006D5B !important;
+  background-color: #006d5b !important;
   padding: 8px !important; }
 
 /*
@@ -113,12 +126,12 @@ body {
 /* Tag */
 .yaba-tag {
   display: inline-block;
-  background-color: #006D5B;
+  background-color: #006d5b;
   color: white;
   border-radius: 3px 6px 6px 3px;
   -webkit-border-radius: 3px 6px 6px 3px;
   -moz-border-radius: 3px 6px 6px 3px;
-  border-left: 1px solid #006D5B;
+  border-left: 1px solid #006d5b;
   margin-left: 13px;
   padding: 6px;
   position: relative;
@@ -134,7 +147,7 @@ body {
     height: 0;
     border-top: 13px solid transparent;
     border-bottom: 13px solid transparent;
-    border-right: 13px solid #006D5B; }
+    border-right: 13px solid #006d5b; }
   .yaba-tag:after {
     content: "";
     display: block;
@@ -146,14 +159,45 @@ body {
     height: 4px;
     border-radius: 50%; }
 
+/* Add Tag Button */
+.yaba-tag-add {
+  margin-bottom: 4px !important;
+  padding: 6px !important; }
+  .yaba-tag-add .icon {
+    color: #333 !important; }
+
 /* Tag Button */
-.tag-spacing {
+.yaba-tag-button {
+  margin-bottom: 4px !important;
   margin-right: 4px !important;
-  margin-bottom: 4px !important; }
+  color: #333 !important;
+  padding: 6px !important;
+  font-weight: 100 !important; }
+  .yaba-tag-button.with-edit {
+    margin-right: 0px !important; }
+
+.yaba-tag-edit, .yaba-tag-delete {
+  padding: 0 !important;
+  height: 26px;
+  width: 26px; }
+  .yaba-tag-edit .icon, .yaba-tag-delete .icon {
+    font-size: 10px; }
+
+.yaba-tag-delete {
+  margin-right: 4px !important; }
 
 /* Tag Form */
 .tag-form {
-  height: 35px; }
+  height: 30px;
+  margin-bottom: 4px !important; }
+  .tag-form .tag-form-input {
+    padding-left: 6px !important;
+    width: 150px; }
+  .tag-form .cta-accept, .tag-form .cta-cancel {
+    padding: 0 0 0 8px !important;
+    width: 30px; }
+    .tag-form .cta-accept .icon, .tag-form .cta-cancel .icon {
+      font-size: 12px; }
 
 /* CSV Download */
 #csv-upload-input {
@@ -170,7 +214,7 @@ body {
 /* Dashboard */
 #dashboard {
   max-width: 500px;
-  border-left: 8px solid #006D5B;
+  border-left: 8px solid #006d5b;
   margin: 0 auto;
   margin-bottom: 30px; }
 
@@ -184,8 +228,7 @@ body {
   font-family: 'Abel'; }
 
 #filter-text {
-  font-size: 1.2em;
-  font-family: 'Abel'; }
+  font-size: 1.2em; }
 
 @media only screen and (min-device-width: 768px) {
   #filter-text {
@@ -197,19 +240,40 @@ body {
     margin-top: 20px !important; } }
 
 /* Transaction Item */
-.transaction-tags {
-  margin-bottom: 12px !important; }
-
-.tag-loader {
-  height: 34px; }
-
-@media only screen and (max-device-width: 767px) {
-  .transaction-description {
-    font-size: 24px;
-    line-height: 1.4;
-    margin: 10px 0; }
-  .transaction-amount {
-    font-size: 20px; } }
+.trans-item {
+  position: relative;
+  border-left-width: 2px !important;
+  border-left-style: solid !important; }
+  .trans-item.amount-pos {
+    border-left-color: #006d5b !important; }
+  .trans-item.amount-neg {
+    border-left-color: #D72C16 !important; }
+  .trans-item .trans-header {
+    font-size: 16px !important;
+    height: 22px !important; }
+    .trans-item .trans-header .amount-pos-icon {
+      color: #006d5b; }
+    .trans-item .trans-header .amount-neg-icon {
+      color: #D72C16; }
+  .trans-item .trans-description {
+    font-size: 16px !important; }
+  .trans-item .trans-cta-button {
+    padding: 6px !important; }
+  .trans-item .show-cta-button {
+    padding: 6px !important;
+    width: 30px !important;
+    position: absolute;
+    top: calc(100% - 30px);
+    left: calc(100% - 30px);
+    background-color: white; }
+    .trans-item .show-cta-button:active, .trans-item .show-cta-button:hover, .trans-item .show-cta-button:focus {
+      background-color: white; }
+  @media screen and (max-device-width: 622px) {
+    .trans-item {
+      width: 100% !important; } }
+  @media screen and (min-device-width: 622px) and (max-device-width: 992px) {
+    .trans-item {
+      width: 47% !important; } }
 
 /* Transaction List */
 #transaction-fetch-loader {
@@ -234,7 +298,7 @@ body {
   font-size: 24px;
   max-width: 520px;
   margin: 0 auto;
-  color: #666; }
+  color: #333; }
   @media only screen and (max-device-width: 767px) {
     .what-is-yaba {
       font-size: 18px; } }
@@ -248,7 +312,7 @@ body {
   max-width: 900px !important; }
 
 .console-button {
-  color: #FDFFFF !important;
-  background-color: #006D5B !important; }
+  color: white !important;
+  background-color: #006d5b !important; }
 
 /*# sourceMappingURL=index.css.map */

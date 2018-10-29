@@ -28,14 +28,12 @@ class TagButton extends React.Component {
     };
   })
 
-
   render() {
     const { onDelete, onEdit, tagId, tagName, transactionId } = this.props;
     const { showCTAs, showEdit } = this.state;
 
     return (
       showEdit ?
-        // Editing tag
         <TagForm
           initialValues={{ tagName }}
           onCancel={() => this.toggleBoolState('showEdit')}
@@ -43,28 +41,33 @@ class TagButton extends React.Component {
           tagId={tagId}
           transactionId={transactionId}
         /> :
-
-        // Displaying tag
-        <Button.Group className='tag tag-spacing'>
-          {/* Button displaying tag name */}
-          <Button content={tagName} onClick={() => this.toggleBoolState('showCTAs')} />
-
-          {/* Edit tag - attached button */}
+        <Button.Group>
+          <Button
+            className={`yaba-tag-button ${showCTAs ? 'with-edit' : ''}`}
+            content={tagName}
+            onClick={() => this.toggleBoolState('showCTAs')}
+          />
           {showCTAs &&
-          <Button className='grouped-button' color='blue' onClick={() => this.toggleBoolState('showEdit')}>
-            <Button.Content className='no-padding'>
-              <Icon name='edit' className='no-margin' />
-            </Button.Content>
-          </Button>
+            <Button
+              className='yaba-tag-edit'
+              color='blue'
+              onClick={() => this.toggleBoolState('showEdit')}
+            >
+              <Button.Content>
+                <Icon name='edit' className='no-margin' />
+              </Button.Content>
+            </Button>
           }
-
-          {/* Delete tag - attached button */}
           {showCTAs &&
-          <Button className='grouped-button' color='red' onClick={onDelete}>
-            <Button.Content className='no-padding'>
-              <Icon name='trash' className='no-margin' />
-            </Button.Content>
-          </Button>
+            <Button
+              className='yaba-tag-delete'
+              color='red'
+              onClick={onDelete}
+            >
+              <Button.Content>
+                <Icon name='trash' className='no-margin' />
+              </Button.Content>
+            </Button>
           }
         </Button.Group>
     );
