@@ -141,7 +141,6 @@ class TransList extends React.PureComponent {
 
   render() {
     const {
-      allTransactionsFetched,
       isFetching,
       noTransactionsFound,
       transactions,
@@ -161,35 +160,23 @@ class TransList extends React.PureComponent {
           {oldTransactions.length > 0 &&
             oldTransactions.map(transaction => this.renderTransaction(transaction))
           }
+
+          {isFetching &&
+            <Card id='loader'>
+              <Dimmer active inverted>
+                <Loader inverted>Loading</Loader>
+              </Dimmer>
+            </Card>
+          }
+
+          {noTransactionsFound &&
+            <Card>
+              <Segment id='end-of-list'>
+                No transactions found
+              </Segment>
+            </Card>
+          }
         </Card.Group>
-
-        {isFetching &&
-          <Segment id='transaction-fetch-loader' className='no-margin'>
-            <Dimmer active inverted>
-              <Loader inverted>Loading</Loader>
-            </Dimmer>
-          </Segment>
-        }
-
-        {allTransactionsFetched && !noTransactionsFound &&
-          <Segment
-            id='end-of-list-indicator'
-            color='black'
-            size='huge'
-          >
-            End of list
-          </Segment>
-        }
-
-        {noTransactionsFound &&
-          <Segment
-            id='end-of-list-indicator'
-            color='black'
-            size='huge'
-          >
-            No transactions found
-          </Segment>
-        }
       </div>
     );
   }

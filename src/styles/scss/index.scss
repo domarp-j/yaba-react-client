@@ -59,12 +59,20 @@ body {
   margin-top: 30px !important;
 }
 
+.margin-bottom-30 {
+  margin-bottom: 30px !important;
+}
+
 .margin-top-bottom-30 {
   margin-top: 30px !important;
   margin-bottom: 30px !important;
 }
 
 @media only screen and (max-device-width: $mobile-width) {
+  .margin-bottom-5-mobile {
+    margin-bottom: 5px !important;
+  }
+
   .margin-top-10-mobile {
     margin-top: 10px !important;
   }

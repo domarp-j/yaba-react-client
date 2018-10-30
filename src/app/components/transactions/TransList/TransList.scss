@@ -1,10 +1,18 @@
 /* Transaction List */
 
-#transaction-fetch-loader {
-  height: 90px;
+#loader {
+  text-align: center;
+  min-height: 100px;
+  vertical-align: middle;
+
+  @media only screen and (max-device-width: $mobile-width) {
+    width: 100%;
+  }
 }
 
-#end-of-list-indicator {
-  margin: 0 0 15px 0;
+#end-of-list {
   text-align: center;
+  min-height: 300px;
+  height: 100%;
+  vertical-align: middle;
 }

@@ -37,11 +37,16 @@ body {
 .margin-top-30 {
   margin-top: 30px !important; }
 
+.margin-bottom-30 {
+  margin-bottom: 30px !important; }
+
 .margin-top-bottom-30 {
   margin-top: 30px !important;
   margin-bottom: 30px !important; }
 
 @media only screen and (max-device-width: 767px) {
+  .margin-bottom-5-mobile {
+    margin-bottom: 5px !important; }
   .margin-top-10-mobile {
     margin-top: 10px !important; }
   .margin-top-20-mobile {
@@ -215,8 +220,7 @@ body {
 #dashboard {
   max-width: 500px;
   border-left: 8px solid #006d5b;
-  margin: 0 auto;
-  margin-bottom: 30px; }
+  margin: 0 auto; }
 
 #total-amount {
   margin: 20px 0 0 0;
@@ -276,12 +280,19 @@ body {
       width: 47% !important; } }
 
 /* Transaction List */
-#transaction-fetch-loader {
-  height: 90px; }
+#loader {
+  text-align: center;
+  min-height: 100px;
+  vertical-align: middle; }
+  @media only screen and (max-device-width: 767px) {
+    #loader {
+      width: 100%; } }
 
-#end-of-list-indicator {
-  margin: 0 0 15px 0;
-  text-align: center; }
+#end-of-list {
+  text-align: center;
+  min-height: 300px;
+  height: 100%;
+  vertical-align: middle; }
 
 .header-catch-phrase {
   text-align: center;

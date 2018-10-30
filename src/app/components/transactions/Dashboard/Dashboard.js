@@ -36,7 +36,7 @@ const Dashboard = ({
 }) => (
   <div>
     {/* Display transaction data */}
-    <Segment id='dashboard'>
+    <Segment id='dashboard' className={`${anyQueryPresent(queries) ? '' : 'margin-bottom-30'}`}>
       <Header
         as='h1'
         className='no-margin'
@@ -79,7 +79,7 @@ const Dashboard = ({
 
     {/* Current filter query */}
     {anyQueryPresent(queries) &&
-      <Segment id='filter-text' className='no-margin'>
+      <Segment id='filter-text' className='margin-bottom-15'>
         Displaying transactions <FilterText {...queries} />
       </Segment>
     }

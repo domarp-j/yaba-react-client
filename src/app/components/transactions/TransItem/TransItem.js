@@ -114,7 +114,7 @@ class TransItem extends React.Component {
 
     return (
       <Card
-        className={`trans-item amount-${amountFloat >= 0 ? 'pos' : 'neg'}`}
+        className={`trans-item margin-bottom-5-mobile amount-${amountFloat >= 0 ? 'pos' : 'neg'}`}
         raised
       >
         <Card.Content>
