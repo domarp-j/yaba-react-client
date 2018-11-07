@@ -15,7 +15,7 @@
   opacity: 0.93;
 }
 
-@media only screen and (max-device-width: $mobile-width) {
+@media only screen and (max-width: $mobile-width) {
   .margin-top-20-mobile {
     margin-top: 20px !important;
   }

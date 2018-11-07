@@ -68,7 +68,7 @@ body {
   margin-bottom: 30px !important;
 }
 
-@media only screen and (max-device-width: $mobile-width) {
+@media only screen and (max-width: $mobile-width) {
   .margin-bottom-5-mobile {
     margin-bottom: 5px !important;
   }
@@ -108,7 +108,7 @@ body {
 
 /* Width */
 
-@media only screen and (max-device-width: $mobile-width) {
+@media only screen and (max-width: $mobile-width) {
   .full-width-mobile {
     width: 100%;
   }

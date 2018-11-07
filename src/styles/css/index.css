@@ -44,7 +44,7 @@ body {
   margin-top: 30px !important;
   margin-bottom: 30px !important; }
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-width: 767px) {
   .margin-bottom-5-mobile {
     margin-bottom: 5px !important; }
   .margin-top-10-mobile {
@@ -69,7 +69,7 @@ body {
   float: left; }
 
 /* Width */
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-width: 767px) {
   .full-width-mobile {
     width: 100%; } }
 
@@ -120,7 +120,7 @@ body {
   max-width: 767px;
   opacity: 0.93; }
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-width: 767px) {
   .margin-top-20-mobile {
     margin-top: 20px !important; }
   .margin-top-30-mobile {
@@ -234,12 +234,12 @@ body {
 #filter-text {
   font-size: 1.2em; }
 
-@media only screen and (min-device-width: 768px) {
+@media only screen and (min-width: 768px) {
   #filter-text {
     text-align: center; } }
 
 /* Transaction Form */
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-width: 767px) {
   .cta-buttons {
     margin-top: 20px !important; } }
 
@@ -269,13 +269,13 @@ body {
     position: absolute;
     top: calc(100% - 30px);
     left: calc(100% - 30px);
-    background-color: white; }
+    background-color: transparent; }
     .trans-item .show-cta-button:active, .trans-item .show-cta-button:hover, .trans-item .show-cta-button:focus {
       background-color: white; }
-  @media screen and (max-device-width: 622px) {
+  @media only screen and (max-width: 622px) {
     .trans-item {
       width: 100% !important; } }
-  @media screen and (min-device-width: 622px) and (max-device-width: 992px) {
+  @media only screen and (min-width: 622px) and (max-width: 992px) {
     .trans-item {
       width: 47% !important; } }
 
@@ -284,7 +284,7 @@ body {
   text-align: center;
   min-height: 100px;
   vertical-align: middle; }
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     #loader {
       width: 100%; } }
 
@@ -299,7 +299,7 @@ body {
   font-family: 'Playfair Display';
   font-size: 42px;
   font-weight: 100; }
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     .header-catch-phrase {
       font-size: 32px; } }
 
@@ -310,7 +310,7 @@ body {
   max-width: 520px;
   margin: 0 auto;
   color: #333; }
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     .what-is-yaba {
       font-size: 18px; } }
 

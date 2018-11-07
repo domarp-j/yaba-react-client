@@ -4,7 +4,7 @@
   font-size: 42px;
   font-weight: 100;
 
-  @media only screen and (max-device-width: $mobile-width) {
+  @media only screen and (max-width: $mobile-width) {
     font-size: 32px;
   }
 }
@@ -17,7 +17,7 @@
   margin: 0 auto;
   color: $grey-base-dark;
 
-  @media only screen and (max-device-width: $mobile-width) {
+  @media only screen and (max-width: $mobile-width) {
     font-size: 18px;
   }
 }

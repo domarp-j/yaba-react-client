@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import TagAdd from '../../tags/TagAdd';
 import TagButton from '../../tags/TagButton';
 import TagForm from '../../tags/TagForm';
+import TransForm from '../TransForm';
 import {
   deleteTransaction,
   toggleEditState
@@ -39,7 +40,8 @@ class TransItem extends React.Component {
     super();
     this.state = {
       isActive: false,
-      openModal: false,
+      openDeleteModal: false,
+      openEditModal: false,
       showTagForm: false,
       showCTAs: false,
     };
@@ -63,19 +65,46 @@ class TransItem extends React.Component {
 
   removeTransItem = async () => {
     this.props.deleteTransaction(this.props.transactionId);
-    this.toggleStateBool('openModal');
+    this.toggleStateBool('openDeleteModal');
   }
+
+  editTransactionModal = () => (
+    <Modal
+      className='yaba-modal'
+      open={this.state.openEditModal}
+      trigger={
+        <Button
+          className='trans-cta-button'
+          content='Edit'
+          color='blue'
+          onClick={() => this.toggleStateBool('openEditModal')}
+        />
+      }
+    >
+      <TransForm
+        editState
+        initialValues={{
+          amount: this.props.amount,
+          date: this.props.date,
+          description: this.props.description,
+        }}
+        onCancel={() => this.toggleStateBool('openEditModal')}
+        onSave={() => this.toggleStateBool('openEditModal')}
+        transactionId={this.props.transactionId}
+      />
+    </Modal>
+  )
 
   removeTransactionModal = () => (
     <Modal
       className='yaba-modal'
-      open={this.state.openModal}
+      open={this.state.openDeleteModal}
       trigger={
         <Button
           className='trans-cta-button'
           content='Delete'
           color='red'
-          onClick={() => this.toggleStateBool('openModal')}
+          onClick={() => this.toggleStateBool('openDeleteModal')}
         />
       }
     >
@@ -86,7 +115,7 @@ class TransItem extends React.Component {
         </p>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='blue' onClick={() => this.toggleStateBool('openModal')}>
+        <Button color='blue' onClick={() => this.toggleStateBool('openDeleteModal')}>
           No, keep it
         </Button>
         <Button color='red' onClick={this.removeTransItem}>
@@ -165,12 +194,7 @@ class TransItem extends React.Component {
                 }
               </div>
               <div className='margin-top-5'>
-                <Button
-                  className='trans-cta-button'
-                  content='Edit'
-                  color='blue'
-                  // onClick={this.setEditMode}
-                />
+                {this.editTransactionModal()}
                 {this.removeTransactionModal()}
               </div>
             </React.Fragment>

@@ -152,7 +152,7 @@ class TransList extends React.PureComponent {
 
     return (
       <div ref={this.setPageRef}>
-        <Card.Group>
+        <Card.Group centered>
           {newTransactions.length > 0 &&
             newTransactions.map(transaction => this.renderTransaction(transaction))
           }

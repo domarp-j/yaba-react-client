@@ -7,15 +7,18 @@ import * as yup from 'yup';
 import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 
-import { createTransaction } from '../../../store/actions/transactions';
+import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
 import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
+import { dollarToFloat } from '../../../utils/dollarTools';
 
 const fields = ['description', 'amount', 'date'];
 
 class TransForm extends React.Component {
   static propTypes = {
     createTransaction: PropTypes.func,
+    editState: PropTypes.bool,
+    updateTransaction: PropTypes.func,
     errors: PropTypes.shape({
       description: PropTypes.string,
       amount: PropTypes.string,
@@ -26,9 +29,15 @@ class TransForm extends React.Component {
     handleSubmit: PropTypes.func,
     onCancel: PropTypes.func,
     onSave: PropTypes.func,
+    initialValues: PropTypes.shape({
+      amount: PropTypes.string,
+      date: PropTypes.string,
+      description: PropTypes.string,
+    }),
     isAdding: PropTypes.bool,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
+    transactionId: PropTypes.number,
     touched: PropTypes.shape({
       amount: PropTypes.bool,
       date: PropTypes.bool,
@@ -41,11 +50,27 @@ class TransForm extends React.Component {
     }),
   };
 
+  static defaultProps = {
+    editState: false,
+    initialValues: {
+      amount: '',
+      date: '',
+      description: '',
+    },
+  }
+
   constructor() {
     super();
     this.state = {
       positiveAmount: true,
     };
+  }
+
+  componentDidMount() {
+    const { amount } = this.props.values;
+    this.setState({
+      positiveAmount: amount ? dollarToFloat(amount) >= 0 : true,
+    });
   }
 
   amountButton = {
@@ -76,6 +101,7 @@ class TransForm extends React.Component {
 
   render() {
     const {
+      editState,
       errors,
       handleBlur,
       handleChange,
@@ -90,8 +116,6 @@ class TransForm extends React.Component {
 
     return (
       <Segment className='padding-30'>
-        <h2>Add a transaction</h2>
-
         <Form onSubmit={this.setValuesAndSubmit}>
           <Form.Group>
             <Form.Field
@@ -157,8 +181,8 @@ class TransForm extends React.Component {
           <div className='margin-top-30-mobile'>
             <Button
               className='full-width-mobile margin-top-10-mobile margin-top-15'
-              color='green'
-              content='Add'
+              color={editState ? 'blue' : 'green'}
+              content={editState ? 'Edit' : 'Add'}
               disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
               loading={isAdding}
               onClick={() => { setTouched(touchAllFields(fields)); }}
@@ -197,7 +221,7 @@ const schema = yup.object().shape({
 const formikOptions = {
   handleSubmit: (values, { props, resetForm, setValues }) => {
     new Promise(resolve => {
-      props.createTransaction(values);
+      props.editState ? props.updateTransaction({ ...values, id: props.transactionId }) : props.createTransaction(values);
       resolve();
     }).then(() => {
       setValues({});
@@ -205,8 +229,10 @@ const formikOptions = {
       props.onSave();
     });
   },
-  mapPropsToValues: () => ({
-    date: currentDateMDY(),
+  mapPropsToValues: props => ({
+    amount: props.initialValues ? props.initialValues.amount : '',
+    date: props.initialValues ? props.initialValues.date : currentDateMDY(),
+    description: props.initialValues ? props.initialValues.description : '',
   }),
   validationSchema: schema,
 };
@@ -218,6 +244,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createTransaction: data => { dispatch(createTransaction(data)); },
+  updateTransaction: data => { dispatch(updateTransaction(data)); },
 });
 
 export { TransForm as BaseTransForm };
