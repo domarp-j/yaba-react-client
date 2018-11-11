@@ -91,7 +91,7 @@ class TransForm extends React.Component {
 
     new Promise(resolve => {
       setValues({
-        amount: (positiveAmount ? '+' : '-') + values.amount.replace(/\$|,/g, ''),
+        amount: (positiveAmount ? '+' : '-') + values.amount.replace(/\$|,|-/g, ''),
         description: values.description,
         date: dateToYMD(values.date),
       });
