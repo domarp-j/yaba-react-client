@@ -7,7 +7,6 @@ import NavSignedIn from '../../components/navigation/NavSignedIn';
 import CsvDownload from '../../components/transactions/CsvDownload';
 import Dashboard from '../../components/transactions/Dashboard';
 import Filter from '../../components/transactions/Filter';
-import TransForm from '../../components/transactions/TransForm';
 import TransList from '../../components/transactions/TransList';
 import Sorter from '../../components/transactions/Sorter';
 
@@ -20,7 +19,6 @@ class TransactionsPage extends React.Component {
   constructor() {
     super();
     this.state = {
-      openAddModal: false,
       openCsvModal: false,
       openFilterModal: false,
       openSortModal: false,
@@ -68,11 +66,6 @@ class TransactionsPage extends React.Component {
         <NavSignedIn />
         <Container textAlign='left' id='transactions-page'>
           <Dashboard
-            addButton={() => this.manageTransactionModal({
-              buttonIcon: 'plus',
-              stateKey: 'openAddModal',
-              TransactionComponent: TransForm,
-            })}
             count={count}
             csvButton={() => this.manageTransactionModal({
               buttonIcon: 'file',

@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import { any, identity, keys, merge, partition } from 'ramda';
 
 import TransItem from '../TransItem';
-import TransEdit from '../TransEdit';
+import TransForm from '../TransForm';
 import {
   DEFAULT_FETCH_LIMIT,
   clearTransactions,
-  fetchTransactions
+  fetchTransactions,
+  toggleTransactionForm
 } from '../../../store/actions/transactions';
 
 class TransList extends React.PureComponent {
@@ -20,7 +21,9 @@ class TransList extends React.PureComponent {
     isFetching: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
     queries: PropTypes.object,
+    showTransactionForm: PropTypes.bool,
     sorting: PropTypes.object,
+    toggleTransactionForm: PropTypes.func,
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
@@ -120,29 +123,22 @@ class TransList extends React.PureComponent {
   )
 
   renderTransaction = transaction => (
-    transaction.editMode ?
-      <TransEdit
-        amount={transaction.amount}
-        date={transaction.date}
-        description={transaction.description}
-        key={transaction.id}
-        tags={transaction.tags}
-        transactionId={transaction.id}
-      /> :
-      <TransItem
-        amount={transaction.amount}
-        date={transaction.date}
-        description={transaction.description}
-        key={transaction.id}
-        tags={transaction.tags}
-        transactionId={transaction.id}
-      />
+    <TransItem
+      amount={transaction.amount}
+      date={transaction.date}
+      description={transaction.description}
+      key={transaction.id}
+      tags={transaction.tags}
+      transactionId={transaction.id}
+    />
   )
 
   render() {
     const {
       isFetching,
       noTransactionsFound,
+      showTransactionForm,
+      toggleTransactionForm,
       transactions,
     } = this.props;
 
@@ -153,14 +149,18 @@ class TransList extends React.PureComponent {
     return (
       <div ref={this.setPageRef}>
         <Card.Group centered>
+          {showTransactionForm &&
+            <TransForm
+              onCancel={toggleTransactionForm}
+              onSave={toggleTransactionForm}
+            />
+          }
           {newTransactions.length > 0 &&
             newTransactions.map(transaction => this.renderTransaction(transaction))
           }
-
           {oldTransactions.length > 0 &&
             oldTransactions.map(transaction => this.renderTransaction(transaction))
           }
-
           {isFetching &&
             <Card id='loader'>
               <Dimmer active inverted>
@@ -168,7 +168,6 @@ class TransList extends React.PureComponent {
               </Dimmer>
             </Card>
           }
-
           {noTransactionsFound &&
             <Card>
               <Segment id='end-of-list'>
@@ -183,17 +182,19 @@ class TransList extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  allTransactionsFetched: state.transactions.events.allTransactionsFetched,
-  isFetching: state.transactions.events.isFetching,
-  noTransactionsFound: state.transactions.events.noTransactionsFound,
+  allTransactionsFetched: state.transactions.boolEvents.allTransactionsFetched,
+  isFetching: state.transactions.boolEvents.isFetching,
+  noTransactionsFound: state.transactions.boolEvents.noTransactionsFound,
   queries: state.transactions.queries,
   sorting: state.transactions.sorting,
+  showTransactionForm: state.transactions.boolEvents.toggleTransactionForm,
   transactions: state.transactions.items,
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearTransactions: () => { dispatch(clearTransactions()); },
-  fetchTransactions: params => { dispatch(fetchTransactions(params)); },
+  clearTransactions: () => dispatch(clearTransactions()),
+  fetchTransactions: params => dispatch(fetchTransactions(params)),
+  toggleTransactionForm: () => dispatch(toggleTransactionForm()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransList);

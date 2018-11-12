@@ -23,13 +23,14 @@ const initialState = {
     items: [],
     count: 0,
     totalAmount: '',
-    events: {
+    boolEvents: {
       allTransactionsFetched: false,
       isAdding: false,
       isEditing: false,
       isFetching: false,
       isDeleting: false,
       noTransactionsFound: false,
+      toggleTransactionForm: false,
     },
     queries: {
       description: undefined,

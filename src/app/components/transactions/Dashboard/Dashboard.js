@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import FilterText from '../FilterText';
 import { clearTransactionQueries } from '../../../store/actions/queries';
+import { toggleTransactionForm } from '../../../store/actions/transactions';
 
 /*
   This is a dashboard that shows important transaction data such as
@@ -25,13 +26,13 @@ const anyQueryPresent = ({
 );
 
 const Dashboard = ({
-  addButton,
   clearQueries,
   count,
-  csvButton,
-  filterButton,
+  csvButton: CsvModal,
+  filterButton: FilterModal,
   queries,
-  sortButton,
+  toggleTransactionForm,
+  sortButton: SortModal,
   totalAmount,
 }) => (
   <div>
@@ -60,10 +61,16 @@ const Dashboard = ({
 
       {/* Transaction CTAs */}
       <div className='center-horizontally'>
-        {addButton()}
-        {filterButton()}
-        {sortButton()}
-        {csvButton()}
+        <Button
+          circular
+          className='margin-5 console-button'
+          onClick={toggleTransactionForm}
+          size='large'
+          icon='plus'
+        />
+        <FilterModal />
+        <SortModal />
+        <CsvModal />
         {anyQueryPresent(queries) &&
           <Button
             circular
@@ -94,6 +101,7 @@ Dashboard.propTypes = {
   filterButton: PropTypes.func,
   queries: PropTypes.object,
   sortButton: PropTypes.func,
+  toggleTransactionForm: PropTypes.func,
   totalAmount: PropTypes.string,
 };
 
@@ -103,6 +111,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearQueries: () => dispatch(clearTransactionQueries()),
+  toggleTransactionForm: () => dispatch(toggleTransactionForm()),
 });
 
 export default connect(

@@ -67,6 +67,11 @@ export const fetchTransactions = (params={}) => dispatch => {
 
 // Adding transactions
 
+export const TOGGLE_TRANS_FORM = 'TOGGLE_TRANS_FORM';
+export const toggleTransactionForm = () => ({
+  type: TOGGLE_TRANS_FORM,
+});
+
 export const REQUEST_TO_ADD_TRANSACTION = 'REQUEST_TO_ADD_TRANSACTION';
 export const requestAddTransaction = () => ({
   type: REQUEST_TO_ADD_TRANSACTION,
@@ -104,13 +109,6 @@ export const createTransaction = (data={}) => dispatch => {
 };
 
 // Updating transactions
-
-export const TOGGLE_EDIT_STATE = 'TOGGLE_EDIT_STATE';
-export const toggleEditState = (transaction, editMode) => ({
-  type: TOGGLE_EDIT_STATE,
-  transaction,
-  editMode,
-});
 
 export const REQUEST_TO_UPDATE_TRANSACTION = 'REQUEST_TO_UPDATE_TRANSACTION';
 export const requestUpdateTransaction = () => ({

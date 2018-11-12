@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Form, Message, Button } from 'semantic-ui-react';
+import { Button, Card, Form, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose } from 'ramda';
 import * as yup from 'yup';
@@ -8,7 +8,7 @@ import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 
 import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
-import { errorsList, allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
+import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
 
@@ -73,11 +73,6 @@ class TransForm extends React.Component {
     });
   }
 
-  amountButton = {
-    [true]: { color: 'green', icon: 'plus' },
-    [false]: { color: 'red', icon: 'minus' },
-  };
-
   changeAmountType = e => {
     e.preventDefault();
     this.setState(prevState => ({
@@ -115,96 +110,95 @@ class TransForm extends React.Component {
     const { positiveAmount } = this.state;
 
     return (
-      <Segment className='padding-30'>
-        <Form onSubmit={this.setValuesAndSubmit}>
-          <Form.Group>
-            <Form.Field
-              error={allFieldsTouched(touched, fields) && !!errors.date}
-              width={3}
-            >
-              <label htmlFor='date'>Date</label>
-              <div className='ui input'>
-                <Cleave
-                  id='date'
-                  name='date'
-                  options={{
-                    date: true, datePattern: ['m', 'd', 'Y'],
-                  }}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.date}
-                />
-              </div>
-            </Form.Field>
+      <Card className={`trans-form yaba-card amount-${positiveAmount ? 'pos' : 'neg'}`}>
+        <Card.Content>
+          <Card.Description >
+            <Form onSubmit={this.setValuesAndSubmit}>
+              <Form.Group>
+                <Form.Field
+                  error={allFieldsTouched(touched, fields) && !!errors.date}
+                  width={7}
+                >
+                  <div className='ui input'>
+                    <Cleave
+                      className='input-height input-padding'
+                      id='date'
+                      name='date'
+                      options={{
+                        date: true, datePattern: ['m', 'd', 'Y'],
+                      }}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.date}
+                    />
+                  </div>
+                </Form.Field>
 
-            <Form.Input
-              className='margin-top-20-mobile'
-              label='Description'
-              type='text'
-              name='description'
-              id='description'
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.description || ''}
-              error={allFieldsTouched(touched, fields) && !!errors.description}
-              width={9}
-            />
+                <Form.Field
+                  className='margin-top-10-mobile'
+                  error={allFieldsTouched(touched, fields) && !!errors.amount}
+                  width={9}
+                >
+                  <div className='ui left action input'>
+                    <Button
+                      className={`input-height amount-button ${positiveAmount ? 'success' : 'error'}-button`}
+                      icon={positiveAmount ? 'plus' : 'minus'}
+                      onClick={e => { this.changeAmountType(e); }}
+                    />
+                    <Cleave
+                      className='input-height input-padding'
+                      id='amount'
+                      name='amount'
+                      options={{
+                        numeral: true,
+                        numeralPositiveOnly: true,
+                        prefix: '$',
+                      }}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.amount || ''}
+                    />
+                  </div>
+                </Form.Field>
+              </Form.Group>
 
-            <Form.Field
-              className='margin-top-20-mobile'
-              error={allFieldsTouched(touched, fields) && !!errors.amount}
-              width={4}
-            >
-              <label htmlFor='date'>Amount</label>
-              <div className='ui left action input'>
+              <Form.Group>
+                <Form.Field
+                  className='margin-top-10-mobile'
+                  error={allFieldsTouched(touched, fields) && !!errors.description}
+                  width={16}
+                >
+                  <Input
+                    className='input-height input-padding-inner'
+                    name='description'
+                    id='description'
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder='Description'
+                    value={values.description || ''}
+                  />
+                </Form.Field>
+              </Form.Group>
+
+              <div className='margin-top-20-mobile'>
                 <Button
-                  color={this.amountButton[positiveAmount].color}
-                  icon={this.amountButton[positiveAmount].icon}
-                  onClick={e => { this.changeAmountType(e); }}
+                  className='trans-cta-button success-button'
+                  content={editState ? 'Edit' : 'Add'}
+                  disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
+                  loading={isAdding}
+                  onClick={() => { setTouched(touchAllFields(fields)); }}
                 />
-                <Cleave
-                  id='amount'
-                  name='amount'
-                  options={{
-                    numeral: true,
-                    numeralPositiveOnly: true,
-                    prefix: '$',
-                  }}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.amount || ''}
+
+                <Button
+                  className='trans-cta-button'
+                  content='Cancel'
+                  onClick={e => { e.preventDefault(); onCancel(); }}
                 />
               </div>
-            </Form.Field>
-          </Form.Group>
-
-          <div className='margin-top-30-mobile'>
-            <Button
-              className='full-width-mobile margin-top-10-mobile margin-top-15'
-              color={editState ? 'blue' : 'green'}
-              content={editState ? 'Edit' : 'Add'}
-              disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
-              loading={isAdding}
-              onClick={() => { setTouched(touchAllFields(fields)); }}
-              size='large'
-            />
-
-            <Button
-              className='full-width-mobile margin-top-10-mobile margin-top-15'
-              content='Cancel'
-              onClick={e => { e.preventDefault(); onCancel(); }}
-              size='large'
-            />
-          </div>
-        </Form>
-
-        <Message
-          error
-          hidden={!(allFieldsTouched(touched, fields) && anyErrorsPresent(errors))}
-          header='There was an error while adding your transaction'
-          list={errorsList(errors)}
-        />
-      </Segment>
+            </Form>
+          </Card.Description>
+        </Card.Content>
+      </Card>
     );
   }
 }
@@ -239,7 +233,7 @@ const formikOptions = {
 
 
 const mapStateToProps = state => ({
-  isAdding: state.transactions.events.isAdding,
+  isAdding: state.transactions.boolEvents.isAdding,
 });
 
 const mapDispatchToProps = dispatch => ({

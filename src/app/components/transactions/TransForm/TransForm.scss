@@ -1,7 +1,38 @@
 /* Transaction Form */
 
-@media only screen and (max-width: $mobile-width) {
-  .cta-buttons {
-    margin-top: 20px !important;
+.trans-form {
+  .input-height {
+    height: 30px;
+  }
+
+  .input-padding {
+    padding-left: 6px !important;
+  }
+
+  .input-padding-inner {
+    input {
+      padding-left: 6px !important;
+    }
+  }
+
+  .amount-button {
+    padding: 0 8px !important;
+  }
+
+
+  @media only screen and (max-width: 622px) {
+    width: 100% !important;
+  }
+
+  @media only screen
+    and (min-width: 622px)
+    and (max-width: 992px) {
+    width: 47% !important;
+  }
+
+  @media only screen and (max-width: $mobile-width) {
+    .cta-buttons {
+      margin-top: 20px !important;
+    }
   }
 }

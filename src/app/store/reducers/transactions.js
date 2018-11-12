@@ -7,9 +7,9 @@ import {
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
   REPORT_NO_TRANSACTIONS,
+  TOGGLE_TRANS_FORM,
   REQUEST_TO_ADD_TRANSACTION,
   PUSH_NEW_TRANSACTION,
-  TOGGLE_EDIT_STATE,
   REQUEST_TO_UPDATE_TRANSACTION,
   EDIT_TRANSACTION,
   REQUEST_TO_DELETE_TRANSACTION,
@@ -47,8 +47,8 @@ const transactions = (
   case REQUEST_TRANSACTIONS:
     return {
       ...state,
-      events: {
-        ...state.events,
+      boolEvents: {
+        ...state.boolEvents,
         isFetching: true,
         noTransactionsFound: false,
       },
@@ -56,8 +56,8 @@ const transactions = (
   case RECEIVE_TRANSACTIONS:
     return {
       ...state,
-      events: {
-        ...state.events,
+      boolEvents: {
+        ...state.boolEvents,
         allTransactionsFetched: action.transactions.items.length < DEFAULT_FETCH_LIMIT,
         isFetching: false,
       },
@@ -68,47 +68,46 @@ const transactions = (
   case REPORT_NO_TRANSACTIONS:
     return {
       ...state,
-      events: {
-        ...state.events,
+      boolEvents: {
+        ...state.boolEvents,
         allTransactionsFetched: true,
         isFetching: false,
         noTransactionsFound: true,
       },
     };
   // Adding transactions
+  case TOGGLE_TRANS_FORM:
+    return {
+      ...state,
+      boolEvents: {
+        ...state.boolEvents,
+        toggleTransactionForm: !state.boolEvents.toggleTransactionForm,
+      },
+    };
   case REQUEST_TO_ADD_TRANSACTION:
     return {
       ...state,
-      events: {
-        ...state.events,
+      boolEvents: {
+        ...state.boolEvents,
         isAdding: true,
       },
     };
   case PUSH_NEW_TRANSACTION:
     return {
       ...state,
-      events: { ...state.events, isAdding: false },
+      boolEvents: { ...state.boolEvents, isAdding: false },
       items: [{ ...action.transaction, justAdded: true, tags: [] }, ...state.items],
     };
   // Editing transactions
-  case TOGGLE_EDIT_STATE:
-    return {
-      ...state,
-      items: update(
-        findIndex(item => item.id === action.transaction.id)(state.items),
-        { ...action.transaction, editMode: action.editMode },
-        state.items
-      ),
-    };
   case REQUEST_TO_UPDATE_TRANSACTION:
     return {
       ...state,
-      events: { ...state.events, isEditing: true },
+      boolEvents: { ...state.boolEvents, isEditing: true },
     };
   case EDIT_TRANSACTION:
     return {
       ...state,
-      events: { ...state.events, isEditing: false },
+      boolEvents: { ...state.boolEvents, isEditing: false },
       items: state.items.map(item => {
         if (item.id !== action.transaction.id) return item;
         return { ...action.transaction, tags: item.tags };
@@ -118,12 +117,12 @@ const transactions = (
   case REQUEST_TO_DELETE_TRANSACTION:
     return {
       ...state,
-      events: { ...state.events, isDeleting: true },
+      boolEvents: { ...state.boolEvents, isDeleting: true },
     };
   case REMOVE_DELETED_TRANSACTION:
     return {
       ...state,
-      events: { ...state.events, isDeleting: false },
+      boolEvents: { ...state.boolEvents, isDeleting: false },
       items: reject(item => (
         item.id === action.transaction.id
       ), state.items),
@@ -132,7 +131,7 @@ const transactions = (
   case CLEAR_TRANSACTIONS:
     return {
       ...state,
-      events: { ...state.events, isFetching: false },
+      boolEvents: { ...state.boolEvents, isFetching: false },
       items: [],
     };
   // Adding a tag to a transaction

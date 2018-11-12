@@ -69,6 +69,10 @@ body {
 }
 
 @media only screen and (max-width: $mobile-width) {
+  .margin-top-5-mobile {
+    margin-top: 5px !important;
+  }
+
   .margin-bottom-5-mobile {
     margin-bottom: 5px !important;
   }
@@ -120,6 +124,18 @@ body {
   font-size: 1.2em;
 }
 
+/* Buttons */
+
+.success-button {
+  background-color: $primary-color !important;
+  color: $white-base !important;
+}
+
+.error-button {
+  background-color: $red-base !important;
+  color: $white-base !important;
+}
+
 /* Miscellaneous */
 
 .yaba-modal {
@@ -144,6 +160,23 @@ body {
   color: $white-base !important;
   background-color: $primary-color !important;
   padding: 8px !important;
+}
+
+.yaba-card {
+  border-left-width: 2px !important;
+  border-left-style: solid !important;
+
+  &.amount-pos {
+    border-left-color: $primary-color !important;
+  }
+
+  &.amount-neg {
+    border-left-color: $red-base !important;
+  }
+}
+
+.trans-cta-button {
+  padding: 6px !important;
 }
 
 /*
