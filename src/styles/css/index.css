@@ -324,9 +324,10 @@ body {
 
 #end-of-list {
   text-align: center;
-  min-height: 300px;
-  height: 100%;
-  vertical-align: middle; }
+  vertical-align: middle;
+  height: 60px;
+  font-size: 18px;
+  font-weight: 600; }
 
 .header-catch-phrase {
   text-align: center;

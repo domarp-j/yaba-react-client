@@ -33,7 +33,7 @@ const initialState = {
       toggleTransactionForm: false,
     },
     queries: {
-      description: undefined,
+      description: '',
       fromDate: '',
       matchAllTags: true,
       tagNames: [],

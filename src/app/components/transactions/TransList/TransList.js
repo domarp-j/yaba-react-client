@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Dimmer, Loader, Segment  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { any, identity, keys, merge, partition } from 'ramda';
+import { any, equals, identity, keys, merge, partition } from 'ramda';
 
 import TransItem from '../TransItem';
 import TransForm from '../TransForm';
@@ -98,7 +98,7 @@ class TransList extends React.PureComponent {
 
   // Check if a transaction query param or sort param has changed
   queryOrSortChanged = (prevProps, currProps) => (
-    any(identity)(
+    equals(keys(prevProps.queries).length, keys(currProps.queries).length) && any(identity)(
       keys(merge(prevProps.queries, prevProps.sorting)).map(param => (
         merge(prevProps.queries, prevProps.sorting)[param] !==
           merge(currProps.queries, currProps.sorting)[param]
@@ -168,14 +168,12 @@ class TransList extends React.PureComponent {
               </Dimmer>
             </Card>
           }
-          {noTransactionsFound &&
-            <Card>
-              <Segment id='end-of-list'>
-                No transactions found
-              </Segment>
-            </Card>
-          }
         </Card.Group>
+        {noTransactionsFound &&
+          <Segment id='end-of-list'>
+            No transactions found
+          </Segment>
+        }
       </div>
     );
   }
