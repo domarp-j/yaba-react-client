@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from 'semantic-ui-react';
 
-import Tag from '../../tags/Tag';
+import { Tag } from '../../tags';
 
 const NavBase = props => (
   <Menu secondary>

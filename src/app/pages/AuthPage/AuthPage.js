@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Segment } from 'semantic-ui-react';
 
-import NavSignedOut from '../../components/navigation/NavSignedOut';
-import SignInForm from '../../components/auth/SignInForm';
-import SignUpForm from '../../components/auth/SignUpForm';
+import { NavSignedOut } from '../../components/navigation';
+import { SignInForm, SignUpForm } from '../../components/auth';
 import routes from '../../routes';
 
 const signIn = 'signIn';

@@ -6,9 +6,7 @@ import { connect } from 'react-redux';
 import Cleave from 'cleave.js/react';
 import moment from 'moment';
 
-import TagAdd from '../../tags/TagAdd';
-import TagButton from '../../tags/TagButton';
-import TagForm from '../../tags/TagForm';
+import { TagAdd, TagButton, TagForm } from '../../tags';
 import FilterText from '../FilterText';
 import {
   FROM_DATE,

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import TagAdd from '../../tags/TagAdd';
-import TagButton from '../../tags/TagButton';
-import TagForm from '../../tags/TagForm';
+import { TagAdd, TagButton, TagForm } from '../../tags';
 import TransForm from '../TransForm';
 import { deleteTransaction } from '../../../store/actions/transactions';
 import {

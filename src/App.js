@@ -3,9 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { generateRequireSignInWrapper } from 'redux-token-auth';
 
 import routes from './app/routes';
-import Alerts from './app/components/misc/Alerts';
-import AuthPage from './app/pages/AuthPage';
-import TransactionsPage from './app/pages/TransactionsPage';
+import { Alerts } from './app/components/misc';
+import { AuthPage, TransactionsPage } from './app/pages';
 
 const requireSignIn = generateRequireSignInWrapper({
   redirectPathIfNotSignedIn: routes.signInPage,

@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import { Button, Container, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import NavSignedIn from '../../components/navigation/NavSignedIn';
-import CsvDownload from '../../components/transactions/CsvDownload';
-import Dashboard from '../../components/transactions/Dashboard';
-import Filter from '../../components/transactions/Filter';
-import TransList from '../../components/transactions/TransList';
-import Sorter from '../../components/transactions/Sorter';
+import { NavSignedIn } from '../../components/navigation';
+import { CsvDownload, Dashboard, Filter, Sorter, TransList } from '../../components/transactions';
 
 class TransactionsPage extends React.Component {
   static propTypes = {
