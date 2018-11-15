@@ -6,7 +6,6 @@ import TagForm from '../TagForm';
 
 class TagButton extends React.Component {
   static propTypes = {
-    detachTagFromTransaction: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
     tagId: PropTypes.number,
@@ -34,23 +33,24 @@ class TagButton extends React.Component {
 
     return (
       showEdit ?
-        <TagForm
-          initialValues={{ tagName }}
-          onCancel={() => this.toggleBoolState('showEdit')}
-          onSubmit={onEdit}
-          tagId={tagId}
-          transactionId={transactionId}
-        /> :
+        <div className='third-width'>
+          <TagForm
+            initialValues={{ tagName }}
+            onCancel={() => this.toggleBoolState('showEdit')}
+            onSave={onEdit}
+            tagId={tagId}
+            transactionId={transactionId}
+          />
+        </div> :
         <Button.Group>
           <Button
             className={`yaba-tag-button ${showCTAs ? 'with-edit' : ''}`}
             content={tagName}
-            onClick={() => this.toggleBoolState('showCTAs')}
+            onClick={e => { e.preventDefault(); this.toggleBoolState('showCTAs'); }}
           />
           {showCTAs &&
             <Button
-              className='yaba-tag-edit'
-              color='blue'
+              className='yaba-tag-edit info-button'
               onClick={() => this.toggleBoolState('showEdit')}
             >
               <Button.Content>
@@ -60,9 +60,8 @@ class TagButton extends React.Component {
           }
           {showCTAs &&
             <Button
-              className='yaba-tag-delete'
-              color='red'
-              onClick={onDelete}
+              className='yaba-tag-delete error-button'
+              onClick={() => onDelete({ tagId, tagName, transactionId })}
             >
               <Button.Content>
                 <Icon name='trash' className='no-margin' />

@@ -45,9 +45,7 @@ const TagForm = ({
   >
     <input className='tag-form-input' />
     <Button
-      className='cta-accept'
-      color='green'
-      // loading={isAddingTag} TODO: Add loader?
+      className='cta-accept success-button'
       onClick={e => submitTagForm(e, handleSubmit, setTouched)}
     >
       <Button.Content>
@@ -55,8 +53,7 @@ const TagForm = ({
       </Button.Content>
     </Button>
     <Button
-      className='cta-cancel'
-      color='red'
+      className='cta-cancel error-button'
       onClick={e => cancelTagForm(e, onCancel) }
     >
       <Button.Content>
@@ -73,7 +70,7 @@ TagForm.propTypes = {
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
   onCancel: PropTypes.func,
-  onSubmit: PropTypes.func,
+  onSave: PropTypes.func,
   setTouched: PropTypes.func,
   touched: PropTypes.shape({
     tagName: PropTypes.bool,
@@ -91,7 +88,8 @@ const schema = yup.object().shape({
 
 const formikOptions = {
   handleSubmit: (values, { props }) => {
-    props.onSubmit({
+    props.onSave({
+      oldTagName: props.initialValues && props.initialValues.tagName,
       tagId: props.tagId,
       tagName: values.tagName,
       transactionId: props.transactionId,

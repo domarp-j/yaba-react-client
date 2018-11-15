@@ -74,8 +74,7 @@ const Dashboard = ({
         {anyQueryPresent(queries) &&
           <Button
             circular
-            className='margin-5'
-            color='red'
+            className='margin-5 error-button'
             icon='undo'
             onClick={clearQueries}
             size='large'

@@ -3,6 +3,7 @@ $white-base: #FDFFFF;
 $grey-base-dark: #333;
 $dark-base: #0F1B07;
 $red-base: #D72C16;
+$blue-base: #217CA3;
 
 $mobile-width: 767px;
 
@@ -32,6 +33,10 @@ body {
 
 .margin-top-5 {
   margin-top: 5px !important;
+}
+
+.margin-top-10 {
+  margin-top: 10px !important;
 }
 
 .margin-top-15 {
@@ -112,6 +117,22 @@ body {
 
 /* Width */
 
+.third-width {
+  width: 33.3% !important;
+}
+
+.forty-percent-width {
+  width: 40% !important;
+}
+
+.half-width {
+  width: 50% !important;
+}
+
+.full-width {
+  width: 100% !important;
+}
+
 @media only screen and (max-width: $mobile-width) {
   .full-width-mobile {
     width: 100%;
@@ -133,6 +154,11 @@ body {
 
 .error-button {
   background-color: $red-base !important;
+  color: $white-base !important;
+}
+
+.info-button {
+  background-color: $blue-base !important;
   color: $white-base !important;
 }
 

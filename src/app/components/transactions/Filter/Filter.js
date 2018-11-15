@@ -233,7 +233,7 @@ class Filter extends React.Component {
           {showTagAdd &&
             <TagForm
               onCancel={() => this.toggleStateBool('showTagAdd')}
-              onSubmit={this.handleTagAdd}
+              onSave={this.handleTagAdd}
             />
           }
 
@@ -360,16 +360,14 @@ class Filter extends React.Component {
         <br />
 
         <Button
-          className='full-width-mobile'
-          color='blue'
+          className='full-width-mobile info-button'
           content='Filter'
           onClick={this.handleFilterSubmit}
           size='large'
         />
 
         <Button
-          className='full-width-mobile margin-top-10-mobile'
-          color='red'
+          className='full-width-mobile margin-top-10-mobile error-button'
           content='Clear'
           onClick={this.resetFields}
           size='large'

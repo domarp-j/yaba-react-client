@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Card, Form, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import { compose } from 'ramda';
+import { compose, contains } from 'ramda';
 import * as yup from 'yup';
 import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 
+import { TagAdd, TagButton, TagForm } from '../../tags';
 import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
 import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
@@ -63,6 +64,8 @@ class TransForm extends React.Component {
     super();
     this.state = {
       positiveAmount: true,
+      showTagForm: false,
+      tags: [],
     };
   }
 
@@ -73,22 +76,43 @@ class TransForm extends React.Component {
     });
   }
 
-  changeAmountType = e => {
-    e.preventDefault();
+  toggleStateBool = stateKey => {
     this.setState(prevState => ({
-      positiveAmount: !prevState.positiveAmount,
+      [stateKey]: !prevState[stateKey],
     }));
-  };
+  }
+
+  addTag = ({ tagName }) => {
+    if (contains(tagName, this.state.tags)) return;
+    this.setState(prevState => ({
+      tags: prevState.tags.concat(tagName),
+    }));
+  }
+
+  editTag = ({ oldTagName, tagName }) => {
+    this.setState(prevState => ({
+      tags: prevState.tags.map(tagInState => (
+        tagInState === oldTagName ? tagName : tagInState
+      )),
+    }));
+  }
+
+  removeTag = ({ tagName }) => {
+    this.setState(prevState => ({
+      tags: prevState.tags.filter(tagInState => tagInState !== tagName),
+    }));
+  }
 
   setValuesAndSubmit = e => {
     const { handleSubmit, setValues, values } = this.props;
-    const { positiveAmount } = this.state;
+    const { positiveAmount, tags } = this.state;
 
     new Promise(resolve => {
       setValues({
         amount: (positiveAmount ? '+' : '-') + values.amount.replace(/\$|,|-/g, ''),
         description: values.description,
         date: dateToYMD(values.date),
+        tags,
       });
       resolve();
     }).then(() => handleSubmit(e));
@@ -107,7 +131,7 @@ class TransForm extends React.Component {
       values,
     } = this.props;
 
-    const { positiveAmount } = this.state;
+    const { positiveAmount, showTagForm, tags } = this.state;
 
     return (
       <Card className={`trans-form yaba-card amount-${positiveAmount ? 'pos' : 'neg'}`}>
@@ -143,7 +167,7 @@ class TransForm extends React.Component {
                     <Button
                       className={`input-height amount-button ${positiveAmount ? 'success' : 'error'}-button`}
                       icon={positiveAmount ? 'plus' : 'minus'}
-                      onClick={e => { this.changeAmountType(e); }}
+                      onClick={() => { this.toggleStateBool('positiveAmount'); }}
                     />
                     <Cleave
                       className='input-height input-padding'
@@ -180,9 +204,35 @@ class TransForm extends React.Component {
                 </Form.Field>
               </Form.Group>
 
-              <div className='margin-top-20-mobile'>
+              <Form.Field className='margin-top-10'>
+                <div className='inline-block full-width'>
+                  {tags && tags.length > 0 &&
+                    tags.map(tag => (
+                      <TagButton
+                        key={tag}
+                        onDelete={this.removeTag}
+                        onEdit={this.editTag}
+                        tagName={tag}
+                      />
+                    ))
+                  }
+                  {showTagForm ?
+                    <div className='tag-form third-width inline-block'>
+                      <TagForm
+                        onCancel={() => this.toggleStateBool('showTagForm')}
+                        onSave={this.addTag}
+                      />
+                    </div> :
+                    <TagAdd
+                      onClick={() => this.toggleStateBool('showTagForm')}
+                    />
+                  }
+                </div>
+              </Form.Field>
+
+              <div>
                 <Button
-                  className='trans-cta-button success-button'
+                  className={`trans-cta-button ${editState ? 'info-button' : 'success-button'}`}
                   content={editState ? 'Edit' : 'Add'}
                   disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
                   loading={isAdding}
@@ -215,7 +265,11 @@ const schema = yup.object().shape({
 const formikOptions = {
   handleSubmit: (values, { props, resetForm, setValues }) => {
     new Promise(resolve => {
-      props.editState ? props.updateTransaction({ ...values, id: props.transactionId }) : props.createTransaction(values);
+      if (props.editState) {
+        props.updateTransaction({ ...values, id: props.transactionId });
+      } else {
+        props.createTransaction({ ...values });
+      }
       resolve();
     }).then(() => {
       setValues({});

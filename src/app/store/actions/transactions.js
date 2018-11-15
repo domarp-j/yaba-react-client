@@ -3,6 +3,7 @@ import { floatToDollar } from '../../utils/dollarTools';
 import { dateToMDY } from '../../utils/dateTools';
 import yabaAxios from '../../utils/yabaAxios';
 import { ERROR, addAlert, serverErrorCheck } from './alerts';
+import { attachTagToTransaction } from './tags';
 
 // Fetching transactions
 
@@ -97,6 +98,14 @@ export const createTransaction = (data={}) => dispatch => {
     value: data.amount,
   }).then(response => {
     dispatch(addTransaction(response.data.content));
+    if (data.tags) {
+      data.tags.map(tag => {
+        dispatch(attachTagToTransaction({
+          tagName: tag,
+          transactionId: response.data.content.id,
+        }));
+      });
+    }
   }).catch(err => {
     if (err.response.status >= 400) {
       dispatch(addAlert({

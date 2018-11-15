@@ -58,9 +58,8 @@ class TransItem extends React.Component {
       open={this.state.openDeleteModal}
       trigger={
         <Button
-          className='trans-cta-button'
+          className='trans-cta-button error-button'
           content='Delete'
-          color='red'
           onClick={() => this.toggleStateBool('openDeleteModal')}
         />
       }
@@ -72,10 +71,10 @@ class TransItem extends React.Component {
         </p>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='blue' onClick={() => this.toggleStateBool('openDeleteModal')}>
+        <Button className='info-button' onClick={() => this.toggleStateBool('openDeleteModal')}>
           No, keep it
         </Button>
-        <Button color='red' onClick={this.removeTransItem}>
+        <Button className='error-button' onClick={this.removeTransItem}>
           Yes, delete it
         </Button>
       </Modal.Actions>
@@ -154,7 +153,7 @@ class TransItem extends React.Component {
                   {showTagForm ?
                     <TagForm
                       onCancel={() => this.toggleStateBool('showTagForm')}
-                      onSubmit={attachTagToTransaction}
+                      onSave={attachTagToTransaction}
                       transactionId={transactionId}
                     /> :
                     <TagAdd
@@ -164,9 +163,8 @@ class TransItem extends React.Component {
                 </div>
                 <div className='margin-top-5'>
                   <Button
-                    className='trans-cta-button'
+                    className='trans-cta-button info-button'
                     content='Edit'
-                    color='blue'
                     onClick={() => this.toggleStateBool('editMode')}
                   />
                   {this.removeTransactionModal()}

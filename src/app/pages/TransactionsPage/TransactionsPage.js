@@ -76,7 +76,7 @@ class TransactionsPage extends React.Component {
               TransactionComponent: Filter,
             })}
             sortButton={() => this.manageTransactionModal({
-              buttonIcon: 'sort',
+              buttonIcon: 'sort amount down',
               size: 'tiny',
               stateKey: 'openSortModal',
               TransactionComponent: Sorter,
