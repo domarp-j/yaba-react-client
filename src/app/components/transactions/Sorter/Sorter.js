@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Segment } from 'semantic-ui-react';
+import { Button, Radio, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { keys } from 'ramda';
 
@@ -24,8 +24,8 @@ class Sorter extends React.Component {
   constructor() {
     super();
     this.state = {
-      category: undefined,
-      order: undefined,
+      category: 'date',
+      order: 'desc',
     };
   }
 
@@ -36,23 +36,21 @@ class Sorter extends React.Component {
     });
   }
 
-  stateKeyToSortParam = {
-    category: SORT_CATEGORIES,
-    order: SORT_ORDERS,
+  categoryToOrderLabel = {
+    date: { asc: 'Show my earliest transaction first', desc: 'Show my latest transaction first' },
+    value: { asc: 'From largest expense to largest income', desc: 'From largest income to largest expense' },
+    description: { asc: 'In alphabetical order', desc: 'In reverse alphabetical order' },
   }
 
-  optionsFor = stateKey => (
-    keys(this.stateKeyToSortParam[stateKey]).map(sortParam => ({
-      key: sortParam,
-      text: sortParam,
-      value: sortParam,
-      content: sortParam,
-    }))
-  )
-
-  handleChange = (e, stateKey) => {
+  handleCategoryChange = (e, { value }) => {
     this.setState({
-      [stateKey]: e.target.innerText,
+      category: value,
+    });
+  }
+
+  handleOrderChange = (e, { value }) => {
+    this.setState({
+      order: value,
     });
   }
 
@@ -64,30 +62,43 @@ class Sorter extends React.Component {
 
   render() {
     const { onCancel } = this.props;
-    const { category, order } = this.state;
 
     return (
-      <Segment className='padding-30'>
+      <Segment className='sorter padding-30'>
         <h2>Sort transactions</h2>
 
-        <div
-          className='margin-top-bottom-30 yaba-text-size'
-        >
-          Sort by <Dropdown
-            inline
-            header='Change description'
-            onChange={e => this.handleChange(e, 'category')}
-            options={this.optionsFor('category')}
-            text={category}
-            value={category}
-          /> in <Dropdown
-            inline
-            header='Change order'
-            onChange={e => this.handleChange(e, 'order')}
-            options={this.optionsFor('order')}
-            text={order}
-            value={order}
-          /> order
+        <div className='margin-bottom-30'>
+          <div className='sort-title margin-bottom-15'>
+          Sort my transactions by:
+          </div>
+          <div>
+            {keys(SORT_CATEGORIES).map(category => (
+              <Radio
+                key={category}
+                label={category}
+                name='category'
+                value={category}
+                checked={this.state.category === category}
+                onChange={this.handleCategoryChange}
+              />
+            ))}
+          </div>
+
+          <div className='sort-title margin-top-bottom-15'>
+          In this order:
+          </div>
+          <div>
+            {keys(SORT_ORDERS).map(order => (
+              <Radio
+                key={order}
+                label={this.categoryToOrderLabel[this.state.category][order]}
+                name='order'
+                value={order}
+                checked={this.state.order === order}
+                onChange={this.handleOrderChange}
+              />
+            ))}
+          </div>
         </div>
 
         <Button
