@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { TagAdd, TagButton, TagForm } from '../../tags';
 import TransForm from '../TransForm';
 import { deleteTransaction } from '../../../store/actions/transactions';
+import { addTagNameToTransactionQuery } from '../../../store/actions/queries';
 import {
   attachTagToTransaction,
   detachTagFromTransaction,
@@ -16,6 +17,7 @@ import { dollarToFloat, floatToDollar } from '../../../utils/dollarTools';
 class TransItem extends React.Component {
   static propTypes = {
     amount: PropTypes.string,
+    addTagNameToTransactionQuery: PropTypes.func,
     attachTagToTransaction: PropTypes.func,
     date: PropTypes.string,
     deleteTransaction: PropTypes.func,
@@ -34,10 +36,9 @@ class TransItem extends React.Component {
     super();
     this.state = {
       editMode: false,
-      isActive: false,
       openDeleteModal: false,
+      showEditDelete: false,
       showTagForm: false,
-      showCTAs: false,
     };
   }
 
@@ -47,11 +48,22 @@ class TransItem extends React.Component {
     }));
   }
 
-  removeTransItem = async () => {
-    this.props.deleteTransaction(this.props.transactionId);
-    this.toggleStateBool('openDeleteModal');
+  /*
+    If a tag is clicked and the transaction is NOT showing Edit/Delete
+    buttons, then add that tag to the transaction filter queries.
+  */
+  handleTagButtonClick = ({ tagName }) => {
+    if (!this.state.showEditDelete) {
+      this.props.addTagNameToTransactionQuery(tagName);
+    }
   }
 
+  /*
+    When the Delete button is clicked for this transaction,
+    display a modal asking for delete confirmation.
+    Once the user confirms that they want to delete the transaction,
+    the delete request is called, and the modal is closed.
+  */
   removeTransactionModal = () => (
     <Modal
       className='yaba-modal'
@@ -74,7 +86,10 @@ class TransItem extends React.Component {
         <Button className='info-button' onClick={() => this.toggleStateBool('openDeleteModal')}>
           No, keep it
         </Button>
-        <Button className='error-button' onClick={this.removeTransItem}>
+        <Button className='error-button' onClick={() => {
+          this.props.deleteTransaction(this.props.transactionId);
+          this.toggleStateBool('openDeleteModal');
+        }}>
           Yes, delete it
         </Button>
       </Modal.Actions>
@@ -93,7 +108,7 @@ class TransItem extends React.Component {
       transactionId,
     } = this.props;
 
-    const { editMode, showCTAs, showTagForm } = this.state;
+    const { editMode, showEditDelete, showTagForm } = this.state;
 
     const amountFloat = dollarToFloat(amount);
 
@@ -112,7 +127,6 @@ class TransItem extends React.Component {
         /> :
         <Card
           className={`yaba-card trans-item margin-bottom-5-mobile amount-${amountFloat >= 0 ? 'pos' : 'neg'}`}
-          raised
         >
           <Card.Content>
             <Card.Header className='trans-header'>
@@ -124,14 +138,16 @@ class TransItem extends React.Component {
                 }
               </div>
             </Card.Header>
-            <Card.Description className={`trans-description ${showCTAs ? 'margin-bottom-15' : ''}`}>
+            <Card.Description className={`trans-description ${showEditDelete ? 'margin-bottom-15' : ''}`}>
               {description}
             </Card.Description>
-            <div className={`inline-block ${!showCTAs ? 'margin-top-15' : ''}`}>
+            <div className={`inline-block ${!showEditDelete ? 'margin-top-15' : ''}`}>
               {tags && tags.length > 0 &&
                 tags.map(tag => (
                   <TagButton
+                    editable={showEditDelete}
                     key={`${transactionId}-${tag.id}`}
+                    onClick={this.handleTagButtonClick}
                     onDelete={() => (
                       detachTagFromTransaction({
                         tagId: tag.id,
@@ -147,7 +163,7 @@ class TransItem extends React.Component {
                 ))
               }
             </div>
-            {showCTAs &&
+            {showEditDelete &&
               <React.Fragment>
                 <div className='inline-block'>
                   {showTagForm ?
@@ -174,8 +190,8 @@ class TransItem extends React.Component {
           </Card.Content>
           <Button
             className='show-cta-button'
-            icon={`angle ${showCTAs ? 'up' : 'down'}`}
-            onClick={() => this.toggleStateBool('showCTAs')}
+            icon={`angle ${showEditDelete ? 'up' : 'down'}`}
+            onClick={() => this.toggleStateBool('showEditDelete')}
           />
         </Card>
     );
@@ -183,6 +199,7 @@ class TransItem extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
+  addTagNameToTransactionQuery: tagName => dispatch(addTagNameToTransactionQuery(tagName)),
   attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
   deleteTransaction: id => dispatch(deleteTransaction(id)),
   detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),

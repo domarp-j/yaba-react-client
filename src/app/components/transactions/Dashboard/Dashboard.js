@@ -16,28 +16,20 @@ import { toggleTransactionForm } from '../../../store/actions/transactions';
     queries in a human-readable format.
 */
 
-const anyQueryPresent = ({
-  description,
-  fromDate,
-  tags,
-  toDate,
-}) => (
-  description || fromDate || (tags && tags.length > 0) || toDate
-);
-
 const Dashboard = ({
   clearQueries,
   count,
   csvButton: CsvModal,
   filterButton: FilterModal,
   queries,
-  toggleTransactionForm,
+  queryPresent,
   sortButton: SortModal,
+  toggleTransactionForm,
   totalAmount,
 }) => (
   <div>
     {/* Display transaction data */}
-    <Segment id='dashboard' className={`${anyQueryPresent(queries) ? '' : 'margin-bottom-30'}`}>
+    <Segment id='dashboard' className={`${queryPresent ? '' : 'margin-bottom-30'}`}>
       <Header
         as='h1'
         className='no-margin'
@@ -71,7 +63,7 @@ const Dashboard = ({
         <FilterModal />
         <SortModal />
         <CsvModal />
-        {anyQueryPresent(queries) &&
+        {queryPresent &&
           <Button
             circular
             className='margin-5 error-button'
@@ -84,9 +76,9 @@ const Dashboard = ({
     </Segment>
 
     {/* Current filter query */}
-    {anyQueryPresent(queries) &&
+    {queryPresent &&
       <Segment id='filter-text' className='margin-bottom-15'>
-        Displaying transactions <FilterText {...queries} />
+        <FilterText {...queries} />
       </Segment>
     }
   </div>
@@ -99,6 +91,7 @@ Dashboard.propTypes = {
   csvButton: PropTypes.func,
   filterButton: PropTypes.func,
   queries: PropTypes.object,
+  queryPresent: PropTypes.bool,
   sortButton: PropTypes.func,
   toggleTransactionForm: PropTypes.func,
   totalAmount: PropTypes.string,
@@ -106,6 +99,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = state => ({
   queries: state.transactions.queries,
+  queryPresent: state.transactions.boolEvents.queryPresent,
 });
 
 const mapDispatchToProps = dispatch => ({

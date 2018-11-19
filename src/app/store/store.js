@@ -30,6 +30,7 @@ const initialState = {
       isFetching: false,
       isDeleting: false,
       noTransactionsFound: false,
+      queryPresent: false,
       toggleTransactionForm: false,
     },
     queries: {

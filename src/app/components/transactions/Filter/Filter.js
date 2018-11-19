@@ -116,30 +116,6 @@ class Filter extends React.Component {
     };
   }
 
-  toggleStateBool = stateKey => {
-    this.setState(prevState => ({
-      [stateKey]: !prevState[stateKey],
-    }));
-  }
-
-  resetFields = () => {
-    this.setState(prevState => ({
-      ...prevState,
-      ...this.initialFieldsState,
-    }));
-
-    /*
-      Reset the Cleave date fields by overriding their raw input values
-
-      It is crucial that the dates tab is active when overriding the
-        Cleave values. Otherwise, some buggy JS behavior could result.
-    */
-    if (this.state.activeTab === this.paneList.indexOf(this.panes.dates)) {
-      this.state[this.dateTypeToCleave[FROM_DATE]].setRawValue('');
-      this.state[this.dateTypeToCleave[TO_DATE]].setRawValue('');
-    }
-  }
-
   componentDidMount = () => {
     this.setState({
       [FROM_DATE]: dateToMDY(this.props[FROM_DATE]),
@@ -148,6 +124,12 @@ class Filter extends React.Component {
       tags: this.props.tags,
       matchAllTags: this.props.matchAllTags,
     });
+  }
+
+  toggleStateBool = stateKey => {
+    this.setState(prevState => ({
+      [stateKey]: !prevState[stateKey],
+    }));
   }
 
   descriptionField = () => (
@@ -225,6 +207,7 @@ class Filter extends React.Component {
             <TagButton
               key={`query-tag-${tag}`}
               onDelete={() => this.handleRemoveTag(tag)}
+              onEdit={() => {}}
               tagName={tag}
             />
           ))}
@@ -331,6 +314,24 @@ class Filter extends React.Component {
     this.props.onSave();
   }
 
+  resetFields = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      ...this.initialFieldsState,
+    }), this.handleFilterSubmit);
+
+    /*
+      Reset the Cleave date fields by overriding their raw input values
+
+      It is crucial that the dates tab is active when overriding the
+        Cleave values. Otherwise, some buggy JS behavior could result.
+    */
+    if (this.state.activeTab === this.paneList.indexOf(this.panes.dates)) {
+      this.state[this.dateTypeToCleave[FROM_DATE]].setRawValue('');
+      this.state[this.dateTypeToCleave[TO_DATE]].setRawValue('');
+    }
+  }
+
   render() {
     const { onCancel } = this.props;
     const { description, tags, [FROM_DATE]: fromDate, [TO_DATE]: toDate } = this.state;
@@ -349,7 +350,7 @@ class Filter extends React.Component {
           {(!description && !fromDate && !toDate && tags.length === 0) ?
             <span>Display <b>all</b> of my transactions</span> :
             <span>
-              Display transactions {<FilterText
+              {<FilterText
                 tagNames={this.state.tags}
                 {...this.state}
               />}

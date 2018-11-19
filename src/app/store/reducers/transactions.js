@@ -1,4 +1,4 @@
-import { findIndex, reject, update } from 'ramda';
+import { findIndex, reject, uniq, update } from 'ramda';
 
 import { initialState } from '../store';
 
@@ -38,11 +38,23 @@ import {
   MODIFY_SORT_ORDER
 } from '../actions/sorting';
 
+// Helpers
+
+const queryPresent = queries => (
+  queries.description ||
+    queries.fromDate ||
+    queries.toDate ||
+    queries.tagNames.length > 0
+);
+
+// Reducer
+
 const transactions = (
   state = initialState.transactions,
   action
 ) => {
   switch (action.type) {
+
   // Fetching transactions
   case REQUEST_TRANSACTIONS:
     return {
@@ -75,6 +87,7 @@ const transactions = (
         noTransactionsFound: true,
       },
     };
+
   // Adding transactions
   case TOGGLE_TRANS_FORM:
     return {
@@ -98,6 +111,7 @@ const transactions = (
       boolEvents: { ...state.boolEvents, isAdding: false },
       items: [{ ...action.transaction, justAdded: true, tags: [] }, ...state.items],
     };
+
   // Editing transactions
   case REQUEST_TO_UPDATE_TRANSACTION:
     return {
@@ -113,6 +127,7 @@ const transactions = (
         return { ...action.transaction, tags: item.tags };
       }),
     };
+
   // Deleting transactions
   case REQUEST_TO_DELETE_TRANSACTION:
     return {
@@ -127,6 +142,7 @@ const transactions = (
         item.id === action.transaction.id
       ), state.items),
     };
+
   // Clearing transactions from the store
   case CLEAR_TRANSACTIONS:
     return {
@@ -134,6 +150,7 @@ const transactions = (
       boolEvents: { ...state.boolEvents, isFetching: false },
       items: [],
     };
+
   // Adding a tag to a transaction
   case ADD_TRANSACTION_TAG:
     return {
@@ -143,6 +160,7 @@ const transactions = (
         return { ...item, tags: [...item.tags, action.tag] };
       }),
     };
+
   // Updating a tag for a transaction
   case UPDATE_TRANSACTION_TAG:
     return {
@@ -159,6 +177,7 @@ const transactions = (
         };
       }),
     };
+
   // Removing a tag from a transaction
   case REMOVE_TRANSACTION_TAG:
     return {
@@ -173,6 +192,7 @@ const transactions = (
         };
       }),
     };
+
   // Modifying the description for the transactions filter query
   case MODIFY_DESCRIPTION_FOR_TRANSACTION_QUERY:
     return {
@@ -181,7 +201,15 @@ const transactions = (
         ...state.queries,
         description: action.description,
       },
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: queryPresent({
+          ...state.queries,
+          description: action.description,
+        }),
+      },
     };
+
   // Modify the fromDate or toDate for the transactions filter query
   case MODIFY_DATE_FOR_TRANSACTION_QUERY:
     return {
@@ -190,16 +218,29 @@ const transactions = (
         ...state.queries,
         [action.dateType]: action.date,
       },
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: queryPresent({
+          ...state.queries,
+          [action.dateType]: action.date,
+        }),
+      },
     };
+
   // Adding a tag name to the transactions filter query
   case ADD_TAG_NAME_TO_TRANSACTION_QUERY:
     return {
       ...state,
       queries: {
         ...state.queries,
-        tagNames: [...state.queries.tagNames, action.tagName],
+        tagNames: uniq([...state.queries.tagNames, action.tagName]),
+      },
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: true,
       },
     };
+
   // Removing a tag name from the transactions filter query
   case REMOVE_TAG_NAME_FROM_TRANSACTION_QUERY:
     return {
@@ -210,7 +251,17 @@ const transactions = (
           tagName === action.tagName
         ), state.queries.tagNames),
       },
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: queryPresent({
+          ...state.queries,
+          tagNames: reject(tagName => (
+            tagName === action.tagName
+          ), state.queries.tagNames),
+        }),
+      },
     };
+
   // Replacing all tag names for the transactions filter query
   case REPLACE_TAG_NAMES_IN_TRANSACTION_QUERY:
     return {
@@ -219,7 +270,15 @@ const transactions = (
         ...state.queries,
         tagNames: action.tagNames,
       },
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: queryPresent({
+          ...state.queries,
+          tagNames: action.tagNames,
+        }),
+      },
     };
+
   // Modify matchAllTags bool for the transactions filter query
   case MODIFY_MATCH_ALL_TAGS_TRANSACTION_QUERY:
     return {
@@ -229,12 +288,18 @@ const transactions = (
         matchAllTags: action.matchAllTags,
       },
     };
+
   // Clearing transactions filter query
   case CLEAR_TRANSACTION_QUERIES:
     return {
       ...state,
       queries: initialState.transactions.queries,
+      boolEvents: {
+        ...state.boolEvents,
+        queryPresent: false,
+      },
     };
+
   // Modify sort category
   case MODIFY_SORT_CATEGORY:
     return {
@@ -244,6 +309,7 @@ const transactions = (
         category: action.category,
       },
     };
+
   // Modify sort order
   case MODIFY_SORT_ORDER:
     return {
@@ -253,6 +319,7 @@ const transactions = (
         order: action.order,
       },
     };
+
   default:
     return state;
   }

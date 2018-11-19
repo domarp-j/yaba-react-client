@@ -23,9 +23,9 @@ export const modifyDateForTransactionQuery = (dateType, date) => ({
 // Adding a tagName
 
 export const ADD_TAG_NAME_TO_TRANSACTION_QUERY = 'ADD_TAG_NAME_TO_TRANSACTION_QUERY';
-export const TagAddNameToTransactionQuery = options => ({
+export const addTagNameToTransactionQuery = tagName => ({
   type: ADD_TAG_NAME_TO_TRANSACTION_QUERY,
-  tagName: options.tagName,
+  tagName,
 });
 
 // Removing a tagName

@@ -6,6 +6,8 @@ import TagForm from '../TagForm';
 
 class TagButton extends React.Component {
   static propTypes = {
+    editable: PropTypes.bool,
+    onClick: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
     tagId: PropTypes.number,
@@ -13,11 +15,15 @@ class TagButton extends React.Component {
     transactionId: PropTypes.number,
   }
 
+  static defaultProps = {
+    editable: true,
+  }
+
   constructor() {
     super();
     this.state = {
-      showCTAs: false,
-      showEdit: false,
+      showEditDelete: false,
+      showTagForm: false,
     };
   }
 
@@ -27,16 +33,23 @@ class TagButton extends React.Component {
     };
   })
 
+  handleClick = e => {
+    const { editable, onClick, tagId, tagName, transactionId } = this.props;
+    e.preventDefault();
+    onClick && onClick({ tagId, tagName, transactionId });
+    editable && this.toggleBoolState('showEditDelete');
+  }
+
   render() {
     const { onDelete, onEdit, tagId, tagName, transactionId } = this.props;
-    const { showCTAs, showEdit } = this.state;
+    const { showEditDelete, showTagForm } = this.state;
 
     return (
-      showEdit ?
+      showTagForm ?
         <div className='third-width'>
           <TagForm
             initialValues={{ tagName }}
-            onCancel={() => this.toggleBoolState('showEdit')}
+            onCancel={() => this.toggleBoolState('showTagForm')}
             onSave={onEdit}
             tagId={tagId}
             transactionId={transactionId}
@@ -44,21 +57,21 @@ class TagButton extends React.Component {
         </div> :
         <Button.Group>
           <Button
-            className={`yaba-tag-button ${showCTAs ? 'with-edit' : ''}`}
+            className={`yaba-tag-button ${showEditDelete ? 'with-edit' : ''}`}
             content={tagName}
-            onClick={e => { e.preventDefault(); this.toggleBoolState('showCTAs'); }}
+            onClick={this.handleClick}
           />
-          {showCTAs &&
+          {showEditDelete &&
             <Button
               className='yaba-tag-edit info-button'
-              onClick={() => this.toggleBoolState('showEdit')}
+              onClick={() => this.toggleBoolState('showTagForm')}
             >
               <Button.Content>
                 <Icon name='edit' className='no-margin' />
               </Button.Content>
             </Button>
           }
-          {showCTAs &&
+          {showEditDelete &&
             <Button
               className='yaba-tag-delete error-button'
               onClick={() => onDelete({ tagId, tagName, transactionId })}

@@ -6,7 +6,7 @@ import { friendlyDate } from '../../../utils/dateTools';
 
 /*
   This component takes transaction query values as props
-    and turns them into a human-readable format.
+  and turns them into a sentence.
 */
 const FilterText = ({
   description,
@@ -16,12 +16,9 @@ const FilterText = ({
   toDate,
 }) => {
   const filtersAsText = filter(identity, [
-    description &&
-      <span key='desc'>with <b>{`"${description}"`}</b> in the description </span>,
-    fromDate &&
-      <span key='fromDate'>from <b>{friendlyDate(fromDate)}</b> </span>,
-    toDate &&
-      <span key='toDate'>to <b>{friendlyDate(toDate)}</b> </span>,
+    description && <span key='desc'>with <b>{`"${description}"`}</b> in the description </span>,
+    fromDate && <span key='fromDate'>from <b>{friendlyDate(fromDate)}</b> </span>,
+    toDate && <span key='toDate'>to <b>{friendlyDate(toDate)}</b> </span>,
     tagNames.length > 1 ?
       <span key='tags'>with <b>{matchAllTags ? 'all' : 'any'}</b> of the following tags: <b>{tagNames.map(tag => tag).join(' | ')}</b></span> :
       tagNames.length === 1 && <span key='tags'>with the tag <b>{`"${tagNames[0]}"`}</b></span>,
@@ -30,7 +27,7 @@ const FilterText = ({
   return (
     filtersAsText.length > 0 &&
       <span>
-        {filtersAsText.map(identity)}
+        Displaying transactions {filtersAsText.map(identity)}
       </span>
   );
 };
