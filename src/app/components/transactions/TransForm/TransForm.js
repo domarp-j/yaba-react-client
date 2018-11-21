@@ -165,7 +165,6 @@ class TransForm extends React.Component {
 
   render() {
     const {
-      editState,
       errors,
       handleBlur,
       handleChange,
@@ -279,8 +278,8 @@ class TransForm extends React.Component {
 
               <div>
                 <Button
-                  className={`trans-cta-button ${editState ? 'info-button' : 'success-button'}`}
-                  content={editState ? 'Edit' : 'Add'}
+                  className='trans-cta-button success-button'
+                  content='Save'
                   disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
                   loading={isAddingTransaction}
                   onClick={() => { setTouched(touchAllFields(fields)); }}
