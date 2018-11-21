@@ -27,7 +27,6 @@ class TransItem extends React.Component {
     tags: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-      description: PropTypes.string,
     })),
     transactionId: PropTypes.number,
   }
@@ -116,10 +115,11 @@ class TransItem extends React.Component {
       editMode ?
         <TransForm
           editState
+          initialTags={tags}
           initialValues={{
-            amount: amount,
-            date: date,
-            description: description,
+            amount,
+            date,
+            description,
           }}
           onCancel={() => this.toggleStateBool('editMode')}
           onSave={() => this.toggleStateBool('editMode')}

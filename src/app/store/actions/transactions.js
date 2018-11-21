@@ -99,12 +99,12 @@ export const createTransaction = (data={}) => dispatch => {
   }).then(response => {
     dispatch(addTransaction(response.data.content));
     if (data.tags) {
-      data.tags.map(tag => {
+      data.tags.map(tag => (
         dispatch(attachTagToTransaction({
           tagName: tag,
           transactionId: response.data.content.id,
-        }));
-      });
+        }))
+      ));
     }
   }).catch(err => {
     if (err.response.status >= 400) {

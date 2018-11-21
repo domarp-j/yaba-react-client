@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
 import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
+import { attachTagToTransaction, detachTagFromTransaction, modifyTransactionTag } from '../../../store/actions/tags';
 import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
 import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
@@ -17,9 +18,10 @@ const fields = ['description', 'amount', 'date'];
 
 class TransForm extends React.Component {
   static propTypes = {
+    attachTagToTransaction: PropTypes.func,
     createTransaction: PropTypes.func,
+    detachTagFromTransaction: PropTypes.func,
     editState: PropTypes.bool,
-    updateTransaction: PropTypes.func,
     errors: PropTypes.shape({
       description: PropTypes.string,
       amount: PropTypes.string,
@@ -30,12 +32,17 @@ class TransForm extends React.Component {
     handleSubmit: PropTypes.func,
     onCancel: PropTypes.func,
     onSave: PropTypes.func,
+    initialTags: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })),
     initialValues: PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
       description: PropTypes.string,
     }),
     isAdding: PropTypes.bool,
+    modifyTransactionTag: PropTypes.func,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
     transactionId: PropTypes.number,
@@ -44,6 +51,7 @@ class TransForm extends React.Component {
       date: PropTypes.bool,
       description: PropTypes.bool,
     }),
+    updateTransaction: PropTypes.func,
     values: PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
@@ -53,6 +61,7 @@ class TransForm extends React.Component {
 
   static defaultProps = {
     editState: false,
+    initialTags: [],
     initialValues: {
       amount: '',
       date: '',
@@ -73,6 +82,7 @@ class TransForm extends React.Component {
     const { amount } = this.props.values;
     this.setState({
       positiveAmount: amount ? dollarToFloat(amount) >= 0 : true,
+      tags: this.props.initialTags.map(tag => tag.name),
     });
   }
 
@@ -82,14 +92,37 @@ class TransForm extends React.Component {
     }));
   }
 
+  /*
+    Add new tag to state.
+    A new tag is NOT added if it is already present in state.
+    If a transaction is currently being edited, then attach the new tag to the current transaction.
+  */
   addTag = ({ tagName }) => {
     if (contains(tagName, this.state.tags)) return;
+
+    if (this.props.editState) {
+      this.props.attachTagToTransaction({ tagName, transactionId: this.props.transactionId });
+    }
+
     this.setState(prevState => ({
       tags: prevState.tags.concat(tagName),
     }));
   }
 
+  /*
+    Edit a tag in state.
+    If a transaction is currently being edited, then modify the tag for that transaction.
+  */
   editTag = ({ oldTagName, tagName }) => {
+    if (this.props.editState) {
+      this.props.modifyTransactionTag({
+        oldTagName,
+        tagId: this.props.initialTags.find(tag => tag.name === oldTagName).id,
+        tagName,
+        transactionId: this.props.transactionId,
+      });
+    }
+
     this.setState(prevState => ({
       tags: prevState.tags.map(tagInState => (
         tagInState === oldTagName ? tagName : tagInState
@@ -97,7 +130,19 @@ class TransForm extends React.Component {
     }));
   }
 
+  /*
+    Remove tag from state.
+    If a transaction is currently being edited, then the removed tag will be detached from the transaction.
+  */
   removeTag = ({ tagName }) => {
+    if (this.props.editState) {
+      this.props.detachTagFromTransaction({
+        tagId: this.props.initialTags.find(tag => tag.name === tagName).id,
+        tagName,
+        transactionId: this.props.transactionId,
+      });
+    }
+
     this.setState(prevState => ({
       tags: prevState.tags.filter(tagInState => tagInState !== tagName),
     }));
@@ -128,6 +173,7 @@ class TransForm extends React.Component {
       onCancel,
       setTouched,
       touched,
+      transactionId,
       values,
     } = this.props;
 
@@ -221,6 +267,7 @@ class TransForm extends React.Component {
                       <TagForm
                         onCancel={() => this.toggleStateBool('showTagForm')}
                         onSave={this.addTag}
+                        transactionId={transactionId}
                       />
                     </div> :
                     <TagAdd
@@ -291,8 +338,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createTransaction: data => { dispatch(createTransaction(data)); },
-  updateTransaction: data => { dispatch(updateTransaction(data)); },
+  attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
+  createTransaction: data => dispatch(createTransaction(data)),
+  detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
+  modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
+  updateTransaction: data => dispatch(updateTransaction(data)),
 });
 
 export { TransForm as BaseTransForm };
