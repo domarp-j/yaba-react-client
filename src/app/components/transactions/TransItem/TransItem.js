@@ -145,6 +145,7 @@ class TransItem extends React.Component {
               {tags && tags.length > 0 &&
                 tags.map(tag => (
                   <TagButton
+                    className='inline-block'
                     editable={showEditDelete}
                     key={`${transactionId}-${tag.id}`}
                     onClick={this.handleTagButtonClick}
@@ -162,9 +163,7 @@ class TransItem extends React.Component {
                   />
                 ))
               }
-            </div>
-            {showEditDelete &&
-              <React.Fragment>
+              {showEditDelete &&
                 <div className='inline-block'>
                   {showTagForm ?
                     <TagForm
@@ -177,15 +176,17 @@ class TransItem extends React.Component {
                     />
                   }
                 </div>
-                <div className='margin-top-5'>
-                  <Button
-                    className='trans-cta-button info-button'
-                    content='Edit'
-                    onClick={() => this.toggleStateBool('editMode')}
-                  />
-                  {this.removeTransactionModal()}
-                </div>
-              </React.Fragment>
+              }
+            </div>
+            {showEditDelete &&
+              <div className='margin-top-5'>
+                <Button
+                  className='trans-cta-button info-button'
+                  content='Edit'
+                  onClick={() => this.toggleStateBool('editMode')}
+                />
+                {this.removeTransactionModal()}
+              </div>
             }
           </Card.Content>
           <Button

@@ -18,7 +18,7 @@ class TransList extends React.PureComponent {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
     fetchTransactions: PropTypes.func,
-    isFetching: PropTypes.bool,
+    isFetchingTransactions: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
     queries: PropTypes.object,
     showTransactionForm: PropTypes.bool,
@@ -135,7 +135,7 @@ class TransList extends React.PureComponent {
 
   render() {
     const {
-      isFetching,
+      isFetchingTransactions,
       noTransactionsFound,
       showTransactionForm,
       toggleTransactionForm,
@@ -161,7 +161,7 @@ class TransList extends React.PureComponent {
           {oldTransactions.length > 0 &&
             oldTransactions.map(transaction => this.renderTransaction(transaction))
           }
-          {isFetching &&
+          {isFetchingTransactions &&
             <Card id='loader'>
               <Dimmer active inverted>
                 <Loader inverted>Loading</Loader>
@@ -181,7 +181,7 @@ class TransList extends React.PureComponent {
 
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.boolEvents.allTransactionsFetched,
-  isFetching: state.transactions.boolEvents.isFetching,
+  isFetchingTransactions: state.transactions.boolEvents.isFetchingTransactions,
   noTransactionsFound: state.transactions.boolEvents.noTransactionsFound,
   queries: state.transactions.queries,
   sorting: state.transactions.sorting,

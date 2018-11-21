@@ -35,6 +35,10 @@ body {
   margin-top: 5px !important;
 }
 
+.margin-right-5 {
+  margin-right: 5px !important;
+}
+
 .margin-top-10 {
   margin-top: 10px !important;
 }
@@ -218,6 +222,7 @@ body {
 @import 'src/app/components/tags/Tag/Tag.scss';
 @import 'src/app/components/tags/TagAdd/TagAdd.scss';
 @import 'src/app/components/tags/TagButton/TagButton.scss';
+@import 'src/app/components/tags/TagDropdown/TagDropdown.scss';
 @import 'src/app/components/tags/TagForm/TagForm.scss';
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';
 @import 'src/app/components/transactions/Dashboard/Dashboard.scss';

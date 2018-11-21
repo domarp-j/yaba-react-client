@@ -1,12 +1,18 @@
 /* Tag Form */
 
 .tag-form {
-  height: 26px;
+  height: 25px;
   margin-bottom: 4px !important;
+  position: relative;
 
   .tag-form-input {
     padding-left: 6px !important;
-    width: 150px;
+    width: 110px;
+  }
+
+  .tag-dropdown {
+    position: absolute;
+    top: 25px;
   }
 
   .cta-accept, .cta-cancel {

@@ -2,6 +2,30 @@ import routes from '../../routes';
 import yabaAxios from '../../utils/yabaAxios';
 import { ERROR, addAlert, serverErrorCheck } from './alerts';
 
+// Fetching tags
+
+export const REQUEST_TAGS = 'REQUEST_TAGS';
+export const requestTags = () => ({
+  type: REQUEST_TAGS,
+});
+
+export const RECEIVE_TAGS = 'RECEIVE_TAGS';
+export const receiveTags = tags => ({
+  type: RECEIVE_TAGS,
+  tags,
+});
+
+export const fetchTags = () => dispatch => {
+  dispatch(requestTags());
+
+  return yabaAxios.get(routes.tags)
+    .then(response => {
+      dispatch(receiveTags(response.data.content));
+    }).catch(err => {
+      serverErrorCheck(err, dispatch);
+    });
+};
+
 // Adding tags to transaction
 
 export const ADD_TRANSACTION_TAG = 'ADD_TRANSACTION_TAG';

@@ -8,6 +8,7 @@ export default {
   signInPage: '/sign-in',
   signUp: `${server}/auth`,
   signIn: `${server}/auth/sign_in`,
+  tags: `${server}/api/tags`,
   transactions: `${server}/api/transaction-items`,
   updateTransaction: `${server}/api/transaction-item/update`,
   deleteTransaction: `${server}/api/transaction-item/delete`,

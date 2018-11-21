@@ -46,7 +46,7 @@ class TagButton extends React.Component {
 
     return (
       showTagForm ?
-        <div className='third-width'>
+        <div>
           <TagForm
             initialValues={{ tagName }}
             onCancel={() => this.toggleBoolState('showTagForm')}

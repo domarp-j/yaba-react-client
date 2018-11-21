@@ -41,7 +41,7 @@ class TransForm extends React.Component {
       date: PropTypes.string,
       description: PropTypes.string,
     }),
-    isAdding: PropTypes.bool,
+    isAddingTransaction: PropTypes.bool,
     modifyTransactionTag: PropTypes.func,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
@@ -169,7 +169,7 @@ class TransForm extends React.Component {
       errors,
       handleBlur,
       handleChange,
-      isAdding,
+      isAddingTransaction,
       onCancel,
       setTouched,
       touched,
@@ -263,7 +263,7 @@ class TransForm extends React.Component {
                     ))
                   }
                   {showTagForm ?
-                    <div className='tag-form third-width inline-block'>
+                    <div className='tag-form forty-percent-width inline-block'>
                       <TagForm
                         onCancel={() => this.toggleStateBool('showTagForm')}
                         onSave={this.addTag}
@@ -282,7 +282,7 @@ class TransForm extends React.Component {
                   className={`trans-cta-button ${editState ? 'info-button' : 'success-button'}`}
                   content={editState ? 'Edit' : 'Add'}
                   disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
-                  loading={isAdding}
+                  loading={isAddingTransaction}
                   onClick={() => { setTouched(touchAllFields(fields)); }}
                 />
 
@@ -334,7 +334,7 @@ const formikOptions = {
 
 
 const mapStateToProps = state => ({
-  isAdding: state.transactions.boolEvents.isAdding,
+  isAddingTransaction: state.transactions.boolEvents.isAddingTransaction,
 });
 
 const mapDispatchToProps = dispatch => ({

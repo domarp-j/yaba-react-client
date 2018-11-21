@@ -25,10 +25,11 @@ const initialState = {
     totalAmount: '',
     boolEvents: {
       allTransactionsFetched: false,
-      isAdding: false,
-      isEditing: false,
-      isFetching: false,
-      isDeleting: false,
+      isAddingTransaction: false,
+      isEditingTransaction: false,
+      isFetchingTags: false,
+      isFetchingTransactions: false,
+      isDeletingTransaction: false,
       noTransactionsFound: false,
       queryPresent: false,
       toggleTransactionForm: false,
@@ -44,6 +45,7 @@ const initialState = {
       category: SORT_CATEGORIES.date,
       order: SORT_ORDERS.desc,
     },
+    tags: [],
   },
 };
 
