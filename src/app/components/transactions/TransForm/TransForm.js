@@ -213,7 +213,7 @@ class TransForm extends React.Component {
                     <Button
                       className={`input-height amount-button ${positiveAmount ? 'success' : 'error'}-button`}
                       icon={positiveAmount ? 'plus' : 'minus'}
-                      onClick={() => { this.toggleStateBool('positiveAmount'); }}
+                      onClick={e => { e.preventDefault(); this.toggleStateBool('positiveAmount'); }}
                     />
                     <Cleave
                       className='input-height input-padding'
