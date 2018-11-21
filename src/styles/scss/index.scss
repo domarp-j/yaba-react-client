@@ -173,6 +173,11 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%);
+
+  // Height adjust specifically for filter modal
+  @media only screen and (max-height: 350px) {
+    top: 1%;
+  }
 }
 
 .auth-button {

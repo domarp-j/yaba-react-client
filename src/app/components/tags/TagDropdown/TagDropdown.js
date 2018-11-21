@@ -16,7 +16,7 @@ class TagDropdown extends React.Component {
   filterTags = (tags, filterText) => (
     filterText ?
       filter(
-        tag => !equals(length(match(new RegExp(filterText), tag.name)), 0),
+        tag => !equals(length(match(new RegExp(toLower(filterText)), toLower(tag.name))), 0),
         tags
       ) : tags
   )

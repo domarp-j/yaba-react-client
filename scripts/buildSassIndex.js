@@ -47,11 +47,11 @@ const buildSassIndex = (indexFile, marker, sassFiles) => {
   const [preservedContent, existingImports] = content.split(marker);
 
   if (!changeInComponentSass(existingImports, sassFiles)) {
-    console.log(`Skipping rewrite of ${indexFile}`);
+    console.log(`Skipping rewrite of ${indexFile}...`);
     return;
   }
 
-  console.log('Change in React Sass files detected');
+  console.log('Change in React Sass files detected...');
   console.log(`Rewriting ${indexFile} with new imports...`);
   const newContent = preservedContent +
     `${marker}\n\n` +

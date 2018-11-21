@@ -337,7 +337,7 @@ class Filter extends React.Component {
     const { description, tags, [FROM_DATE]: fromDate, [TO_DATE]: toDate } = this.state;
 
     return (
-      <Segment className='padding-30'>
+      <Segment className='transactions-filter padding-30'>
         <h2>Filter transactions</h2>
 
         <Tab

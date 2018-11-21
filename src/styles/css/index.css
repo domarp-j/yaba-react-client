@@ -116,6 +116,9 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%); }
+  @media only screen and (max-height: 350px) {
+    .yaba-modal {
+      top: 1%; } }
 
 .auth-button {
   width: 100%;
@@ -245,13 +248,7 @@ body {
   .tag-dropdown .tag-dropdown-option {
     text-align: left;
     padding: 6px 4px !important;
-    min-width: 100px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    margin: 0 !important; }
-    .tag-dropdown .tag-dropdown-option:focus, .tag-dropdown .tag-dropdown-option:hover, .tag-dropdown .tag-dropdown-option:active {
-      background-color: #666 !important; }
+    min-width: 100px; }
 
 /* Tag Form */
 .tag-form {
