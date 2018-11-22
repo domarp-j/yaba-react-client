@@ -178,20 +178,20 @@ export const requestDeleteTransaction = () => ({
 export const REMOVE_DELETED_TRANSACTION = 'REMOVE_DELETED_TRANSACTION';
 export const removeDeletedTransaction = transaction => ({
   type: REMOVE_DELETED_TRANSACTION,
-  transaction,
+  transaction: {
+    amount: floatToDollar(transaction.value),
+    date: dateToMDY(transaction.date),
+    description: transaction.description,
+    id: transaction.id,
+  },
 });
 
-export const deleteTransaction = ({ amount, id, date, description }) => dispatch => {
+export const deleteTransaction = ({ id }) => dispatch => {
   dispatch(requestDeleteTransaction());
 
   return yabaAxios.post(routes.deleteTransaction, { id })
     .then(response => {
-      dispatch(removeDeletedTransaction({
-        amount,
-        id: response.data.content,
-        date,
-        description,
-      }));
+      dispatch(removeDeletedTransaction(response.data.content));
     }).catch(err => {
       if (err.response.status >= 404) {
         dispatch(addAlert({
