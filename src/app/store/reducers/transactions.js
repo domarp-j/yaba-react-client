@@ -1,6 +1,7 @@
 import { findIndex, reject, uniq, update } from 'ramda';
 
 import { initialState } from '../store';
+import { dollarToFloat, floatToDollar } from '../../utils/dollarTools';
 
 import {
   DEFAULT_FETCH_LIMIT,
@@ -112,6 +113,11 @@ const transactions = (
       ...state,
       boolEvents: { ...state.boolEvents, isAddingTransaction: false },
       items: [{ ...action.transaction, justAdded: true, tags: [] }, ...state.items],
+      count: state.count + 1,
+      totalAmount: floatToDollar(
+        dollarToFloat(state.totalAmount) +
+        dollarToFloat(action.transaction.amount)
+      ),
     };
 
   // Editing transactions
@@ -125,9 +131,14 @@ const transactions = (
       ...state,
       boolEvents: { ...state.boolEvents, isEditingTransaction: false },
       items: state.items.map(item => {
-        if (item.id !== action.transaction.id) return item;
-        return { ...action.transaction, tags: item.tags };
+        if (item.id !== action.newTransaction.id) return item;
+        return { ...action.newTransaction, tags: item.tags };
       }),
+      totalAmount: floatToDollar(
+        dollarToFloat(state.totalAmount) -
+        dollarToFloat(action.oldTransaction.amount) +
+        dollarToFloat(action.newTransaction.amount)
+      ),
     };
 
   // Deleting transactions
@@ -143,6 +154,11 @@ const transactions = (
       items: reject(item => (
         item.id === action.transaction.id
       ), state.items),
+      count: state.count - 1,
+      totalAmount: floatToDollar(
+        dollarToFloat(state.totalAmount) -
+        dollarToFloat(action.transaction.amount)
+      ),
     };
 
   // Clearing transactions from the store
@@ -151,6 +167,8 @@ const transactions = (
       ...state,
       boolEvents: { ...state.boolEvents, isFetchingTransactions: false },
       items: [],
+      count: 0,
+      totalAmount: '$0.00',
     };
 
   // Fetching tags

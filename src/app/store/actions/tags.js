@@ -40,9 +40,9 @@ export const addTransactionTag = tag => ({
   },
 });
 
-export const attachTagToTransaction = (data={}) => dispatch => {
-  return yabaAxios.post(routes.addTransactionTag(data.transactionId), {
-    name: data.tagName,
+export const attachTagToTransaction = ({ tagName, transactionId }) => dispatch => {
+  return yabaAxios.post(routes.addTransactionTag(transactionId), {
+    name: tagName,
   }).then(response => {
     dispatch(addTransactionTag(response.data.content));
   }).catch(err => {
@@ -70,13 +70,13 @@ export const updateTransactionTag = (oldTag, newTag) => ({
   newTag,
 });
 
-export const modifyTransactionTag = (data={}) => dispatch => {
+export const modifyTransactionTag = ({ tagId, tagName, transactionId }) => dispatch => {
   const tagBeforeUpdate = {
-    id: data.tagId,
-    name: data.tagName,
+    id: tagId,
+    name: tagName,
   };
 
-  return yabaAxios.post(routes.updateTransactionTag(data.transactionId), tagBeforeUpdate)
+  return yabaAxios.post(routes.updateTransactionTag(transactionId), tagBeforeUpdate)
     .then(response => {
       const tagAfterUpdate = response.data.content;
       dispatch(updateTransactionTag(tagBeforeUpdate, tagAfterUpdate));
@@ -105,10 +105,10 @@ export const removeTransactionTag = tag => ({
   },
 });
 
-export const detachTagFromTransaction = (data={}) => dispatch => {
-  return yabaAxios.post(routes.deleteTransactionTag(data.transactionId), {
-    id: data.tagId,
-    name: data.tagName,
+export const detachTagFromTransaction = ({ tagId, tagName, transactionId }) => dispatch => {
+  return yabaAxios.post(routes.deleteTransactionTag(transactionId), {
+    id: tagId,
+    name: tagName,
   }).then(response => {
     dispatch(removeTransactionTag(response.data.content));
   }).catch(err => {

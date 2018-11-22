@@ -86,7 +86,12 @@ class TransItem extends React.Component {
           No, keep it
         </Button>
         <Button className='error-button' onClick={() => {
-          this.props.deleteTransaction(this.props.transactionId);
+          this.props.deleteTransaction({
+            amount: this.props.amount,
+            date: this.props.date,
+            description: this.props.description,
+            id: this.props.transactionId,
+          });
           this.toggleStateBool('openDeleteModal');
         }}>
           Yes, delete it
@@ -202,7 +207,7 @@ class TransItem extends React.Component {
 const mapDispatchToProps = dispatch => ({
   addTagNameToTransactionQuery: tagName => dispatch(addTagNameToTransactionQuery(tagName)),
   attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
-  deleteTransaction: id => dispatch(deleteTransaction(id)),
+  deleteTransaction: data => dispatch(deleteTransaction(data)),
   detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
   modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
 });

@@ -312,7 +312,11 @@ const formikOptions = {
   handleSubmit: (values, { props, resetForm, setValues }) => {
     new Promise(resolve => {
       if (props.editState) {
-        props.updateTransaction({ ...values, id: props.transactionId });
+        props.updateTransaction({
+          id: props.transactionId,
+          newValues: values,
+          previousValues: props.initialValues,
+        });
       } else {
         props.createTransaction({ ...values });
       }

@@ -89,17 +89,17 @@ export const addTransaction = transaction => ({
   },
 });
 
-export const createTransaction = (data={}) => dispatch => {
+export const createTransaction = ({ amount, date, description, tags }) => dispatch => {
   dispatch(requestAddTransaction());
 
   return yabaAxios.post(routes.transactions, {
-    date: data.date,
-    description: data.description,
-    value: data.amount,
+    date,
+    description,
+    value: amount,
   }).then(response => {
     dispatch(addTransaction(response.data.content));
-    if (data.tags) {
-      data.tags.map(tag => (
+    if (tags) {
+      tags.map(tag => (
         dispatch(attachTagToTransaction({
           tagName: tag,
           transactionId: response.data.content.id,
@@ -125,26 +125,34 @@ export const requestUpdateTransaction = () => ({
 });
 
 export const EDIT_TRANSACTION = 'EDIT_TRANSACTION';
-export const editTransaction = transaction => ({
+export const editTransaction = ({ id, oldTransaction, newTransaction }) => ({
   type: EDIT_TRANSACTION,
-  transaction: {
-    amount: floatToDollar(transaction.value),
-    date: dateToMDY(transaction.date),
-    description: transaction.description,
-    id: transaction.id,
+  newTransaction: {
+    amount: floatToDollar(newTransaction.value),
+    date: dateToMDY(newTransaction.date),
+    description: newTransaction.description,
+    id,
+  },
+  oldTransaction: {
+    ...oldTransaction,
+    id,
   },
 });
 
-export const updateTransaction = (data={}) => dispatch => {
+export const updateTransaction = ({ id, newValues, previousValues }) => dispatch => {
   dispatch(requestUpdateTransaction());
 
   return yabaAxios.post(routes.updateTransaction, {
-    date: data.date,
-    description: data.description,
-    id: data.id,
-    value: data.amount,
+    date: newValues.date,
+    description: newValues.description,
+    id,
+    value: newValues.amount,
   }).then(response => {
-    dispatch(editTransaction(response.data.content));
+    dispatch(editTransaction({
+      id,
+      newTransaction: response.data.content,
+      oldTransaction: previousValues,
+    }));
   }).catch(err => {
     if (err.response.status >= 400) {
       const message = err.response.status === 404 ?
@@ -170,17 +178,20 @@ export const requestDeleteTransaction = () => ({
 export const REMOVE_DELETED_TRANSACTION = 'REMOVE_DELETED_TRANSACTION';
 export const removeDeletedTransaction = transaction => ({
   type: REMOVE_DELETED_TRANSACTION,
-  transaction: {
-    id: transaction.id,
-  },
+  transaction,
 });
 
-export const deleteTransaction = id => dispatch => {
+export const deleteTransaction = ({ amount, id, date, description }) => dispatch => {
   dispatch(requestDeleteTransaction());
 
   return yabaAxios.post(routes.deleteTransaction, { id })
     .then(response => {
-      dispatch(removeDeletedTransaction(response.data.content));
+      dispatch(removeDeletedTransaction({
+        amount,
+        id: response.data.content,
+        date,
+        description,
+      }));
     }).catch(err => {
       if (err.response.status >= 404) {
         dispatch(addAlert({
