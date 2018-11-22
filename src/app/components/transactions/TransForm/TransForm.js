@@ -8,6 +8,7 @@ import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
+import { DateInput } from '../../misc';
 import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
 import { attachTagToTransaction, detachTagFromTransaction, modifyTransactionTag } from '../../../store/actions/tags';
 import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
@@ -73,6 +74,7 @@ class TransForm extends React.Component {
     super();
     this.state = {
       positiveAmount: true,
+      showDatePicker: false,
       showTagForm: false,
       tags: [],
     };
@@ -148,6 +150,17 @@ class TransForm extends React.Component {
     }));
   }
 
+  handleDatePickerClick = date => {
+    this.setState({
+      showDatePicker: false,
+    });
+
+    this.props.setValues({
+      ...this.props.values,
+      date,
+    });
+  }
+
   setValuesAndSubmit = e => {
     const { handleSubmit, setValues, values } = this.props;
     const { positiveAmount, tags } = this.state;
@@ -176,7 +189,12 @@ class TransForm extends React.Component {
       values,
     } = this.props;
 
-    const { positiveAmount, showTagForm, tags } = this.state;
+    const {
+      positiveAmount,
+      showDatePicker,
+      showTagForm,
+      tags,
+    } = this.state;
 
     return (
       <Card className={`trans-form yaba-card amount-${positiveAmount ? 'pos' : 'neg'}`}>
@@ -185,22 +203,25 @@ class TransForm extends React.Component {
             <Form onSubmit={this.setValuesAndSubmit}>
               <Form.Group>
                 <Form.Field
+                  className='date-input-wrapper'
                   error={allFieldsTouched(touched, fields) && !!errors.date}
                   width={7}
                 >
-                  <div className='ui input'>
-                    <Cleave
-                      className='input-height input-padding'
-                      id='date'
-                      name='date'
-                      options={{
-                        date: true, datePattern: ['m', 'd', 'Y'],
-                      }}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.date}
-                    />
-                  </div>
+                  <DateInput
+                    className='input-height input-padding'
+                    id='date'
+                    name='date'
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onDayClick={this.handleDatePickerClick}
+                    onFocus={() => this.setState({ showDatePicker: true })}
+                    onPickerClose={e => {
+                      e.preventDefault();
+                      this.setState({ showDatePicker: false });
+                    }}
+                    showDatePicker={showDatePicker}
+                    value={values.date}
+                  />
                 </Form.Field>
 
                 <Form.Field

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Button, Segment, Form, Tab } from 'semantic-ui-react';
 import { compose, reject } from 'ramda';
 import { connect } from 'react-redux';
-import Cleave from 'cleave.js/react';
 import moment from 'moment';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
+import { DateInput } from '../../misc';
 import FilterText from '../FilterText';
 import {
   FROM_DATE,
@@ -110,9 +110,11 @@ class Filter extends React.Component {
       ...this.initialFieldsState,
       [this.FROM_DATE_CLEAVE]: undefined,
       [this.TO_DATE_CLEAVE]: undefined,
-      matchAllTags: true,
-      showTagAdd: false,
       activeTab: this.paneList.indexOf(this.panes.desc),
+      matchAllTags: true,
+      showDatePickerFrom: false,
+      showDatePickerTo: false,
+      showTagAdd: false,
     };
   }
 
@@ -154,42 +156,55 @@ class Filter extends React.Component {
       <Form>
         <Form.Group>
           <Form.Field
+            className='date-field'
             width={6}
           >
-            <label htmlFor='date'>From</label>
-            <div className='ui input'>
-              <Cleave
-                id='dateQueryFrom'
-                name='dateQueryFrom'
-                onBlur={e => this.handleDateBlur(e, FROM_DATE)}
-                onChange={e => this.handleDateChange(e, FROM_DATE)}
-                onInit={cleave => this.setCleaveState(cleave, FROM_DATE)}
-                options={{
-                  date: true, datePattern: ['m', 'd', 'Y'],
-                }}
-                value={this.state[FROM_DATE]}
-              />
-            </div>
+            <DateInput
+              id='dateQueryFrom'
+              label='From'
+              name='dateQueryFrom'
+              onBlur={e => {
+                this.handleDateBlur(e, FROM_DATE);
+              }}
+              onChange={e => this.handleDateChange(e, FROM_DATE)}
+              onDayClick={day => this.handleDatePickerClick(day, FROM_DATE)}
+              onFocus={() => {
+                this.setState({
+                  showDatePickerFrom: true,
+                  showDatePickerTo: false,
+                });
+              }}
+              onInit={cleave => this.setCleaveState(cleave, FROM_DATE)}
+              onPickerClose={() => this.setState({ showDatePickerFrom: false })}
+              showDatePicker={this.state.showDatePickerFrom}
+              value={this.state[FROM_DATE]}
+            />
           </Form.Field>
 
           <Form.Field
-            className='margin-top-20-mobile'
+            className='margin-top-20-mobile date-field'
             width={6}
           >
-            <label htmlFor='date'>To</label>
-            <div className='ui input'>
-              <Cleave
-                id='dateQueryTo'
-                name='dateQueryTo'
-                onBlur={e => this.handleDateBlur(e, TO_DATE)}
-                onChange={e => this.setState({ [TO_DATE]: e.target.value })}
-                onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
-                options={{
-                  date: true, datePattern: ['m', 'd', 'Y'],
-                }}
-                value={this.state[TO_DATE]}
-              />
-            </div>
+            <DateInput
+              id='dateQueryTo'
+              label='To'
+              name='dateQueryTo'
+              onBlur={e => {
+                this.handleDateBlur(e, TO_DATE);
+              }}
+              onChange={e => this.handleDateChange(e, TO_DATE)}
+              onDayClick={day => this.handleDatePickerClick(day, TO_DATE)}
+              onFocus={() => {
+                this.setState({
+                  showDatePickerFrom: false,
+                  showDatePickerTo: true,
+                });
+              }}
+              onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
+              onPickerClose={() => this.setState({ showDatePickerTo: false })}
+              showDatePicker={this.state.showDatePickerTo}
+              value={this.state[TO_DATE]}
+            />
           </Form.Field>
         </Form.Group>
       </Form>
@@ -278,6 +293,15 @@ class Filter extends React.Component {
     this.setState({ [dateType]: e.target.value });
   }
 
+  handleDatePickerClick = (date, dateType) => {
+    const showDatePicker = dateType === FROM_DATE ? 'showDatePickerFrom' : 'showDatePickerTo';
+
+    this.setState({
+      [dateType]: this.validDateInput(date, dateType) ? date : '',
+      [showDatePicker]: false,
+    });
+  }
+
   handleDescChange = e => {
     this.setState({
       description: e.target.value,
@@ -332,6 +356,13 @@ class Filter extends React.Component {
     }
   }
 
+  resetDatePickerState = () => {
+    this.setState({
+      showDatePickerFrom: false,
+      showDatePickerTo: false,
+    });
+  }
+
   render() {
     const { onCancel } = this.props;
     const { description, tags, [FROM_DATE]: fromDate, [TO_DATE]: toDate } = this.state;
@@ -341,7 +372,10 @@ class Filter extends React.Component {
         <h2>Filter transactions</h2>
 
         <Tab
-          onTabChange={(e, data) => this.setState({ activeTab: data.activeIndex })}
+          onTabChange={(e, data) => {
+            this.resetDatePickerState();
+            this.setState({ activeTab: data.activeIndex });
+          }}
           menu={{ borderless: true, pointing: true }}
           panes={this.paneList}
         />

@@ -5,6 +5,12 @@ body {
 .no-padding {
   padding: 0 !important; }
 
+.padding-top-5 {
+  padding-top: 5px !important; }
+
+.padding-bottom-5 {
+  padding-bottom: 5px !important; }
+
 .padding-30 {
   padding: 30px !important; }
 
@@ -175,6 +181,23 @@ body {
   .alert-list {
     margin-top: 45px; } }
 
+.date-picker {
+  position: absolute;
+  z-index: 999; }
+  .date-picker .close-picker {
+    position: absolute;
+    z-index: 1000;
+    padding: 1px !important;
+    width: 18px;
+    height: 18px;
+    margin-left: 1px !important;
+    margin-top: 1px !important;
+    border-radius: 0 !important; }
+  .date-picker .DayPicker {
+    background-color: #FDFFFF;
+    border: 1px solid #BBB !important;
+    padding-top: 0.8em; }
+
 /* Tag */
 .yaba-tag {
   display: inline-block;
@@ -242,7 +265,7 @@ body {
 
 .tag-dropdown {
   background-color: #FDFFFF;
-  z-index: 1;
+  z-index: 10;
   max-height: 270px;
   overflow-y: scroll; }
   .tag-dropdown .tag-dropdown-option {
@@ -301,6 +324,9 @@ body {
   #filter-text {
     text-align: center; } }
 
+.transactions-filter .date-field {
+  position: relative; }
+
 .sorter .sort-title {
   font-size: 16px;
   font-weight: 500; }
@@ -331,6 +357,9 @@ body {
 
 .trans-form .tag-form {
   height: 25px; }
+
+.trans-form .date-input-wrapper {
+  position: relative; }
 
 @media only screen and (max-width: 622px) {
   .trans-form {

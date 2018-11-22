@@ -1,0 +1,21 @@
+.date-picker {
+  position: absolute;
+  z-index: 999;
+
+  .close-picker {
+    position: absolute;
+    z-index: 1000;
+    padding: 1px !important;
+    width: 18px;
+    height: 18px;
+    margin-left: 1px !important;
+    margin-top: 1px !important;
+    border-radius: 0 !important;
+  }
+
+  .DayPicker {
+    background-color: $white-base;
+    border: 1px solid $grey-base-light !important;
+    padding-top: 0.8em;
+  }
+}

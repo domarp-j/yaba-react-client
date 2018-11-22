@@ -1,6 +1,7 @@
 $primary-color: #006d5b;
 $white-base: #FDFFFF;
 $grey-base-dark: #333;
+$grey-base-light: #BBB;
 $dark-base: #0F1B07;
 $red-base: #D72C16;
 $blue-base: #217CA3;
@@ -15,6 +16,14 @@ body {
 
 .no-padding {
   padding: 0 !important;
+}
+
+.padding-top-5 {
+  padding-top: 5px !important;
+}
+
+.padding-bottom-5 {
+  padding-bottom: 5px !important;
 }
 
 .padding-30 {
@@ -224,6 +233,7 @@ body {
 /* buildSassIndex */
 
 @import 'src/app/components/misc/Alerts/Alerts.scss';
+@import 'src/app/components/misc/DatePicker/DatePicker.scss';
 @import 'src/app/components/tags/Tag/Tag.scss';
 @import 'src/app/components/tags/TagAdd/TagAdd.scss';
 @import 'src/app/components/tags/TagButton/TagButton.scss';
@@ -231,6 +241,7 @@ body {
 @import 'src/app/components/tags/TagForm/TagForm.scss';
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';
 @import 'src/app/components/transactions/Dashboard/Dashboard.scss';
+@import 'src/app/components/transactions/Filter/Filter.scss';
 @import 'src/app/components/transactions/Sorter/Sorter.scss';
 @import 'src/app/components/transactions/TransForm/TransForm.scss';
 @import 'src/app/components/transactions/TransItem/TransItem.scss';
