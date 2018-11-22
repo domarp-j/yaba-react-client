@@ -21,6 +21,7 @@ class TagForm extends React.Component {
     onSave: PropTypes.func,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
+    submitForm: PropTypes.func,
     tagId: PropTypes.number,
     tagOptions: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
@@ -64,8 +65,13 @@ class TagForm extends React.Component {
 
   handleDropdownSelect = e => {
     this.hideDropdown();
-    this.props.setValues({
-      tagName: e.target.innerText,
+    new Promise(resolve => {
+      this.props.setValues({
+        tagName: e.target.innerText,
+      });
+      resolve();
+    }).then(() => {
+      this.props.submitForm();
     });
   }
 
