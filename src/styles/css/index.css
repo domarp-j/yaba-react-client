@@ -116,6 +116,10 @@ body {
   background-color: #217CA3 !important;
   color: #FDFFFF !important; }
 
+.warning-button {
+  background-color: #F5BE41 !important;
+  color: #FDFFFF !important; }
+
 /* Miscellaneous */
 .yaba-modal {
   position: absolute;

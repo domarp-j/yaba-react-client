@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
 import TransForm from '../TransForm';
-import { deleteTransaction } from '../../../store/actions/transactions';
+import { createTransaction, deleteTransaction } from '../../../store/actions/transactions';
 import { addTagNameToTransactionQuery } from '../../../store/actions/queries';
 import {
   attachTagToTransaction,
@@ -13,12 +13,14 @@ import {
   modifyTransactionTag
 } from '../../../store/actions/tags';
 import { dollarToFloat, floatToDollar } from '../../../utils/dollarTools';
+import { currentDateYMD } from '../../../utils/dateTools';
 
 class TransItem extends React.Component {
   static propTypes = {
     amount: PropTypes.string,
     addTagNameToTransactionQuery: PropTypes.func,
     attachTagToTransaction: PropTypes.func,
+    createTransaction: PropTypes.func,
     date: PropTypes.string,
     deleteTransaction: PropTypes.func,
     description: PropTypes.string,
@@ -55,6 +57,19 @@ class TransItem extends React.Component {
     if (!this.state.showEditDelete) {
       this.props.addTagNameToTransactionQuery(tagName);
     }
+  }
+
+  /*
+    Create a near-duplicate transaction with the same description, value,
+    and tags. The date will be set to the current date.
+  */
+  cloneTransaction = () => {
+    this.props.createTransaction({
+      amount:  (dollarToFloat(this.props.amount) > 0 ? '+' : '-') + this.props.amount.replace(/\$|,|-/g, ''),
+      description: this.props.description,
+      date: currentDateYMD(),
+      tags: this.props.tags.map(tag => tag.name),
+    });
   }
 
   /*
@@ -190,6 +205,11 @@ class TransItem extends React.Component {
                   content='Edit'
                   onClick={() => this.toggleStateBool('editMode')}
                 />
+                <Button
+                  className='trans-cta-button warning-button'
+                  content='Clone'
+                  onClick={this.cloneTransaction}
+                />
                 {this.removeTransactionModal()}
               </div>
             }
@@ -207,6 +227,7 @@ class TransItem extends React.Component {
 const mapDispatchToProps = dispatch => ({
   addTagNameToTransactionQuery: tagName => dispatch(addTagNameToTransactionQuery(tagName)),
   attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
+  createTransaction: data => dispatch(createTransaction(data)),
   deleteTransaction: data => dispatch(deleteTransaction(data)),
   detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
   modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),

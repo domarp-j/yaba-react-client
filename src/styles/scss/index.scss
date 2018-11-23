@@ -5,6 +5,7 @@ $grey-base-light: #BBB;
 $dark-base: #0F1B07;
 $red-base: #D72C16;
 $blue-base: #217CA3;
+$yellow-base: #F5BE41;
 
 $mobile-width: 767px;
 
@@ -172,6 +173,11 @@ body {
 
 .info-button {
   background-color: $blue-base !important;
+  color: $white-base !important;
+}
+
+.warning-button {
+  background-color: $yellow-base !important;
   color: $white-base !important;
 }
 

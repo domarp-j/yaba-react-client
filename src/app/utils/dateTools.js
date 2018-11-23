@@ -6,6 +6,10 @@ export const currentDateMDY = () => (
   moment().format('MM/DD/YYYY')
 );
 
+export const currentDateYMD = () => (
+  moment().format('YYYY-MM-DD')
+);
+
 export const dateToMDY = date => (
   date && moment(date).utc().format('MM/DD/YYYY')
 );

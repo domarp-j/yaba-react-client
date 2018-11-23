@@ -1,10 +1,18 @@
 import moment from 'moment';
-import { currentDateMDY, dateToMDY, dateToYMD, friendlyDate } from './dateTools';
+import { currentDateMDY, currentDateYMD, dateToMDY, dateToYMD, friendlyDate } from './dateTools';
 
 describe('currentDateMDY', () => {
   it('returns the current date in MM/DD/YYYY', () => {
     const expected = moment().format('MM/DD/YYYY');
     const actual = currentDateMDY();
+    expect(expected).toEqual(actual);
+  });
+});
+
+describe('currentDateYMD', () => {
+  it('returns the current date in YYYY-MM-DD', () => {
+    const expected = moment().format('YYYY-MM-DD');
+    const actual = currentDateYMD();
     expect(expected).toEqual(actual);
   });
 });
