@@ -102,7 +102,7 @@ class Sorter extends React.Component {
         </div>
 
         <Button
-          className='full-width-mobile warning-button'
+          className='full-width-mobile yellow-button'
           content='Sort'
           onClick={this.handleSubmit}
           size='large'

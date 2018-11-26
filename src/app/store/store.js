@@ -32,7 +32,6 @@ const initialState = {
       isDeletingTransaction: false,
       noTransactionsFound: false,
       queryPresent: false,
-      toggleTransactionForm: false,
     },
     queries: {
       description: '',

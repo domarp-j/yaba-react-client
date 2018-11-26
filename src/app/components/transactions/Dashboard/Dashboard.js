@@ -1,110 +1,146 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Segment } from 'semantic-ui-react';
+import { Button, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import FilterText from '../FilterText';
+import { CsvDownload, Filter, FilterText, Sorter, TransForm } from '../../transactions';
+import { ButtonToModal } from '../../misc';
 import { clearTransactionQueries } from '../../../store/actions/queries';
-import { toggleTransactionForm } from '../../../store/actions/transactions';
 
 /*
   This is a dashboard that shows important transaction data such as
     total amount & total number of transactions.
 
-  This dashboard also includes CTAs to add & filter transactions, along
-    with a segment that displays the user's currently transaction filter
-    queries in a human-readable format.
+  This dashboard also includes buttons to add, filter, and sort transactions,
+    along with a segment that displays the user's currently transaction
+    filter queries in a human-readable format.
 */
 
-const Dashboard = ({
-  clearQueries,
-  count,
-  csvButton: CsvModal,
-  filterButton: FilterModal,
-  queries,
-  queryPresent,
-  sortButton: SortModal,
-  toggleTransactionForm,
-  totalAmount,
-}) => (
-  <div>
-    {/* Display transaction data */}
-    <Segment id='dashboard' className={`${queryPresent ? '' : 'margin-bottom-30'}`}>
-      <Header
-        as='h1'
-        className='no-margin'
-        icon
-        textAlign='center'
-      >
-        <Header.Content id='total-amount'>
-          {totalAmount}
-        </Header.Content>
-      </Header>
+class Dashboard extends React.Component {
+  static propTypes = {
+    addButton: PropTypes.func,
+    clearQueries: PropTypes.func,
+    count: PropTypes.number,
+    csvButton: PropTypes.func,
+    filterButton: PropTypes.func,
+    queries: PropTypes.object,
+    queryPresent: PropTypes.bool,
+    sortButton: PropTypes.func,
+    totalAmount: PropTypes.string,
+  }
 
-      <Header
-        as='h3'
-        textAlign='center'
-        className='margin-top-15'
-      >
-        <Header.Content id='transaction-count'>
-          for {count} transactions
-        </Header.Content>
-      </Header>
+  constructor() {
+    super();
+    this.state = {
+      openCsvModal: false,
+      openFilterModal: false,
+      openSortModal: false,
+      openTransFormModal: false,
+    };
+  }
 
-      {/* Transaction CTAs */}
-      <div className='center-horizontally'>
-        <Button
-          circular
-          className='margin-5 console-button'
-          onClick={toggleTransactionForm}
-          size='large'
-          icon='plus'
-        />
-        <FilterModal />
-        <SortModal />
-        <CsvModal />
+  buttonSize = 'small';
+
+  toggleStateBool = stateKey => {
+    this.setState(prevState => ({
+      [stateKey]: !prevState[stateKey],
+    }));
+  }
+
+  dashboardModal = ({ component: Component, icon, id, stateKey }) => (
+    <ButtonToModal
+      button={<Button
+        className='margin-right-5 margin-top-bottom-5 no-left-margin green-button'
+        onClick={() => this.toggleStateBool(stateKey)}
+        icon={icon}
+        size={this.buttonSize}
+      />}
+      showModal={this.state[stateKey]}
+      id={id}
+    >
+      <Component
+        onCancel={() => this.toggleStateBool(stateKey)}
+        onSave={() => this.toggleStateBool(stateKey)}
+      />
+    </ButtonToModal>
+  )
+
+  render() {
+    const {
+      clearQueries,
+      count,
+      queries,
+      queryPresent,
+      totalAmount,
+    } = this.props;
+
+    return (
+      <div>
+        {/* Display transaction data */}
+        <Segment id='dashboard' className={`${queryPresent ? '' : 'margin-bottom-15'}`}>
+          <div className='inline-block' id='total-amount'>
+            {totalAmount} <span id='transaction-count'> for {count} transactions</span>
+          </div>
+
+          {/* Transaction CTAs (Tablet Width & Larger) */}
+          <div className='float-right hidden-tablet-and-mobile'>
+            <div className='center-horizontally'>
+              {this.dashboardModal({
+                component: TransForm,
+                icon: 'plus',
+                id: 'trans-form-modal',
+                stateKey: 'openTransFormModal',
+              })}
+              {this.dashboardModal({
+                component: Filter,
+                icon: 'filter',
+                id: 'filter-modal',
+                stateKey: 'openFilterModal',
+              })}
+              {this.dashboardModal({
+                component: Sorter,
+                icon: 'sort content ascending',
+                id: 'sort-modal',
+                stateKey: 'openSortModal',
+              })}
+              {this.dashboardModal({
+                component: CsvDownload,
+                icon: 'file',
+                id: 'csv-modal',
+                stateKey: 'openCsvModal',
+              })}
+              {queryPresent &&
+                <Button
+                  className='margin-right-5 margin-top-bottom-5 no-left-margin red-button'
+                  icon='undo'
+                  onClick={clearQueries}
+                  size={this.buttonSize}
+                />
+              }
+            </div>
+          </div>
+        </Segment>
+
+        {/* Current filter query */}
         {queryPresent &&
-          <Button
-            circular
-            className='margin-5 error-button'
-            icon='undo'
-            onClick={clearQueries}
-            size='large'
-          />
+          <Segment id='filter-text' className='margin-bottom-15'>
+            <FilterText {...queries} />
+          </Segment>
         }
       </div>
-    </Segment>
-
-    {/* Current filter query */}
-    {queryPresent &&
-      <Segment id='filter-text' className='margin-bottom-15'>
-        <FilterText {...queries} />
-      </Segment>
-    }
-  </div>
-);
-
-Dashboard.propTypes = {
-  addButton: PropTypes.func,
-  clearQueries: PropTypes.func,
-  count: PropTypes.number,
-  csvButton: PropTypes.func,
-  filterButton: PropTypes.func,
-  queries: PropTypes.object,
-  queryPresent: PropTypes.bool,
-  sortButton: PropTypes.func,
-  toggleTransactionForm: PropTypes.func,
-  totalAmount: PropTypes.string,
-};
+    );
+  }
+}
 
 const mapStateToProps = state => ({
+  count: state.transactions.count,
   queries: state.transactions.queries,
   queryPresent: state.transactions.boolEvents.queryPresent,
+  totalAmount: state.transactions.totalAmount,
 });
 
 const mapDispatchToProps = dispatch => ({
   clearQueries: () => dispatch(clearTransactionQueries()),
-  toggleTransactionForm: () => dispatch(toggleTransactionForm()),
 });
 
 export default connect(

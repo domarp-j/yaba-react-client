@@ -6,6 +6,7 @@ import { compose, contains } from 'ramda';
 import * as yup from 'yup';
 import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
+import classcat from 'classcat';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
 import { DateInput } from '../../misc';
@@ -178,6 +179,7 @@ class TransForm extends React.Component {
 
   render() {
     const {
+      editState,
       errors,
       handleBlur,
       handleChange,
@@ -197,10 +199,26 @@ class TransForm extends React.Component {
     } = this.state;
 
     return (
-      <Card className={`trans-form yaba-card amount-${positiveAmount ? 'pos' : 'neg'}`}>
+      <Card
+        fluid={!editState}
+        className={classcat({
+          'trans-form': true,
+          'yaba-card': editState,
+          'amount-pos': editState && positiveAmount,
+          'amount-neg': editState && !positiveAmount,
+        })}
+      >
         <Card.Content>
+          {!editState &&
+            <Card.Header className='margin-bottom-15'>
+              <h2>Add a transaction</h2>
+            </Card.Header>
+          }
+
           <Card.Description >
-            <Form onSubmit={this.setValuesAndSubmit}>
+            <Form
+              onSubmit={this.setValuesAndSubmit}
+            >
               <Form.Group>
                 <Form.Field
                   className='date-input-wrapper'
@@ -231,7 +249,7 @@ class TransForm extends React.Component {
                 >
                   <div className='ui left action input'>
                     <Button
-                      className={`input-height amount-button ${positiveAmount ? 'success' : 'error'}-button`}
+                      className={`input-height amount-button ${positiveAmount ? 'green-button' : 'red-button'}`}
                       icon={positiveAmount ? 'plus' : 'minus'}
                       onClick={e => { e.preventDefault(); this.toggleStateBool('positiveAmount'); }}
                     />
@@ -299,7 +317,7 @@ class TransForm extends React.Component {
 
               <div>
                 <Button
-                  className='trans-cta-button success-button'
+                  className='trans-form-button green-button'
                   content='Save'
                   disabled={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
                   loading={isAddingTransaction}
@@ -307,7 +325,7 @@ class TransForm extends React.Component {
                 />
 
                 <Button
-                  className='trans-cta-button'
+                  className='trans-form-button'
                   content='Cancel'
                   onClick={e => { e.preventDefault(); onCancel(); }}
                 />

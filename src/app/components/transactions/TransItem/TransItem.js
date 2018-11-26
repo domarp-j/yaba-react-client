@@ -4,7 +4,7 @@ import { Card, Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
-import TransForm from '../TransForm';
+import { TransForm } from '../../transactions';
 import { createTransaction, deleteTransaction } from '../../../store/actions/transactions';
 import { addTagNameToTransactionQuery } from '../../../store/actions/queries';
 import {
@@ -84,7 +84,7 @@ class TransItem extends React.Component {
       open={this.state.openDeleteModal}
       trigger={
         <Button
-          className='trans-cta-button error-button'
+          className='trans-form-button red-button'
           content='Delete'
           onClick={() => this.toggleStateBool('openDeleteModal')}
         />
@@ -97,10 +97,10 @@ class TransItem extends React.Component {
         </p>
       </Modal.Content>
       <Modal.Actions>
-        <Button className='info-button' onClick={() => this.toggleStateBool('openDeleteModal')}>
+        <Button className='blue-button' onClick={() => this.toggleStateBool('openDeleteModal')}>
           No, keep it
         </Button>
-        <Button className='error-button' onClick={() => {
+        <Button className='red-button' onClick={() => {
           this.props.deleteTransaction({
             amount: this.props.amount,
             date: this.props.date,
@@ -201,12 +201,12 @@ class TransItem extends React.Component {
             {showEditDelete &&
               <div className='margin-top-5'>
                 <Button
-                  className='trans-cta-button info-button'
+                  className='trans-form-button blue-button'
                   content='Edit'
                   onClick={() => this.toggleStateBool('editMode')}
                 />
                 <Button
-                  className='trans-cta-button warning-button'
+                  className='trans-form-button yellow-button'
                   content='Clone'
                   onClick={this.cloneTransaction}
                 />
@@ -215,7 +215,7 @@ class TransItem extends React.Component {
             }
           </Card.Content>
           <Button
-            className='show-cta-button'
+            className='show-edit-delete-button'
             icon={`angle ${showEditDelete ? 'up' : 'down'}`}
             onClick={() => this.toggleStateBool('showEditDelete')}
           />

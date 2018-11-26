@@ -4,13 +4,11 @@ import { Card, Dimmer, Loader, Segment  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, equals, identity, keys, merge, partition } from 'ramda';
 
-import TransItem from '../TransItem';
-import TransForm from '../TransForm';
+import { TransItem } from '../../transactions';
 import {
   DEFAULT_FETCH_LIMIT,
   clearTransactions,
-  fetchTransactions,
-  toggleTransactionForm
+  fetchTransactions
 } from '../../../store/actions/transactions';
 
 class TransList extends React.PureComponent {
@@ -21,9 +19,7 @@ class TransList extends React.PureComponent {
     isFetchingTransactions: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
     queries: PropTypes.object,
-    showTransactionForm: PropTypes.bool,
     sorting: PropTypes.object,
-    toggleTransactionForm: PropTypes.func,
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
       date: PropTypes.string,
@@ -137,8 +133,6 @@ class TransList extends React.PureComponent {
     const {
       isFetchingTransactions,
       noTransactionsFound,
-      showTransactionForm,
-      toggleTransactionForm,
       transactions,
     } = this.props;
 
@@ -149,12 +143,6 @@ class TransList extends React.PureComponent {
     return (
       <div ref={this.setPageRef}>
         <Card.Group centered>
-          {showTransactionForm &&
-            <TransForm
-              onCancel={toggleTransactionForm}
-              onSave={toggleTransactionForm}
-            />
-          }
           {newTransactions.length > 0 &&
             newTransactions.map(transaction => this.renderTransaction(transaction))
           }
@@ -185,14 +173,12 @@ const mapStateToProps = state => ({
   noTransactionsFound: state.transactions.boolEvents.noTransactionsFound,
   queries: state.transactions.queries,
   sorting: state.transactions.sorting,
-  showTransactionForm: state.transactions.boolEvents.toggleTransactionForm,
   transactions: state.transactions.items,
 });
 
 const mapDispatchToProps = dispatch => ({
   clearTransactions: () => dispatch(clearTransactions()),
   fetchTransactions: params => dispatch(fetchTransactions(params)),
-  toggleTransactionForm: () => dispatch(toggleTransactionForm()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransList);

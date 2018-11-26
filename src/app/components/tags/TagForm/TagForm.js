@@ -121,7 +121,7 @@ class TagForm extends React.Component {
           />
         }
         <Button
-          className='cta-accept success-button'
+          className='tag-save green-button'
           onClick={this.submitTagForm}
         >
           <Button.Content>
@@ -129,7 +129,7 @@ class TagForm extends React.Component {
           </Button.Content>
         </Button>
         <Button
-          className='cta-cancel error-button margin-right-5'
+          className='tag-cancel red-button margin-right-5'
           onClick={this.cancelTagForm}
         >
           <Button.Content>

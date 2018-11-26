@@ -1,98 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Container, Modal } from 'semantic-ui-react';
-import { connect } from 'react-redux';
+import { Container } from 'semantic-ui-react';
+import { Sticky, StickyContainer } from 'react-sticky';
 
 import { NavSignedIn } from '../../components/navigation';
-import { CsvDownload, Dashboard, Filter, Sorter, TransList } from '../../components/transactions';
+import { Dashboard, MobileButtonGroup, TransList } from '../../components/transactions';
 
-class TransactionsPage extends React.Component {
-  static propTypes = {
-    count: PropTypes.number,
-    totalAmount: PropTypes.string,
-  }
+const dashboardTop = 25;
 
-  constructor() {
-    super();
-    this.state = {
-      openCsvModal: false,
-      openFilterModal: false,
-      openSortModal: false,
-    };
-  }
+const stickyOffset = dashboardTop => 65 - dashboardTop;
 
-  toggleStateBool = stateKey => {
-    this.setState(prevState => ({
-      [stateKey]: !prevState[stateKey],
-    }));
-  }
+const TransactionsPage = () => (
+  <StickyContainer>
+    <NavSignedIn />
+    <MobileButtonGroup className='tablet-and-mobile-only' id='trans-mobile-buttons' />
+    <Container textAlign='left' id='transactions-page'>
+      <Sticky
+        topOffset={stickyOffset(dashboardTop)}
+      >
+        {({ style: stickyStyles }) => (
+          <div id='dashboard-wrapper' style={{ ...stickyStyles, zIndex: 1000, top: dashboardTop }}>
+            <Dashboard />
+          </div>
+        )}
+      </Sticky>
+      <TransList />
+    </Container>
+  </StickyContainer>
+);
 
-  manageTransactionModal = ({
-    buttonIcon,
-    size,
-    stateKey,
-    TransactionComponent,
-  }) => (
-    <Modal
-      className='yaba-modal'
-      open={this.state[stateKey]}
-      size={size}
-      trigger={
-        <Button
-          circular
-          className='margin-5 console-button'
-          onClick={() => this.toggleStateBool(stateKey)}
-          size='large'
-          icon={buttonIcon}
-        />
-      }
-    >
-      <TransactionComponent
-        onCancel={() => this.toggleStateBool(stateKey)}
-        onSave={() => this.toggleStateBool(stateKey)}
-      />
-    </Modal>
-  )
-
-  render() {
-    const { count, totalAmount } = this.props;
-
-    return (
-      <div>
-        <NavSignedIn />
-        <Container textAlign='left' id='transactions-page'>
-          <Dashboard
-            count={count}
-            csvButton={() => this.manageTransactionModal({
-              buttonIcon: 'file',
-              size: 'tiny',
-              stateKey: 'openCsvModal',
-              TransactionComponent: CsvDownload,
-            })}
-            filterButton={() => this.manageTransactionModal({
-              buttonIcon: 'filter',
-              size: 'tiny',
-              stateKey: 'openFilterModal',
-              TransactionComponent: Filter,
-            })}
-            sortButton={() => this.manageTransactionModal({
-              buttonIcon: 'sort amount down',
-              size: 'tiny',
-              stateKey: 'openSortModal',
-              TransactionComponent: Sorter,
-            })}
-            totalAmount={totalAmount}
-          />
-          <TransList />
-        </Container>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  count: state.transactions.count,
-  totalAmount: state.transactions.totalAmount,
-});
-
-export default connect(mapStateToProps)(TransactionsPage);
+export default TransactionsPage;

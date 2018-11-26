@@ -63,7 +63,7 @@ class TagButton extends React.Component {
           />
           {showEditDelete &&
             <Button
-              className='yaba-tag-edit info-button'
+              className='yaba-tag-edit blue-button'
               onClick={() => this.toggleBoolState('showTagForm')}
             >
               <Button.Content>
@@ -73,7 +73,7 @@ class TagButton extends React.Component {
           }
           {showEditDelete &&
             <Button
-              className='yaba-tag-delete error-button'
+              className='yaba-tag-delete red-button'
               onClick={() => onDelete({ tagId, tagName, transactionId })}
             >
               <Button.Content>

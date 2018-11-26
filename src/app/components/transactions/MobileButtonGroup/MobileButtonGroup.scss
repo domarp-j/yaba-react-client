@@ -1,0 +1,45 @@
+.mobile-button-group {
+  text-align: center;
+  width: 64px;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  .toggle-button {
+    margin: 0 !important;
+  }
+
+  .action-button-wrapper {
+    position: relative;
+
+    .action-label {
+      position: absolute;
+      top: 5px;
+      background-color: $grey;
+      padding: 3px 6px !important;
+      color: $white;
+      border-radius: 3px;
+    }
+
+    .action-button {
+      display: inline-block;
+      margin: 0 !important;
+      margin-bottom: 10px !important;
+    }
+
+    #filter-label {
+      left: -43px;
+    }
+
+    #form-label {
+      left: -35px;
+    }
+
+    #sort-label {
+      left: -36px;
+    }
+
+    #csv-label {
+      left: -73px;
+    }
+  }
+}

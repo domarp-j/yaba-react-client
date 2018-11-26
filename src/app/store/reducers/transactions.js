@@ -8,7 +8,6 @@ import {
   REQUEST_TRANSACTIONS,
   RECEIVE_TRANSACTIONS,
   REPORT_NO_TRANSACTIONS,
-  TOGGLE_TRANS_FORM,
   REQUEST_TO_ADD_TRANSACTION,
   PUSH_NEW_TRANSACTION,
   REQUEST_TO_UPDATE_TRANSACTION,
@@ -92,14 +91,6 @@ const transactions = (
     };
 
   // Adding transactions
-  case TOGGLE_TRANS_FORM:
-    return {
-      ...state,
-      boolEvents: {
-        ...state.boolEvents,
-        toggleTransactionForm: !state.boolEvents.toggleTransactionForm,
-      },
-    };
   case REQUEST_TO_ADD_TRANSACTION:
     return {
       ...state,

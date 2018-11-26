@@ -1,16 +1,18 @@
-$primary-color: #006d5b;
-$white-base: #FDFFFF;
-$grey-base-dark: #333;
-$grey-base-light: #BBB;
-$dark-base: #0F1B07;
-$red-base: #D72C16;
-$blue-base: #217CA3;
-$yellow-base: #F5BE41;
+$green: #006d5b;
+$white: #FDFFFF;
+$grey-dark: #333;
+$grey: #666;
+$grey-light: #BBB;
+$black: #0F1B07;
+$red: #D72C16;
+$blue: #217CA3;
+$yellow: #F5BE41;
 
-$mobile-width: 767px;
+$mobile-width: 560px;
+$tablet-width: 767px;
 
 body {
-  background-color: $white-base;
+  background-color: $white;
 }
 
 /* Padding */
@@ -37,6 +39,14 @@ body {
   margin: 0 !important;
 }
 
+.no-margin-left {
+  margin-left: 0 !important;
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
+}
+
 .margin-5 {
   margin: 5px !important;
 }
@@ -47,6 +57,11 @@ body {
 
 .margin-right-5 {
   margin-right: 5px !important;
+}
+
+.margin-top-bottom-5 {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 .margin-top-10 {
@@ -87,7 +102,7 @@ body {
   margin-bottom: 30px !important;
 }
 
-@media only screen and (max-width: $mobile-width) {
+@media only screen and (max-width: $tablet-width) {
   .margin-top-5-mobile {
     margin-top: 5px !important;
   }
@@ -114,6 +129,31 @@ body {
 .inline-block {
   display: inline-block !important;
 }
+
+@media only screen and (max-width: $mobile-width) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: $mobile-width + 1px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: $tablet-width) {
+  .hidden-tablet-and-mobile {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: $tablet-width + 1px) {
+  .tablet-and-mobile-only {
+    display: none !important;
+  }
+}
+
 
 /* Positioning */
 
@@ -147,7 +187,7 @@ body {
   width: 100% !important;
 }
 
-@media only screen and (max-width: $mobile-width) {
+@media only screen and (max-width: $tablet-width) {
   .full-width-mobile {
     width: 100%;
   }
@@ -161,24 +201,24 @@ body {
 
 /* Buttons */
 
-.success-button {
-  background-color: $primary-color !important;
-  color: $white-base !important;
+.green-button {
+  background-color: $green !important;
+  color: $white !important;
 }
 
-.error-button {
-  background-color: $red-base !important;
-  color: $white-base !important;
+.red-button {
+  background-color: $red !important;
+  color: $white !important;
 }
 
-.info-button {
-  background-color: $blue-base !important;
-  color: $white-base !important;
+.blue-button {
+  background-color: $blue !important;
+  color: $white !important;
 }
 
-.warning-button {
-  background-color: $yellow-base !important;
-  color: $white-base !important;
+.yellow-button {
+  background-color: $yellow !important;
+  color: $white !important;
 }
 
 /* Miscellaneous */
@@ -188,17 +228,24 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%);
+}
 
-  // Height adjust specifically for filter modal
-  @media only screen and (max-height: 350px) {
-    top: 1%;
+#trans-form-modal {
+  @media only screen and (max-height: 290px) {
+    top: 0.5% !important;
+  }
+}
+
+#filter-modal {
+  @media only screen and (max-height: 460px) {
+    top: 0.5% !important;
   }
 }
 
 .auth-button {
   width: 100%;
-  color: $white-base !important;
-  background-color: $primary-color !important;
+  color: $white !important;
+  background-color: $green !important;
   height: 60px;
   font-size: 24px !important;
   padding: 0 !important;
@@ -207,9 +254,14 @@ body {
 }
 
 .yaba-button {
-  color: $white-base !important;
-  background-color: $primary-color !important;
+  color: $white !important;
+  background-color: $green !important;
   padding: 8px !important;
+
+  &.inverted {
+    color: $green !important;
+    background-color: $white !important;
+  }
 }
 
 .yaba-card {
@@ -217,15 +269,15 @@ body {
   border-left-style: solid !important;
 
   &.amount-pos {
-    border-left-color: $primary-color !important;
+    border-left-color: $green !important;
   }
 
   &.amount-neg {
-    border-left-color: $red-base !important;
+    border-left-color: $red !important;
   }
 }
 
-.trans-cta-button {
+.trans-form-button {
   padding: 6px !important;
 }
 
@@ -248,6 +300,7 @@ body {
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';
 @import 'src/app/components/transactions/Dashboard/Dashboard.scss';
 @import 'src/app/components/transactions/Filter/Filter.scss';
+@import 'src/app/components/transactions/MobileButtonGroup/MobileButtonGroup.scss';
 @import 'src/app/components/transactions/Sorter/Sorter.scss';
 @import 'src/app/components/transactions/TransForm/TransForm.scss';
 @import 'src/app/components/transactions/TransItem/TransItem.scss';

@@ -8,11 +8,11 @@
     height: 22px !important;
 
     .amount-pos-icon {
-      color: $primary-color;
+      color: $green;
     }
 
     .amount-neg-icon {
-      color: $red-base;
+      color: $red;
     }
   }
 
@@ -20,7 +20,7 @@
     font-size: 16px !important;
   }
 
-  .show-cta-button {
+  .show-edit-delete-button {
     padding: 6px !important;
     width: 30px !important;
     position: absolute;

@@ -11,7 +11,7 @@ const DatePicker = ({
 }) => (
   <div className='date-picker'>
     <Button
-      className='close-picker error-button'
+      className='close-picker red-button'
       content='X'
       onClick={onPickerClose}
       size='mini'

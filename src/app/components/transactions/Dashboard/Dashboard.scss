@@ -1,20 +1,23 @@
 /* Dashboard */
 
 #dashboard {
-  max-width: 500px;
-  border-left: 8px solid $primary-color;
+  border-left: 8px solid $green;
   margin: 0 auto;
+  padding: 0 !important;
+  min-height: 45px;
 }
 
 #total-amount {
-  margin: 20px 0 0 0;
-  font-size: 40px;
+  font-size: 28px;
   font-family: 'Abel';
+  font-weight: 700;
+  padding: 11px !important;
 }
 
 #transaction-count {
-  font-size: 22px;
-  font-family: 'Abel'
+  font-size: 20px;
+  font-family: 'Abel';
+  font-weight: 500;
 }
 
 #filter-text {

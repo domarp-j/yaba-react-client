@@ -1,8 +1,10 @@
-#transactions-page {
-  max-width: 900px !important;
+#trans-mobile-buttons {
+  position: fixed;
+  z-index: 1000;
+  bottom: 3%;
+  right: 5%;
 }
 
-.console-button {
-  color: white !important;
-  background-color: $primary-color !important;
+#transactions-page {
+  max-width: 900px !important;
 }

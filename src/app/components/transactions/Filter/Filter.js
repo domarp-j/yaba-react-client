@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
 import { DateInput } from '../../misc';
-import FilterText from '../FilterText';
+import { FilterText } from '../../transactions';
 import {
   FROM_DATE,
   TO_DATE,
@@ -395,14 +395,14 @@ class Filter extends React.Component {
         <br />
 
         <Button
-          className='full-width-mobile info-button'
+          className='full-width-mobile blue-button'
           content='Filter'
           onClick={this.handleFilterSubmit}
           size='large'
         />
 
         <Button
-          className='full-width-mobile margin-top-10-mobile error-button'
+          className='full-width-mobile margin-top-10-mobile red-button'
           content='Clear'
           onClick={this.resetFields}
           size='large'
