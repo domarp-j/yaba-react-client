@@ -106,7 +106,7 @@ class MobileButtonGroup extends React.Component {
         <Button
           className='green-button toggle-button'
           circular
-          icon={showButtons ? 'cancel' : 'circle'}
+          icon={showButtons ? 'cancel' : 'ellipsis vertical'}
           onClick={() => this.toggleStateBool('showButtons')}
           size='big'
         />
