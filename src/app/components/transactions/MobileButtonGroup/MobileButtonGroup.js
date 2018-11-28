@@ -28,24 +28,39 @@ class MobileButtonGroup extends React.Component {
     }));
   }
 
-  dashboardModal = ({ component: Component, icon, id, stateKey }) => (
-    <ButtonToModal
-      button={<Button
-        className='green-button action-button'
-        circular
-        icon={icon}
-        onClick={() => this.toggleStateBool(stateKey)}
-        size='medium'
-      />}
-      id={id}
-      showModal={this.state[stateKey]}
-    >
-      <Component
-        onCancel={() => this.toggleStateBool(stateKey)}
-        onSave={() => this.toggleStateBool(stateKey)}
-      />
-    </ButtonToModal>
-  )
+  dashboardModal = ({ component: Component, icon, id, stateKey }) => {
+    const openModal = () => {
+      this.setState({
+        [stateKey]: true,
+      });
+    };
+
+    const closeModal = () => {
+      this.setState({
+        showButtons: false,
+        [stateKey]: false,
+      });
+    };
+
+    return (
+      <ButtonToModal
+        button={<Button
+          className='green-button action-button'
+          circular
+          icon={icon}
+          onClick={openModal}
+          size='medium'
+        />}
+        id={id}
+        showModal={this.state[stateKey]}
+      >
+        <Component
+          onCancel={closeModal}
+          onSave={closeModal}
+        />
+      </ButtonToModal>
+    );
+  }
 
   render() {
     const {
