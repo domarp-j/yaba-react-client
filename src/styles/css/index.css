@@ -169,7 +169,7 @@ body {
   font-size: 24px !important;
   padding: 0 !important;
   margin-top: 30px !important;
-  font-family: 'Abel' !important; }
+  font-family: 'Source Serif Pro' !important; }
 
 .yaba-button {
   color: #FDFFFF !important;
@@ -349,13 +349,13 @@ body {
 
 #total-amount {
   font-size: 28px;
-  font-family: 'Abel';
+  font-family: 'Source Serif Pro';
   font-weight: 700;
-  padding: 11px !important; }
+  padding: 13px 11px 9px 11px !important; }
 
 #transaction-count {
   font-size: 20px;
-  font-family: 'Abel';
+  font-family: 'Source Serif Pro';
   font-weight: 500; }
 
 #filter-text {
@@ -486,7 +486,7 @@ body {
 
 .what-is-yaba {
   text-align: center;
-  font-family: 'Abel';
+  font-family: 'Source Serif Pro';
   font-size: 24px;
   max-width: 520px;
   margin: 0 auto;
