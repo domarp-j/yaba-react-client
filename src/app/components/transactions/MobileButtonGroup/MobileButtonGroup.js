@@ -123,7 +123,7 @@ class MobileButtonGroup extends React.Component {
           circular
           icon={showButtons ? 'cancel' : 'ellipsis vertical'}
           onClick={() => this.toggleStateBool('showButtons')}
-          size='big'
+          size='huge'
         />
       </div>
     );
