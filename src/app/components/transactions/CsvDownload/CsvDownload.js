@@ -10,8 +10,8 @@ class CsvDownload extends React.Component {
     onCancel: PropTypes.func,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       loading: false,
     };

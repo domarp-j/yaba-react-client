@@ -33,8 +33,8 @@ class TransItem extends React.Component {
     transactionId: PropTypes.number,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       editMode: false,
       openDeleteModal: false,

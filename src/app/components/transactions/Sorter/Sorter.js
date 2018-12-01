@@ -21,8 +21,8 @@ class Sorter extends React.Component {
     order: PropTypes.string,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       category: 'date',
       order: 'desc',

@@ -33,8 +33,8 @@ class TransList extends React.PureComponent {
     })),
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       limit: DEFAULT_FETCH_LIMIT,

@@ -71,8 +71,8 @@ class TransForm extends React.Component {
     },
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       positiveAmount: true,
       showDatePicker: false,

@@ -36,8 +36,8 @@ class TagForm extends React.Component {
     }),
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showDropdown: false,
     };

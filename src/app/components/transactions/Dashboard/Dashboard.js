@@ -29,8 +29,8 @@ class Dashboard extends React.Component {
     totalAmount: PropTypes.string,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       openCsvModal: false,
       openFilterModal: false,

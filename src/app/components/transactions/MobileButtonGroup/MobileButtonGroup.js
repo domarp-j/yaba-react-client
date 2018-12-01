@@ -11,8 +11,8 @@ class MobileButtonGroup extends React.Component {
     id: PropTypes.string,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       openCsvModal: false,
       openFilterModal: false,

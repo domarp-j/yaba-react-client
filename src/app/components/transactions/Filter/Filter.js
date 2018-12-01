@@ -104,8 +104,8 @@ class Filter extends React.Component {
     tags: PropTypes.arrayOf(PropTypes.string),
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       ...this.initialFieldsState,
       [this.FROM_DATE_CLEAVE]: undefined,

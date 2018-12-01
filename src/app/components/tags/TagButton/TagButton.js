@@ -19,8 +19,8 @@ class TagButton extends React.Component {
     editable: true,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showEditDelete: false,
       showTagForm: false,
