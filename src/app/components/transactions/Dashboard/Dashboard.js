@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
     return (
       <div>
         {/* Display transaction data */}
-        <Segment id='dashboard' className={`${queryPresent ? '' : 'margin-bottom-15'}`}>
+        <Segment id='dashboard' className={`${queryPresent ? 'no-border-bottom' : 'margin-bottom-15'}`}>
           <div className='inline-block' id='total-amount'>
             {totalAmount} <span id='transaction-count'> for {count} transactions</span>
           </div>
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
 
         {/* Current filter query */}
         {queryPresent &&
-          <Segment id='filter-text' className='margin-bottom-15'>
+          <Segment id='filter-text' className='no-margin-top no-border-top margin-bottom-15'>
             <FilterText {...queries} />
           </Segment>
         }

@@ -47,6 +47,14 @@ body {
   margin-right: 0 !important;
 }
 
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
 .margin-5 {
   margin: 5px !important;
 }
@@ -191,6 +199,16 @@ body {
   .full-width-mobile {
     width: 100%;
   }
+}
+
+/* Border */
+
+.no-border-top {
+  border-top: none !important;
+}
+
+.no-border-bottom {
+  border-bottom: none !important;
 }
 
 /* Text */

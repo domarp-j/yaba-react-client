@@ -24,6 +24,12 @@ body {
 .no-margin-right {
   margin-right: 0 !important; }
 
+.no-margin-top {
+  margin-top: 0 !important; }
+
+.no-margin-bottom {
+  margin-bottom: 0 !important; }
+
 .margin-5 {
   margin: 5px !important; }
 
@@ -124,6 +130,13 @@ body {
 @media only screen and (max-width: 767px) {
   .full-width-mobile {
     width: 100%; } }
+
+/* Border */
+.no-border-top {
+  border-top: none !important; }
+
+.no-border-bottom {
+  border-bottom: none !important; }
 
 /* Text */
 .yaba-text-size {
@@ -343,6 +356,7 @@ body {
 /* Dashboard */
 #dashboard {
   border-left: 8px solid #006d5b;
+  border-radius: 0 !important;
   margin: 0 auto;
   padding: 0 !important;
   min-height: 45px; }
@@ -359,11 +373,9 @@ body {
   font-weight: 500; }
 
 #filter-text {
-  font-size: 1.2em; }
-
-@media only screen and (min-width: 768px) {
-  #filter-text {
-    text-align: center; } }
+  border-left: 8px solid #006d5b;
+  font-size: 1.2em;
+  border-radius: 0 !important; }
 
 .transactions-filter .date-field {
   position: relative; }

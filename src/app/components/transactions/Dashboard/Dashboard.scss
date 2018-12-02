@@ -2,6 +2,7 @@
 
 #dashboard {
   border-left: 8px solid $green;
+  border-radius: 0 !important;
   margin: 0 auto;
   padding: 0 !important;
   min-height: 45px;
@@ -21,12 +22,7 @@
 }
 
 #filter-text {
+  border-left: 8px solid $green;
   font-size: 1.2em;
+  border-radius: 0 !important;
 }
-
-@media only screen and (min-width: 768px) {
-  #filter-text {
-    text-align: center;
-  }
-}
-
