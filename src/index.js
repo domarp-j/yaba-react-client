@@ -17,6 +17,7 @@ verifyCredentials(store);
 WebFont.load({
   google: {
     families: [
+      'Abel',
       'Playfair Display',
       'Source Serif Pro',
     ],
