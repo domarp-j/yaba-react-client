@@ -112,8 +112,6 @@ class Filter extends React.Component {
       [this.TO_DATE_CLEAVE]: undefined,
       activeTab: this.paneList.indexOf(this.panes.desc),
       matchAllTags: true,
-      showDatePickerFrom: false,
-      showDatePickerTo: false,
       showTagAdd: false,
     };
   }
@@ -167,16 +165,7 @@ class Filter extends React.Component {
                 this.handleDateBlur(e, FROM_DATE);
               }}
               onChange={e => this.handleDateChange(e, FROM_DATE)}
-              onDayClick={day => this.handleDatePickerClick(day, FROM_DATE)}
-              onFocus={() => {
-                this.setState({
-                  showDatePickerFrom: true,
-                  showDatePickerTo: false,
-                });
-              }}
               onInit={cleave => this.setCleaveState(cleave, FROM_DATE)}
-              onPickerClose={() => this.setState({ showDatePickerFrom: false })}
-              showDatePicker={this.state.showDatePickerFrom}
               value={this.state[FROM_DATE]}
             />
           </Form.Field>
@@ -193,16 +182,7 @@ class Filter extends React.Component {
                 this.handleDateBlur(e, TO_DATE);
               }}
               onChange={e => this.handleDateChange(e, TO_DATE)}
-              onDayClick={day => this.handleDatePickerClick(day, TO_DATE)}
-              onFocus={() => {
-                this.setState({
-                  showDatePickerFrom: false,
-                  showDatePickerTo: true,
-                });
-              }}
               onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
-              onPickerClose={() => this.setState({ showDatePickerTo: false })}
-              showDatePicker={this.state.showDatePickerTo}
               value={this.state[TO_DATE]}
             />
           </Form.Field>
@@ -293,15 +273,6 @@ class Filter extends React.Component {
     this.setState({ [dateType]: e.target.value });
   }
 
-  handleDatePickerClick = (date, dateType) => {
-    const showDatePicker = dateType === FROM_DATE ? 'showDatePickerFrom' : 'showDatePickerTo';
-
-    this.setState({
-      [dateType]: this.validDateInput(date, dateType) ? date : '',
-      [showDatePicker]: false,
-    });
-  }
-
   handleDescChange = e => {
     this.setState({
       description: e.target.value,
@@ -356,13 +327,6 @@ class Filter extends React.Component {
     }
   }
 
-  resetDatePickerState = () => {
-    this.setState({
-      showDatePickerFrom: false,
-      showDatePickerTo: false,
-    });
-  }
-
   render() {
     const { onCancel } = this.props;
     const { description, tags, [FROM_DATE]: fromDate, [TO_DATE]: toDate } = this.state;
@@ -373,7 +337,6 @@ class Filter extends React.Component {
 
         <Tab
           onTabChange={(e, data) => {
-            this.resetDatePickerState();
             this.setState({ activeTab: data.activeIndex });
           }}
           menu={{ borderless: true, pointing: true }}

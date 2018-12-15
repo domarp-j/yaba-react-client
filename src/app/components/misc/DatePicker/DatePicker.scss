@@ -1,5 +1,4 @@
 .date-picker {
-  position: absolute;
   z-index: 999;
 
   .close-picker {
@@ -16,6 +15,6 @@
   .DayPicker {
     background-color: $white;
     border: 1px solid $grey-light !important;
-    padding-top: 0.8em;
+    padding-top: 0;
   }
 }

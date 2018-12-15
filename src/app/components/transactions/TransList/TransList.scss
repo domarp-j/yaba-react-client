@@ -4,16 +4,12 @@
   text-align: center;
   min-height: 100px;
   vertical-align: middle;
-
-  @media only screen and (max-width: $tablet-width) {
-    width: 100%;
-  }
 }
 
-#end-of-list {
+#fetch-transactions, #end-of-list {
   text-align: center;
   vertical-align: middle;
-  height: 60px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  padding: 0 !important;
+  color: $grey-dark;
 }

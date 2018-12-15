@@ -20,9 +20,6 @@ const initialState = {
     },
   },
   transactions: {
-    items: [],
-    count: 0,
-    totalAmount: '',
     boolEvents: {
       allTransactionsFetched: false,
       isAddingTransaction: false,
@@ -33,6 +30,8 @@ const initialState = {
       noTransactionsFound: false,
       queryPresent: false,
     },
+    count: 0,
+    items: [],
     queries: {
       description: '',
       fromDate: '',
@@ -45,6 +44,7 @@ const initialState = {
       order: SORT_ORDERS.desc,
     },
     tags: [],
+    totalAmount: '',
   },
 };
 

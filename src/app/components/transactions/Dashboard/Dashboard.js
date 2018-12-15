@@ -105,7 +105,7 @@ class Dashboard extends React.Component {
               })}
               {this.dashboardModal({
                 component: CsvDownload,
-                icon: 'file',
+                icon: 'file alternate',
                 id: 'csv-modal',
                 stateKey: 'openCsvModal',
               })}

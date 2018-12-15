@@ -4,12 +4,11 @@ import { Button, Card, Form, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose, contains } from 'ramda';
 import * as yup from 'yup';
-import Cleave from 'cleave.js/react';
 import { connect } from 'react-redux';
 import classcat from 'classcat';
 
 import { TagAdd, TagButton, TagForm } from '../../tags';
-import { DateInput } from '../../misc';
+import { AmountInput, DateInput } from '../../misc';
 import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
 import { attachTagToTransaction, detachTagFromTransaction, modifyTransactionTag } from '../../../store/actions/tags';
 import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
@@ -75,7 +74,6 @@ class TransForm extends React.Component {
     super(props);
     this.state = {
       positiveAmount: true,
-      showDatePicker: false,
       showTagForm: false,
       tags: [],
     };
@@ -151,17 +149,6 @@ class TransForm extends React.Component {
     }));
   }
 
-  handleDatePickerClick = date => {
-    this.setState({
-      showDatePicker: false,
-    });
-
-    this.props.setValues({
-      ...this.props.values,
-      date,
-    });
-  }
-
   setValuesAndSubmit = e => {
     const { handleSubmit, setValues, values } = this.props;
     const { positiveAmount, tags } = this.state;
@@ -193,7 +180,6 @@ class TransForm extends React.Component {
 
     const {
       positiveAmount,
-      showDatePicker,
       showTagForm,
       tags,
     } = this.state;
@@ -231,13 +217,6 @@ class TransForm extends React.Component {
                     name='date'
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    onDayClick={this.handleDatePickerClick}
-                    onFocus={() => this.setState({ showDatePicker: true })}
-                    onPickerClose={e => {
-                      e.preventDefault();
-                      this.setState({ showDatePicker: false });
-                    }}
-                    showDatePicker={showDatePicker}
                     value={values.date}
                   />
                 </Form.Field>
@@ -247,26 +226,13 @@ class TransForm extends React.Component {
                   error={allFieldsTouched(touched, fields) && !!errors.amount}
                   width={9}
                 >
-                  <div className='ui left action input'>
-                    <Button
-                      className={`input-height amount-button ${positiveAmount ? 'green-button' : 'red-button'}`}
-                      icon={positiveAmount ? 'plus' : 'minus'}
-                      onClick={e => { e.preventDefault(); this.toggleStateBool('positiveAmount'); }}
-                    />
-                    <Cleave
-                      className='input-height input-padding'
-                      id='amount'
-                      name='amount'
-                      options={{
-                        numeral: true,
-                        numeralPositiveOnly: true,
-                        prefix: '$',
-                      }}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.amount || ''}
-                    />
-                  </div>
+                  <AmountInput
+                    amount={values.amount}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    positiveAmount={positiveAmount}
+                    onSignClick={() => this.toggleStateBool('positiveAmount')}
+                  />
                 </Form.Field>
               </Form.Group>
 

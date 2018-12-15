@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Dimmer, Loader, Segment  } from 'semantic-ui-react';
+import { Card, Dimmer, Loader  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, equals, identity, keys, merge, partition } from 'ramda';
 
@@ -42,10 +42,6 @@ class TransList extends React.PureComponent {
     };
 
     this.pageRef = undefined;
-
-    this.setPageRef = ele => {
-      this.pageRef = ele;
-    };
   }
 
   componentDidMount() {
@@ -83,14 +79,9 @@ class TransList extends React.PureComponent {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  fetchTransRequest = (limit, page) => {
-    this.props.fetchTransactions({
-      limit,
-      page,
-      ...this.props.queries,
-      ...this.props.sorting,
-    });
-  }
+  setPageRef = ele => {
+    this.pageRef = ele;
+  };
 
   // Check if a transaction query param or sort param has changed
   queryOrSortChanged = (prevProps, currProps) => (
@@ -102,15 +93,28 @@ class TransList extends React.PureComponent {
     )
   )
 
+  fetchTransRequest = (limit, page) => {
+    this.props.fetchTransactions({
+      limit,
+      page,
+      ...this.props.queries,
+      ...this.props.sorting,
+    });
+  }
+
   atBottom = () => (
-    this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 10
+    this.pageRef.getBoundingClientRect().bottom <= window.innerHeight + 100
   );
+
+  updateStateAndFetch = () => {
+    const { limit, page } = this.state;
+    this.setState({ page: page + 1 });
+    this.fetchTransRequest(limit, page + 1);
+  }
 
   handleScroll = () => {
     if (this.atBottom() && !this.props.allTransactionsFetched) {
-      const { limit, page } = this.state;
-      this.setState({ page: page + 1 });
-      this.fetchTransRequest(limit, page + 1);
+      this.updateStateAndFetch();
     }
   }
 
@@ -131,6 +135,7 @@ class TransList extends React.PureComponent {
 
   render() {
     const {
+      allTransactionsFetched,
       isFetchingTransactions,
       noTransactionsFound,
       transactions,
@@ -142,26 +147,42 @@ class TransList extends React.PureComponent {
 
     return (
       <div ref={this.setPageRef}>
-        <Card.Group centered>
+        <Card.Group centered itemsPerRow={1}>
           {newTransactions.length > 0 &&
             newTransactions.map(transaction => this.renderTransaction(transaction))
           }
           {oldTransactions.length > 0 &&
             oldTransactions.map(transaction => this.renderTransaction(transaction))
           }
+          {!(isFetchingTransactions || allTransactionsFetched) &&
+            <Card
+              className='full-width green-button no-margin-left no-margin-right'
+              id='fetch-transactions'
+              onClick={this.updateStateAndFetch}
+            >
+              <Card.Content>
+                Fetch more transactions
+              </Card.Content>
+            </Card>
+          }
           {isFetchingTransactions &&
-            <Card id='loader'>
+            <Card className='full-width' id='loader'>
               <Dimmer active inverted>
                 <Loader inverted>Loading</Loader>
               </Dimmer>
             </Card>
           }
+          {!isFetchingTransactions && (allTransactionsFetched || noTransactionsFound) &&
+            <Card
+              className='full-width no-margin-left no-margin-right'
+              id='end-of-list'
+            >
+              <Card.Content>
+                End of list
+              </Card.Content>
+            </Card>
+          }
         </Card.Group>
-        {noTransactionsFound &&
-          <Segment id='end-of-list'>
-            No transactions found
-          </Segment>
-        }
       </div>
     );
   }
