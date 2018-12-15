@@ -219,7 +219,7 @@ class TransItem extends React.Component {
 
     // Clear out existing transaction tags and attach new tags
     await this.clearTransactionTags();
-    newTagNames.map(tag => {
+    newTagNames.forEach(tag => {
       this.props.attachTagToTransaction({
         tagName: tag,
         transactionId: this.props.transactionId,
@@ -382,7 +382,7 @@ class TransItem extends React.Component {
             description: this.props.description,
             id: this.props.transactionId,
           });
-          this.toggleDeleteModal;
+          this.toggleDeleteModal();
         }}>
           Yes, delete it
         </Button>

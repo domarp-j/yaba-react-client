@@ -21,13 +21,13 @@ const AmountInput = ({
         className='input-height input-padding'
         id='amount'
         name='amount'
+        onBlur={onBlur}
+        onChange={onChange}
         options={{
           numeral: true,
           numeralPositiveOnly: true,
           prefix: '$',
         }}
-        onBlur={onBlur}
-        onChange={onChange}
         value={amount || ''}
       />
     </div>
