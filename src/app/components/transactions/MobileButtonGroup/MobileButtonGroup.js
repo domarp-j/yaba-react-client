@@ -1,14 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
 import { ButtonToModal } from '../../misc';
-import { CsvDownload, Filter, Sorter, TransForm } from '../../transactions';
+import { CsvDownload, Filter, Sorter } from '../../transactions';
+import { showTransactionForm } from '../../../store/actions/transactions';
 
 class MobileButtonGroup extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     id: PropTypes.string,
+    showTransactionForm: PropTypes.func,
   }
 
   constructor(props) {
@@ -21,6 +24,9 @@ class MobileButtonGroup extends React.Component {
       showButtons: false,
     };
   }
+
+  buttonSize = 'medium';
+  buttonClassName = 'green-button action-button';
 
   toggleStateBool = stateKey => {
     this.setState(prevState => ({
@@ -45,11 +51,11 @@ class MobileButtonGroup extends React.Component {
     return (
       <ButtonToModal
         button={<Button
-          className='green-button action-button'
+          className={this.buttonClassName}
           circular
           icon={icon}
           onClick={openModal}
-          size='medium'
+          size={this.buttonSize}
         />}
         id={id}
         showModal={this.state[stateKey]}
@@ -66,6 +72,7 @@ class MobileButtonGroup extends React.Component {
     const {
       className,
       id,
+      showTransactionForm,
     } = this.props;
 
     const {
@@ -108,12 +115,17 @@ class MobileButtonGroup extends React.Component {
 
             <div className='action-button-wrapper'>
               <div className='action-label' id='form-label'>Add</div>
-              {this.dashboardModal({
-                component: TransForm,
-                icon: 'plus',
-                id: 'trans-form-modal',
-                stateKey: 'openTransactionFormModal',
-              })}
+              <Button
+                className={this.buttonClassName}
+                circular
+                icon='plus'
+                onClick={() => {
+                  showTransactionForm(true);
+                  window.scrollTo(0,0);
+                  this.setState({ showButtons: false });
+                }}
+                size={this.buttonSize}
+              />
             </div>
           </div>
         }
@@ -130,5 +142,8 @@ class MobileButtonGroup extends React.Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  showTransactionForm: newState => dispatch(showTransactionForm(newState)),
+});
 
-export default MobileButtonGroup;
+export default connect(null, mapDispatchToProps)(MobileButtonGroup);

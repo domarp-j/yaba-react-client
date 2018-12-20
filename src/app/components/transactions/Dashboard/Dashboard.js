@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Button, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { CsvDownload, Filter, FilterText, Sorter, TransForm } from '../../transactions';
+import { CsvDownload, Filter, FilterText, Sorter } from '../../transactions';
 import { ButtonToModal } from '../../misc';
 import { clearTransactionQueries } from '../../../store/actions/queries';
+import { showTransactionForm } from '../../../store/actions/transactions';
 
 /*
   This is a dashboard that shows important transaction data such as
@@ -26,6 +27,7 @@ class Dashboard extends React.Component {
     queries: PropTypes.object,
     queryPresent: PropTypes.bool,
     sortButton: PropTypes.func,
+    showTransactionForm: PropTypes.func,
     totalAmount: PropTypes.string,
   }
 
@@ -40,6 +42,7 @@ class Dashboard extends React.Component {
   }
 
   buttonSize = 'small';
+  buttonClassName = 'margin-right-5 margin-top-bottom-5 no-left-margin green-button';
 
   toggleStateBool = stateKey => {
     this.setState(prevState => ({
@@ -50,7 +53,7 @@ class Dashboard extends React.Component {
   dashboardModal = ({ component: Component, icon, id, stateKey }) => (
     <ButtonToModal
       button={<Button
-        className='margin-right-5 margin-top-bottom-5 no-left-margin green-button'
+        className={this.buttonClassName}
         onClick={() => this.toggleStateBool(stateKey)}
         icon={icon}
         size={this.buttonSize}
@@ -71,6 +74,7 @@ class Dashboard extends React.Component {
       count,
       queries,
       queryPresent,
+      showTransactionForm,
       totalAmount,
     } = this.props;
 
@@ -85,12 +89,12 @@ class Dashboard extends React.Component {
           {/* Transaction CTAs (Tablet Width & Larger) */}
           <div className='float-right hidden-tablet-and-mobile'>
             <div className='center-horizontally'>
-              {this.dashboardModal({
-                component: TransForm,
-                icon: 'plus',
-                id: 'trans-form-modal',
-                stateKey: 'openTransFormModal',
-              })}
+              <Button
+                className={this.buttonClassName}
+                onClick={() => showTransactionForm(true)}
+                icon='plus'
+                size={this.buttonSize}
+              />
               {this.dashboardModal({
                 component: Filter,
                 icon: 'filter',
@@ -141,6 +145,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearQueries: () => dispatch(clearTransactionQueries()),
+  showTransactionForm: newState => dispatch(showTransactionForm(newState)),
 });
 
 export default connect(

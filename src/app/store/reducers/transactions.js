@@ -14,7 +14,8 @@ import {
   EDIT_TRANSACTION,
   REQUEST_TO_DELETE_TRANSACTION,
   REMOVE_DELETED_TRANSACTION,
-  CLEAR_TRANSACTIONS
+  CLEAR_TRANSACTIONS,
+  SHOW_TRANSACTION_FORM
 } from '../actions/transactions';
 
 import {
@@ -160,6 +161,16 @@ const transactions = (
       items: [],
       count: 0,
       totalAmount: '$0.00',
+    };
+
+  // Toggling the transaction form
+  case SHOW_TRANSACTION_FORM:
+    return {
+      ...state,
+      boolEvents: {
+        ...state.boolEvents,
+        displayTransactionForm: action.newState,
+      },
     };
 
   // Fetching tags

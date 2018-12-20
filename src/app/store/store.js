@@ -22,6 +22,7 @@ const initialState = {
   transactions: {
     boolEvents: {
       allTransactionsFetched: false,
+      displayTransactionForm: false,
       isAddingTransaction: false,
       isEditingTransaction: false,
       isFetchingTags: false,

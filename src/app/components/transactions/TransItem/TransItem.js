@@ -19,6 +19,7 @@ import {
 } from '../../../store/actions/tags';
 import { dollarToFloat } from '../../../utils/dollarTools';
 import { currentDateYMD } from '../../../utils/dateTools';
+import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class TransItem extends React.Component {
   static propTypes = {
@@ -43,7 +44,7 @@ class TransItem extends React.Component {
     super(props);
 
     this.compositeDecorator = new CompositeDecorator([{
-      strategy: this.tagStrategy,
+      strategy: tagStrategy,
       component: this.TagSpan,
     }]);
 
@@ -67,9 +68,9 @@ class TransItem extends React.Component {
   }
 
   /**
-   * Regex that will be used to add custom styling to tags in description
+   * Regex to find dollar-based chars
    */
-  tagRegex = /#([^\s]*)/g;
+  dollarRegex = /\$|,|-/g;
 
   /**
    * Delay between user changing description/tags and saving
@@ -115,28 +116,12 @@ class TransItem extends React.Component {
     this.setState(prevState => ({
       positiveAmount: !prevState.positiveAmount,
     }), () => {
-      const absAmount = this.props.amount.replace(/\$|,|-/g, '');
+      const absAmount = this.props.amount.replace(this.dollarRegex, '');
       const sign = this.state.positiveAmount ? '+' : '-';
       this.updateTransaction({
         amount: `${sign}${absAmount}`,
       });
     });
-  }
-
-  /***************************************************************/
-  /** STRATEGIES (DRAFT-JS) */
-  /***************************************************************/
-
-  /**
-   * Strategy used to decorate tags (for draft-js)
-   */
-  tagStrategy = (contentBlock, callback) => {
-    const text = contentBlock.getText();
-    let matchArr, start;
-    while ((matchArr = this.tagRegex.exec(text)) !== null) {
-      start = matchArr.index;
-      callback(start, start + matchArr[0].length);
-    }
   }
 
   /***************************************************************/
@@ -206,7 +191,7 @@ class TransItem extends React.Component {
    */
   updateTransactionTags = async text => {
     // Clear out all transaction tags if no #tags are present
-    if (!text.match(this.tagRegex)) {
+    if (!text.match(tagRegex)) {
       await this.clearTransactionTags();
       return;
     }
@@ -214,7 +199,7 @@ class TransItem extends React.Component {
     // Check if user has changed any tags in the description
     // Return if tags have not changed
     const currentTagNames = this.props.tags.map(tag => tag.name);
-    const newTagNames = text.match(this.tagRegex).map(tag => tag.replace(/#/, ''));
+    const newTagNames = text.match(tagRegex).map(tag => tag.replace(/#/, ''));
     if (!symmetricDifference(currentTagNames, newTagNames).length) return;
 
     // Clear out existing transaction tags and attach new tags
@@ -232,7 +217,7 @@ class TransItem extends React.Component {
    */
   updateTransactionAmount = () => {
     const { editAmount, positiveAmount } = this.state;
-    this.updateTransaction({ amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(/\$|,|-/g, '')}` });
+    this.updateTransaction({ amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(this.dollarRegex, '')}` });
   }
 
   /**
@@ -240,7 +225,7 @@ class TransItem extends React.Component {
    */
   cloneTransaction = () => {
     this.props.createTransaction({
-      amount:  (dollarToFloat(this.props.amount) > 0 ? '+' : '-') + this.props.amount.replace(/\$|,|-/g, ''),
+      amount:  (dollarToFloat(this.props.amount) > 0 ? '+' : '-') + this.props.amount.replace(this.dollarRegex, ''),
       description: this.props.description,
       date: currentDateYMD(),
       tags: this.props.tags.map(tag => tag.name),
@@ -461,7 +446,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { showAmountPopup, showDatePopup } = this.state;
+    const { editAmount, showAmountPopup, showDatePopup } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -490,7 +475,7 @@ class TransItem extends React.Component {
                 {dollarToFloat(amount) >= 0 ?
                   <Icon name='arrow circle up' className='green-color no-margin' /> :
                   <Icon name='arrow circle down' className='red-color no-margin' />
-                } {amount.replace(/-/, '')}
+                } {editAmount || amount.replace(/-/, '')}
               </span>}
             />
             <div className='float-right'>

@@ -5,7 +5,9 @@ import yabaAxios from '../../utils/yabaAxios';
 import { ERROR, addAlert, serverErrorCheck } from './alerts';
 import { attachTagToTransaction } from './tags';
 
-// Fetching transactions
+/**
+ * Fetching transactions
+ */
 
 export const DEFAULT_FETCH_LIMIT = 20;
 
@@ -66,7 +68,9 @@ export const fetchTransactions = (params={}) => dispatch => {
   });
 };
 
-// Adding transactions
+/**
+ * Adding transactions
+ */
 
 export const REQUEST_TO_ADD_TRANSACTION = 'REQUEST_TO_ADD_TRANSACTION';
 export const requestAddTransaction = () => ({
@@ -112,7 +116,9 @@ export const createTransaction = ({ amount, date, description, tags }) => dispat
   });
 };
 
-// Updating transactions
+/**
+ * Updating transactions
+ */
 
 export const REQUEST_TO_UPDATE_TRANSACTION = 'REQUEST_TO_UPDATE_TRANSACTION';
 export const requestUpdateTransaction = () => ({
@@ -163,7 +169,9 @@ export const updateTransaction = ({ id, newValues, previousValues }) => dispatch
   });
 };
 
-// Deleting transactions
+/**
+ * Deleting transactions
+ */
 
 export const REQUEST_TO_DELETE_TRANSACTION = 'REQUEST_TO_DELETE_TRANSACTION';
 export const requestDeleteTransaction = () => ({
@@ -198,10 +206,21 @@ export const deleteTransaction = ({ id }) => dispatch => {
     });
 };
 
-// Clearing transactions from store
-// (Not deleting them from the database)
+/**
+ * Clearing transactions from the store
+ */
 
 export const CLEAR_TRANSACTIONS = 'CLEAR_TRANSACTIONS';
 export const clearTransactions = () => ({
   type: CLEAR_TRANSACTIONS,
+});
+
+/**
+ * Toggling the transaction form
+ */
+
+export const SHOW_TRANSACTION_FORM = 'SHOW_TRANSACTION_FORM';
+export const showTransactionForm = newState => ({
+  type: SHOW_TRANSACTION_FORM,
+  newState,
 });

@@ -1,287 +1,128 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Form, Input } from 'semantic-ui-react';
+import { Button, Card, Form, Message } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import { compose, contains } from 'ramda';
+import { compose } from 'ramda';
 import * as yup from 'yup';
 import { connect } from 'react-redux';
-import classcat from 'classcat';
+import { CompositeDecorator, Editor, EditorState } from 'draft-js';
 
-import { TagAdd, TagButton, TagForm } from '../../tags';
-import { AmountInput, DateInput } from '../../misc';
-import { createTransaction, updateTransaction } from '../../../store/actions/transactions';
-import { attachTagToTransaction, detachTagFromTransaction, modifyTransactionTag } from '../../../store/actions/tags';
-import { allFieldsTouched, anyErrorsPresent, touchAllFields } from '../../../utils/formikTools';
-import { currentDateMDY, dateToYMD } from '../../../utils/dateTools';
-import { dollarToFloat } from '../../../utils/dollarTools';
+import { createTransaction } from '../../../store/actions/transactions';
+import { currentDateYMD } from '../../../utils/dateTools';
+import { allFieldsTouched, anyErrorsPresent, errorsList, touchAllFields } from '../../../utils/formikTools';
+import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
-const fields = ['description', 'amount', 'date'];
+const fields = ['description'];
 
 class TransForm extends React.Component {
   static propTypes = {
-    attachTagToTransaction: PropTypes.func,
+    className: PropTypes.string,
     createTransaction: PropTypes.func,
-    detachTagFromTransaction: PropTypes.func,
-    editState: PropTypes.bool,
     errors: PropTypes.shape({
       description: PropTypes.string,
-      amount: PropTypes.string,
-      date: PropTypes.string,
     }),
     handleBlur: PropTypes.func,
     handleChange: PropTypes.func,
     handleSubmit: PropTypes.func,
     onCancel: PropTypes.func,
     onSave: PropTypes.func,
-    initialTags: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
-    initialValues: PropTypes.shape({
-      amount: PropTypes.string,
-      date: PropTypes.string,
-      description: PropTypes.string,
-    }),
     isAddingTransaction: PropTypes.bool,
-    modifyTransactionTag: PropTypes.func,
     setTouched: PropTypes.func,
     setValues: PropTypes.func,
-    transactionId: PropTypes.number,
     touched: PropTypes.shape({
-      amount: PropTypes.bool,
-      date: PropTypes.bool,
       description: PropTypes.bool,
     }),
-    updateTransaction: PropTypes.func,
     values: PropTypes.shape({
-      amount: PropTypes.string,
-      date: PropTypes.string,
       description: PropTypes.string,
     }),
   };
 
   static defaultProps = {
-    editState: false,
-    initialTags: [],
-    initialValues: {
-      amount: '',
-      date: '',
-      description: '',
-    },
+    className: '',
   }
 
   constructor(props) {
     super(props);
+
+    this.compositeDecorator = new CompositeDecorator([{
+      strategy: tagStrategy,
+      component: this.TagSpan,
+    }]);
+
     this.state = {
-      positiveAmount: true,
-      showTagForm: false,
-      tags: [],
+      editorState: EditorState.createEmpty(this.compositeDecorator),
     };
   }
 
-  componentDidMount() {
-    const { amount } = this.props.values;
+  handleDescChange = (editorState, handleChange) => {
     this.setState({
-      positiveAmount: amount ? dollarToFloat(amount) >= 0 : true,
-      tags: this.props.initialTags.map(tag => tag.name),
+      editorState,
+    }, () => {
+      const value = this.state.editorState.getCurrentContent().getPlainText();
+      const synthEvent = { persist: () => null, target: { value, name: 'description' } };
+      handleChange(synthEvent);
     });
   }
 
-  toggleStateBool = stateKey => {
-    this.setState(prevState => ({
-      [stateKey]: !prevState[stateKey],
-    }));
-  }
-
-  /*
-    Add new tag to state.
-    A new tag is NOT added if it is already present in state.
-    If a transaction is currently being edited, then attach the new tag to the current transaction.
-  */
-  addTag = ({ tagName }) => {
-    if (contains(tagName, this.state.tags)) return;
-
-    if (this.props.editState) {
-      this.props.attachTagToTransaction({ tagName, transactionId: this.props.transactionId });
-    }
-
-    this.setState(prevState => ({
-      tags: prevState.tags.concat(tagName),
-    }));
-  }
-
-  /*
-    Edit a tag in state.
-    If a transaction is currently being edited, then modify the tag for that transaction.
-  */
-  editTag = ({ oldTagName, tagName }) => {
-    if (this.props.editState) {
-      this.props.modifyTransactionTag({
-        oldTagName,
-        tagId: this.props.initialTags.find(tag => tag.name === oldTagName).id,
-        tagName,
-        transactionId: this.props.transactionId,
-      });
-    }
-
-    this.setState(prevState => ({
-      tags: prevState.tags.map(tagInState => (
-        tagInState === oldTagName ? tagName : tagInState
-      )),
-    }));
-  }
-
-  /*
-    Remove tag from state.
-    If a transaction is currently being edited, then the removed tag will be detached from the transaction.
-  */
-  removeTag = ({ tagName }) => {
-    if (this.props.editState) {
-      this.props.detachTagFromTransaction({
-        tagId: this.props.initialTags.find(tag => tag.name === tagName).id,
-        tagName,
-        transactionId: this.props.transactionId,
-      });
-    }
-
-    this.setState(prevState => ({
-      tags: prevState.tags.filter(tagInState => tagInState !== tagName),
-    }));
-  }
-
-  setValuesAndSubmit = e => {
-    const { handleSubmit, setValues, values } = this.props;
-    const { positiveAmount, tags } = this.state;
-
-    new Promise(resolve => {
-      setValues({
-        amount: (positiveAmount ? '+' : '-') + values.amount.replace(/\$|,|-/g, ''),
-        description: values.description,
-        date: dateToYMD(values.date),
-        tags,
-      });
-      resolve();
-    }).then(() => handleSubmit(e));
+  /**
+   * Tag element & styling (for draft-js)
+   */
+  TagSpan = props => {
+    return (
+      <span
+        {...props}
+        className='transaction-tag'
+      >
+        <Button>
+          {props.children}
+        </Button>
+      </span>
+    );
   }
 
   render() {
     const {
-      editState,
+      className,
       errors,
-      handleBlur,
       handleChange,
+      handleSubmit,
       isAddingTransaction,
       onCancel,
       setTouched,
       touched,
-      transactionId,
-      values,
     } = this.props;
-
-    const {
-      positiveAmount,
-      showTagForm,
-      tags,
-    } = this.state;
 
     return (
       <Card
-        fluid={!editState}
-        className={classcat({
-          'trans-form': true,
-          'yaba-card': editState,
-          'amount-pos': editState && positiveAmount,
-          'amount-neg': editState && !positiveAmount,
-        })}
+        className={`trans-form ${className}`}
+        fluid
       >
         <Card.Content>
-          {!editState &&
-            <Card.Header className='margin-bottom-15'>
-              <h2>Add a transaction</h2>
-            </Card.Header>
-          }
-
-          <Card.Description >
-            <Form
-              onSubmit={this.setValuesAndSubmit}
-            >
+          <Card.Description id='trans-form-content' >
+            <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Field
-                  className='date-input-wrapper'
-                  error={allFieldsTouched(touched, fields) && !!errors.date}
-                  width={7}
-                >
-                  <DateInput
-                    className='input-height input-padding'
-                    id='date'
-                    name='date'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.date}
-                  />
-                </Form.Field>
-
-                <Form.Field
-                  className='margin-top-10-mobile'
-                  error={allFieldsTouched(touched, fields) && !!errors.amount}
-                  width={9}
-                >
-                  <AmountInput
-                    amount={values.amount}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    positiveAmount={positiveAmount}
-                    onSignClick={() => this.toggleStateBool('positiveAmount')}
-                  />
-                </Form.Field>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Field
-                  className='margin-top-10-mobile'
+                  className='description-field'
                   error={allFieldsTouched(touched, fields) && !!errors.description}
                   width={16}
                 >
-                  <Input
-                    className='input-height input-padding-inner'
-                    name='description'
-                    id='description'
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder='Description'
-                    value={values.description || ''}
-                  />
+                  <label htmlFor='description'>Description</label>
+                  <div className={`input-imitation ${touched.description && errors.description ? 'error' : ''}`}>
+                    <Editor
+                      editorState={this.state.editorState}
+                      onChange={editorState => this.handleDescChange(editorState, handleChange)}
+                    />
+                  </div>
                 </Form.Field>
               </Form.Group>
 
-              <Form.Field className='margin-top-10'>
-                <div className='inline-block full-width'>
-                  {tags && tags.length > 0 &&
-                    tags.map(tag => (
-                      <TagButton
-                        key={tag}
-                        onDelete={this.removeTag}
-                        onEdit={this.editTag}
-                        tagName={tag}
-                      />
-                    ))
-                  }
-                  {showTagForm ?
-                    <div className='tag-form forty-percent-width inline-block'>
-                      <TagForm
-                        onCancel={() => this.toggleStateBool('showTagForm')}
-                        onSave={this.addTag}
-                        transactionId={transactionId}
-                      />
-                    </div> :
-                    <TagAdd
-                      onClick={() => this.toggleStateBool('showTagForm')}
-                    />
-                  }
-                </div>
-              </Form.Field>
+              <Message
+                error
+                visible={allFieldsTouched(touched, fields) && anyErrorsPresent(errors)}
+                list={errorsList(errors)}
+              />
 
-              <div>
+              <div className='margin-top-10-mobile'>
                 <Button
                   className='trans-form-button green-button'
                   content='Save'
@@ -304,27 +145,24 @@ class TransForm extends React.Component {
   }
 }
 
+const extractTags = description => {
+  const tags = description.match(tagRegex);
+  return tags && tags.map(tag => tag.replace(/#/, ''));
+};
+
 const schema = yup.object().shape({
-  amount: yup.string()
-    .required('The amount of the transaction is required'),
-  date: yup.string()
-    .required('The date of the transaction is required'),
-  description: yup.string()
-    .required('A description of the transaction is required'),
+  description: yup.string().required('A description of the transaction is required'),
 });
 
 const formikOptions = {
   handleSubmit: (values, { props, resetForm, setValues }) => {
     new Promise(resolve => {
-      if (props.editState) {
-        props.updateTransaction({
-          id: props.transactionId,
-          newValues: values,
-          previousValues: props.initialValues,
-        });
-      } else {
-        props.createTransaction({ ...values });
-      }
+      props.createTransaction({
+        amount: '0',
+        date: currentDateYMD(),
+        description: values.description,
+        tags: extractTags(values.description),
+      });
       resolve();
     }).then(() => {
       setValues({});
@@ -332,25 +170,15 @@ const formikOptions = {
       props.onSave();
     });
   },
-  mapPropsToValues: props => ({
-    amount: props.initialValues ? props.initialValues.amount : '',
-    date: props.initialValues ? props.initialValues.date : currentDateMDY(),
-    description: props.initialValues ? props.initialValues.description : '',
-  }),
   validationSchema: schema,
 };
-
 
 const mapStateToProps = state => ({
   isAddingTransaction: state.transactions.boolEvents.isAddingTransaction,
 });
 
 const mapDispatchToProps = dispatch => ({
-  attachTagToTransaction: data => dispatch(attachTagToTransaction(data)),
   createTransaction: data => dispatch(createTransaction(data)),
-  detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
-  modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
-  updateTransaction: data => dispatch(updateTransaction(data)),
 });
 
 export { TransForm as BaseTransForm };

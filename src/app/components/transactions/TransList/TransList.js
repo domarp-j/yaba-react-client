@@ -4,21 +4,24 @@ import { Card, Dimmer, Loader  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, equals, identity, keys, merge, partition } from 'ramda';
 
-import { TransItem } from '../../transactions';
+import { TransForm, TransItem } from '../../transactions';
 import {
   DEFAULT_FETCH_LIMIT,
   clearTransactions,
-  fetchTransactions
+  fetchTransactions,
+  showTransactionForm
 } from '../../../store/actions/transactions';
 
 class TransList extends React.PureComponent {
   static propTypes = {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
+    displayTransactionForm: PropTypes.bool,
     fetchTransactions: PropTypes.func,
     isFetchingTransactions: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
     queries: PropTypes.object,
+    showTransactionForm: PropTypes.func,
     sorting: PropTypes.object,
     transactions: PropTypes.arrayOf(PropTypes.shape({
       amount: PropTypes.string,
@@ -136,8 +139,10 @@ class TransList extends React.PureComponent {
   render() {
     const {
       allTransactionsFetched,
+      displayTransactionForm,
       isFetchingTransactions,
       noTransactionsFound,
+      showTransactionForm,
       transactions,
     } = this.props;
 
@@ -148,6 +153,12 @@ class TransList extends React.PureComponent {
     return (
       <div ref={this.setPageRef}>
         <Card.Group centered itemsPerRow={1}>
+          {displayTransactionForm &&
+            <TransForm className='no-margin-bottom'
+              onCancel={() => showTransactionForm(false)}
+              onSave={() => showTransactionForm(false)}
+            />
+          }
           {newTransactions.length > 0 &&
             newTransactions.map(transaction => this.renderTransaction(transaction))
           }
@@ -190,6 +201,7 @@ class TransList extends React.PureComponent {
 
 const mapStateToProps = state => ({
   allTransactionsFetched: state.transactions.boolEvents.allTransactionsFetched,
+  displayTransactionForm: state.transactions.boolEvents.displayTransactionForm,
   isFetchingTransactions: state.transactions.boolEvents.isFetchingTransactions,
   noTransactionsFound: state.transactions.boolEvents.noTransactionsFound,
   queries: state.transactions.queries,
@@ -200,6 +212,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   clearTransactions: () => dispatch(clearTransactions()),
   fetchTransactions: params => dispatch(fetchTransactions(params)),
+  showTransactionForm: newState => dispatch(showTransactionForm(newState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransList);
