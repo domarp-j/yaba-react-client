@@ -481,13 +481,19 @@ body {
   max-width: 360px;
   margin: 0 auto; }
 
+#transactions-page {
+  max-width: 700px !important; }
+
 #trans-mobile-buttons {
   position: fixed;
   z-index: 1000;
   bottom: 3%;
   right: 5%; }
 
-#transactions-page {
-  max-width: 700px !important; }
+#save-indicator-mobile {
+  position: fixed;
+  z-index: 1000;
+  bottom: 6%;
+  left: 10%; }
 
 /*# sourceMappingURL=index.css.map */
