@@ -79,6 +79,10 @@ class TransItem extends React.Component {
    */
   saveDelay = 1200;
 
+  /***************************************************************/
+  /** LIFECYCLE METHODS */
+  /***************************************************************/
+
   /**
    * Keep track of mouse clicks so that amount & date popups can close as needed
    */
@@ -233,20 +237,26 @@ class TransItem extends React.Component {
    */
   updateTransactionAmount = () => {
     const { editAmount, positiveAmount } = this.state;
-    this.updateTransaction({ amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(this.dollarRegex, '')}` });
+    this.updateTransaction({
+      amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(this.dollarRegex, '')}`,
+    });
   }
 
   /**
    * Create a near-duplicate transaction with the same description, value, and tags. The date will be set to the current date.
    */
   cloneTransaction = () => {
+    const { amount } = this.props;
+
     this.props.createTransaction({
-      amount:  (dollarToFloat(this.props.amount) > 0 ? '+' : '-') + this.props.amount.replace(this.dollarRegex, ''),
+      amount:  `${dollarToFloat(amount) > 0 ? '+' : '-'}${amount.replace(this.dollarRegex, '')}`,
       description: this.props.description,
       date: currentDateYMD(),
       tags: this.props.tags.map(tag => tag.name),
     });
+
     window.scrollTo(0, 0);
+
     this.setState({ showOptionsPopup: false });
   }
 
@@ -285,8 +295,10 @@ class TransItem extends React.Component {
     }
 
     this.setState({ editorState }, () => {
+      const text = this.state.editorState.getCurrentContent().getPlainText();
+      if (!this.isValidDescription(text)) return;
+
       this.descTagTimeout = setTimeout(() => {
-        const text = this.state.editorState.getCurrentContent().getPlainText();
         this.saveTransactionDescription(text);
         this.updateTransactionTags(text);
       }, this.saveDelay);
@@ -330,6 +342,17 @@ class TransItem extends React.Component {
   handleTagSpanClick = tagSpanProps => {
     const tagName = tagSpanProps.decoratedText.replace(/#/, '');
     this.props.addTagNameToTransactionQuery(tagName);
+  }
+
+  /***************************************************************/
+  /** UTILITY FUNCTIONS */
+  /***************************************************************/
+
+  isValidDescription = text => {
+    // Invalid description if there is a stranded tag (# without followup chars)
+    if (text.match(/#\s|#$/)) return false;
+
+    return true;
   }
 
   /***************************************************************/
