@@ -18,7 +18,7 @@ import {
   modifyTransactionTag
 } from '../../../store/actions/tags';
 import { dollarToFloat } from '../../../utils/dollarTools';
-import { currentDateYMD } from '../../../utils/dateTools';
+import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
 import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class TransItem extends React.Component {
@@ -58,10 +58,12 @@ class TransItem extends React.Component {
       showAmountPopup: false,
       showDeleteModal: false,
       showDatePopup: false,
+      showOptionsPopup: false,
     };
 
     this.amountPopupRef = undefined;
     this.datePopupRef = undefined;
+    this.optionsPopupRef = undefined;
 
     this.amountTimeout = undefined;
     this.descTagTimeout = undefined;
@@ -102,9 +104,16 @@ class TransItem extends React.Component {
       showDatePopup: !prevState.showDatePopup,
     }));
   }
+
   toggleAmountPopup = () => {
     this.setState(prevState => ({
       showAmountPopup: !prevState.showAmountPopup,
+    }));
+  }
+
+  toggleOptionsPopup = () => {
+    this.setState(prevState => ({
+      showOptionsPopup: !prevState.showOptionsPopup,
     }));
   }
 
@@ -140,6 +149,13 @@ class TransItem extends React.Component {
    */
   setDatePopupRef = ele => {
     this.datePopupRef = ele;
+  };
+
+  /**
+   * Set ref using the provided element
+   */
+  setOptionsPopupRef = ele => {
+    this.optionsPopupRef = ele;
   };
 
   /***************************************************************/
@@ -231,6 +247,7 @@ class TransItem extends React.Component {
       tags: this.props.tags.map(tag => tag.name),
     });
     window.scrollTo(0, 0);
+    this.setState({ showOptionsPopup: false });
   }
 
   /***************************************************************/
@@ -249,6 +266,13 @@ class TransItem extends React.Component {
     if (this.datePopupRef && !this.datePopupRef.contains(e.target)) {
       this.setState({ showDatePopup: false });
     }
+
+    /**
+     * TODO: This currently breaks delete functionality. Fix it.
+     */
+    // if (this.optionsPopupRef && !this.optionsPopupRef.contains(e.target)) {
+    //   this.setState({ showOptionsPopup: false });
+    // }
   }
 
   /**
@@ -296,14 +320,7 @@ class TransItem extends React.Component {
    * It subsequently updates the transaction based on this new date.
    */
   handleDatePickerClick = async date => {
-    const month = date.getMonth() + 1;
-    const paddedMonth = month < 10 ? `0${month}` : month;
-    const day = date.getDate();
-    const paddedDay = day < 10 ? `0${day}` : day;
-    const year = date.getFullYear();
-    const dateYMD = `${year}-${paddedMonth}-${paddedDay}`;
-
-    await this.updateTransaction({ date: dateYMD });
+    await this.updateTransaction({ date: dateToYMD(date) });
     this.toggleDatePopup();
   };
 
@@ -446,7 +463,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { editAmount, showAmountPopup, showDatePopup } = this.state;
+    const { editAmount, showAmountPopup, showDatePopup, showOptionsPopup } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -473,20 +490,22 @@ class TransItem extends React.Component {
               position='bottom left'
               trigger={<span className='cursor-pointer' onClick={this.toggleAmountPopup}>
                 {dollarToFloat(amount) >= 0 ?
-                  <Icon name='arrow circle up' className='green-color no-margin' /> :
+                  <Icon name='arrow circle up' className='green-color no-margsin' /> :
                   <Icon name='arrow circle down' className='red-color no-margin' />
                 } {editAmount || amount.replace(/-/, '')}
               </span>}
             />
             <div className='float-right'>
               <Popup
-                content={<OptionsList />}
+                content={<div ref={this.setOptionsPopupRef}><OptionsList /></div>}
                 horizontalOffset={8}
+                open={showOptionsPopup}
                 position='bottom right'
                 style={{ padding: '0' }}
                 trigger={<Icon
                   className='cursor-pointer grey-light-color'
                   name='ellipsis horizontal'
+                  onClick={this.toggleOptionsPopup}
                 />}
               />
             </div>

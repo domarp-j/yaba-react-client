@@ -273,7 +273,7 @@ body {
 }
 
 #filter-modal {
-  @media only screen and (max-height: 460px) {
+  @media only screen and (max-height: 533px) {
     top: 0.5% !important;
   }
 }
@@ -328,6 +328,20 @@ body {
   }
 }
 
+.input-imitation {
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  border-radius: 0.28em;
+  line-height: 1.32em;
+  padding: 6px 8px;
+  font-size: 18px;
+  color: $black;
+
+  &.error {
+    border-color: #E0B4B4;
+    background: #FFF6F6;
+  }
+}
+
 /*
   Imports below are automatically generated.
   Any changes made after the following comment will be
@@ -340,10 +354,7 @@ body {
 @import 'src/app/components/misc/Alerts/Alerts.scss';
 @import 'src/app/components/misc/DatePicker/DatePicker.scss';
 @import 'src/app/components/tags/Tag/Tag.scss';
-@import 'src/app/components/tags/TagAdd/TagAdd.scss';
-@import 'src/app/components/tags/TagButton/TagButton.scss';
 @import 'src/app/components/tags/TagDropdown/TagDropdown.scss';
-@import 'src/app/components/tags/TagForm/TagForm.scss';
 @import 'src/app/components/transactions/CsvDownload/CsvDownload.scss';
 @import 'src/app/components/transactions/Dashboard/Dashboard.scss';
 @import 'src/app/components/transactions/Filter/Filter.scss';

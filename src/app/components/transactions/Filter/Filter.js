@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Segment, Form, Tab } from 'semantic-ui-react';
-import { compose, reject } from 'ramda';
+import { Button, Form, Segment, Tab } from 'semantic-ui-react';
+import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
 
-import { TagAdd, TagButton, TagForm } from '../../tags';
-import { DateInput } from '../../misc';
+import { DatePicker, Popup } from '../../misc';
 import { FilterText } from '../../transactions';
 import {
   FROM_DATE,
@@ -17,16 +17,13 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
+import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class Filter extends React.Component {
-  /*
-    We will keep track of the initial state of all of our
-      query fields.
-
-    That will make it easier for us to reset the form when
-      the user decides to clear out all of their current
-      filter queries.
-  */
+  /**
+   * Initial state for all transaction query fields
+   * Useful when the queries need to be reset to a "blank", initial state
+   */
   initialFieldsState = {
     [FROM_DATE]: '',
     [TO_DATE]: '',
@@ -34,36 +31,10 @@ class Filter extends React.Component {
     tags: [],
   };
 
-  /*
-    To properly handle what is displayed in the Cleave inputs,
-      we need direct control of the Cleaves.
-
-    Therefore, we must define our own custom Cleaves that we
-      will save to state and mainpulate directly.
-  */
-  FROM_DATE_CLEAVE = `${FROM_DATE}Cleave`;
-  TO_DATE_CLEAVE = `${TO_DATE}Cleave`;
-
-  /*
-    This is a quick & easy way to map a date type (FROM, TO)
-      to it's respective cleave.
-  */
-  dateTypeToCleave = {
-    [FROM_DATE]: this.FROM_DATE_CLEAVE,
-    [TO_DATE]: this.TO_DATE_CLEAVE,
-  };
-
-  /*
-    The user will be able to choose the filter type (description,
-      date, tags, etc) by selecting a tab via the "Tab" Semantic UI
-      component
-
-    This object defines the panes for each tab, including the tab
-      label and the rendered component when the tab is selected
-
-    The "Tab" component itself, however, requires an array, so an
-      ordered version of the panes has also been defined.
-  */
+  /**
+   * Each filter "page" will be behind a tab pane
+   * The Tab component is provided by Semantic UI React
+   */
   panes = {
     desc: {
       menuItem: 'By description',
@@ -106,13 +77,20 @@ class Filter extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.compositeDecorator = new CompositeDecorator([{
+      strategy: tagStrategy,
+      component: this.TagSpan,
+    }]);
+
     this.state = {
       ...this.initialFieldsState,
-      [this.FROM_DATE_CLEAVE]: undefined,
-      [this.TO_DATE_CLEAVE]: undefined,
       activeTab: this.paneList.indexOf(this.panes.desc),
       matchAllTags: true,
-      showTagAdd: false,
+      tagEditor: EditorState.createWithContent(
+        ContentState.createFromText(props.tags.map(tag => `#${tag}`).join(' ')),
+        this.compositeDecorator
+      ),
     };
   }
 
@@ -149,108 +127,93 @@ class Filter extends React.Component {
     </div>
   )
 
-  dateFields = () => (
+  dateFields = () => {
+    const style = { padding: '0', zIndex: 1001 };
+
+    return (<div>
+      <Form>
+        <Form.Group>
+          <Popup
+            content={<DatePicker
+              month={this.state[FROM_DATE] ? new Date(this.state[FROM_DATE]) : null}
+              onDayClick={day => this.handleDateChange(day, FROM_DATE)}
+              showClose={false}
+            />}
+            position='bottom left'
+            style={style}
+            trigger={<Form.Input
+              className='date-field'
+              id='dateQueryFrom'
+              label='From'
+              name='dateQueryFrom'
+              readOnly
+              value={(this.state[FROM_DATE] && dateToMDY(this.state[FROM_DATE])) || 'MM/DD/YYYY'}
+              width={6}
+            />}
+          />
+
+          <Popup
+            content={<DatePicker
+              month={this.state[TO_DATE] ? new Date(this.state[TO_DATE]) : null}
+              onDayClick={day => this.handleDateChange(day, TO_DATE)}
+              showClose={false}
+            />}
+            position='bottom left'
+            style={style}
+            trigger={<Form.Input
+              className='margin-top-20-mobile date-field'
+              id='dateQueryTo'
+              label='To'
+              name='dateQueryTo'
+              readOnly
+              value={(this.state[TO_DATE] && dateToMDY(this.state[TO_DATE])) || 'MM/DD/YYYY'}
+              width={6}
+            />}
+          />
+        </Form.Group>
+      </Form>
+    </div>);
+  }
+
+  tagFields = () => (
     <div>
       <Form>
         <Form.Group>
           <Form.Field
-            className='date-field'
-            width={6}
+            width={16}
           >
-            <DateInput
-              id='dateQueryFrom'
-              label='From'
-              name='dateQueryFrom'
-              onBlur={e => {
-                this.handleDateBlur(e, FROM_DATE);
-              }}
-              onChange={e => this.handleDateChange(e, FROM_DATE)}
-              onInit={cleave => this.setCleaveState(cleave, FROM_DATE)}
-              value={this.state[FROM_DATE]}
-            />
-          </Form.Field>
-
-          <Form.Field
-            className='margin-top-20-mobile date-field'
-            width={6}
-          >
-            <DateInput
-              id='dateQueryTo'
-              label='To'
-              name='dateQueryTo'
-              onBlur={e => {
-                this.handleDateBlur(e, TO_DATE);
-              }}
-              onChange={e => this.handleDateChange(e, TO_DATE)}
-              onInit={cleave => this.setCleaveState(cleave, TO_DATE)}
-              value={this.state[TO_DATE]}
-            />
+            <label htmlFor='tags'>Tags <span>(i.e. #food and #travel)</span></label>
+            <div className='input-imitation tag-field'>
+              <Editor
+                editorState={this.state.tagEditor}
+                onChange={this.handleTagsChange}
+              />
+            </div>
           </Form.Field>
         </Form.Group>
       </Form>
+
+      <Button.Group
+        className='margin-top-15'
+        size='tiny'
+      >
+        <Button
+          onClick={() => this.setState({ matchAllTags: true })}
+          positive={this.state.matchAllTags}
+        >
+            Match all tags
+        </Button>
+        <Button.Or />
+        <Button
+          onClick={() => this.setState({ matchAllTags: false })}
+          positive={!this.state.matchAllTags}
+        >
+            Match any tag
+        </Button>
+      </Button.Group>
     </div>
   )
 
-  tagFields = () => {
-    const { matchAllTags, showTagAdd, tags } = this.state;
-
-    return (
-      <div>
-        <div>
-          {/* Transaction query tags */}
-          {tags && tags.length > 0 && tags.map(tag => (
-            <TagButton
-              key={`query-tag-${tag}`}
-              onDelete={() => this.handleRemoveTag(tag)}
-              onEdit={() => {}}
-              tagName={tag}
-            />
-          ))}
-
-          {/* Input to add new tag */}
-          {showTagAdd &&
-            <TagForm
-              onCancel={() => this.toggleStateBool('showTagAdd')}
-              onSave={this.handleTagAdd}
-            />
-          }
-
-          {/* Button that, when clicked, displays input to add new tag */}
-          {!showTagAdd &&
-            <TagAdd
-              onClick={() => this.toggleStateBool('showTagAdd')}
-            />
-          }
-        </div>
-
-        <Button.Group
-          className='margin-top-15'
-          size='tiny'
-        >
-          <Button
-            onClick={() => this.setState({ matchAllTags: true })}
-            positive={matchAllTags}
-          >
-            Match all tags
-          </Button>
-          <Button.Or />
-          <Button
-            onClick={() => this.setState({ matchAllTags: false })}
-            positive={!matchAllTags}
-          >
-            Match any tag
-          </Button>
-        </Button.Group>
-      </div>
-    );
-  }
-
-  setCleaveState = (cleave, dateType) => {
-    this.setState({ [this.dateTypeToCleave[dateType]]: cleave });
-  }
-
-  // TODO: Display alert for any scenario where this method returns false
-  // TODO: Replace with a date picker?
   validDateInput = (date, dateType) => {
     // Empty date fields are automatically valid
     if (date === '') return true;
@@ -269,8 +232,25 @@ class Filter extends React.Component {
     return true;
   }
 
-  handleDateChange = (e, dateType) => {
-    this.setState({ [dateType]: e.target.value });
+  extractTags = editorState => {
+    const tagInputValue = editorState.getCurrentContent().getPlainText();
+    const tags = tagInputValue.match(tagRegex);
+
+    if (tags) {
+      return tags.map(tag => tag.replace(/#/, '')).filter(tag => tag !== '');
+    }
+
+    return [];
+  }
+
+
+  handleDateChange = (day, dateType) => {
+    const dateMDY = dateToMDY(day);
+    if (this.validDateInput(dateMDY, dateType)) {
+      this.setState({
+        [dateType]: dateMDY,
+      });
+    }
   }
 
   handleDescChange = e => {
@@ -279,25 +259,11 @@ class Filter extends React.Component {
     });
   }
 
-  handleDateBlur = (e, dateType) => {
-    if (!this.validDateInput(e.target.value, dateType)) {
-      this.setState(prevState => {
-        prevState[this.dateTypeToCleave[dateType]].setRawValue('');
-        return { [dateType]: '' };
-      });
-    }
-  }
-
-  handleTagAdd = tag => {
-    this.setState(prevState => ({
-      tags: prevState.tags.concat(tag.tagName),
-    }));
-  }
-
-  handleRemoveTag = removedTag => {
-    this.setState(prevState => ({
-      tags: reject(tag => tag === removedTag, prevState.tags),
-    }));
+  handleTagsChange = editorState => {
+    this.setState({
+      tagEditor: editorState,
+      tags: this.extractTags(editorState),
+    });
   }
 
   handleFilterSubmit = () => {
@@ -314,17 +280,22 @@ class Filter extends React.Component {
       ...prevState,
       ...this.initialFieldsState,
     }), this.handleFilterSubmit);
+  }
 
-    /*
-      Reset the Cleave date fields by overriding their raw input values
-
-      It is crucial that the dates tab is active when overriding the
-        Cleave values. Otherwise, some buggy JS behavior could result.
-    */
-    if (this.state.activeTab === this.paneList.indexOf(this.panes.dates)) {
-      this.state[this.dateTypeToCleave[FROM_DATE]].setRawValue('');
-      this.state[this.dateTypeToCleave[TO_DATE]].setRawValue('');
-    }
+  /**
+   * Tag element & styling (for draft-js)
+   */
+  TagSpan = props => {
+    return (
+      <span
+        {...props}
+        className='filter-tag'
+        onClick={() => this.handleTagSpanClick(props)}>
+        <Button>
+          {props.children}
+        </Button>
+      </span>
+    );
   }
 
   render() {

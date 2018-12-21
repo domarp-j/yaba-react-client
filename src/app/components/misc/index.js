@@ -1,13 +1,13 @@
 import Alerts from './Alerts';
 import AmountInput from './AmountInput';
 import ButtonToModal from './ButtonToModal';
-import DateInput from './DateInput';
 import DatePicker from './DatePicker';
+import Popup from './Popup';
 
 export {
   Alerts,
   AmountInput,
   ButtonToModal,
-  DateInput,
-  DatePicker
+  DatePicker,
+  Popup
 };
