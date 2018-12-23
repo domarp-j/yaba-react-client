@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Header, Icon, Modal, Popup as SemPopup } from 'semantic-ui-react';
+import { Card, Button, Header, Icon, Input, Modal, Popup as SemPopup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
 import { symmetricDifference } from 'ramda';
@@ -50,6 +50,7 @@ class TransItem extends React.Component {
     }]);
 
     this.state = {
+      description: props.description,
       editorState: EditorState.createWithContent(
         ContentState.createFromText(props.description),
         this.compositeDecorator
@@ -289,14 +290,26 @@ class TransItem extends React.Component {
   /**
    * On change, look for changes in the transaction description & tags.
    * Autosave descriptions and tags if they have been modified.
+   * Behaves differently depending on whether argument is either:
+   * 1) An EditorState (for draft-js, which is used in desktop)
+   * 2) A SyntheticEvent (for plain inputs, which are used in tablet/mobile)
    */
-  handleDescTagChange = editorState => {
+  handleDescTagChange = event => {
     if (this.descTagTimeout) {
       clearTimeout(this.descTagTimeout);
     }
 
-    this.setState({ editorState }, () => {
-      const text = this.state.editorState.getCurrentContent().getPlainText();
+    const usingDraftjs = event.constructor.name === 'EditorState';
+    const newState = usingDraftjs ? { editorState: event } : { description: event.target.value };
+
+    this.setState(newState, () => {
+      let text;
+      if (usingDraftjs) {
+        text = this.state.editorState.getCurrentContent().getPlainText();
+      } else {
+        text = this.state.description;
+      }
+
       if (!this.isValidDescription(text)) return;
 
       this.descTagTimeout = setTimeout(() => {
@@ -487,7 +500,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { editAmount, showAmountPopup, showDatePopup, showOptionsPopup } = this.state;
+    const { description, editAmount, showAmountPopup, showDatePopup, showOptionsPopup } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -498,7 +511,26 @@ class TransItem extends React.Component {
       <Card className='full-width no-margin-bottom' ref={this.setItemRef}>
         <Card.Content>
           <Card.Header className='transaction-description'>
-            <Editor editorState={this.state.editorState} onChange={this.handleDescTagChange} />
+            {/*
+              Display the draft-js editor on desktops
+            */}
+            <div className='hidden-tablet-and-mobile'>
+              <Editor
+                editorState={this.state.editorState}
+                onChange={this.handleDescTagChange}
+              />
+            </div>
+            {/*
+              Display a plain-old input on smaller devices, since draft-js doesn't work on
+              mobile browsers.
+            */}
+            <div className='tablet-and-mobile-only'>
+              <Input
+                className='transaction-description-mobile'
+                onChange={this.handleDescTagChange}
+                value={description}
+              />
+            </div>
           </Card.Header>
           <Card.Description className='transaction-date-amount'>
             <Popup

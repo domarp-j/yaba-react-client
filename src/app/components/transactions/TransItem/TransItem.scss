@@ -8,3 +8,13 @@
 .transaction-date-amount {
   font-size: 18px !important;
 }
+
+.transaction-description-mobile {
+  width: 100%;
+  font-size: 1.05em !important;
+
+  input {
+    padding: 0 !important;
+    border: none !important;
+  }
+}
