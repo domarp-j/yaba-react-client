@@ -17,6 +17,7 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
+import { isDraftjsEvent } from '../../../utils/draftjsTools';
 import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class Filter extends React.Component {
@@ -91,6 +92,7 @@ class Filter extends React.Component {
         ContentState.createFromText(props.tags.map(tag => `#${tag}`).join(' ')),
         this.compositeDecorator
       ),
+      tagInput: '',
     };
   }
 
@@ -183,9 +185,14 @@ class Filter extends React.Component {
             width={16}
           >
             <label htmlFor='tags'>Tags <span>(i.e. #food and #travel)</span></label>
-            <div className='input-imitation tag-field'>
+            <div className='input-imitation tag-field hidden-tablet-and-mobile'>
               <Editor
                 editorState={this.state.tagEditor}
+                onChange={this.handleTagsChange}
+              />
+            </div>
+            <div className='tablet-and-mobile-only'>
+              <Form.Input
                 onChange={this.handleTagsChange}
               />
             </div>
@@ -232,9 +239,8 @@ class Filter extends React.Component {
     return true;
   }
 
-  extractTags = editorState => {
-    const tagInputValue = editorState.getCurrentContent().getPlainText();
-    const tags = tagInputValue.match(tagRegex);
+  extractTags = description => {
+    const tags = description.match(tagRegex);
 
     if (tags) {
       return tags.map(tag => tag.replace(/#/, '')).filter(tag => tag !== '');
@@ -259,10 +265,23 @@ class Filter extends React.Component {
     });
   }
 
-  handleTagsChange = editorState => {
+  handleTagsChange = event => {
+    const usingDraftjs = isDraftjsEvent(event);
+
+    let newState;
+    let text;
+
+    if (usingDraftjs) {
+      newState = { tagEditor: event };
+      text = event.getCurrentContent().getPlainText();
+    }  else {
+      text = event.target.value;
+      newState = { tagInput: text };
+    }
+
     this.setState({
-      tagEditor: editorState,
-      tags: this.extractTags(editorState),
+      ...newState,
+      tags: this.extractTags(text),
     });
   }
 

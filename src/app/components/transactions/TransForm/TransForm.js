@@ -9,6 +9,7 @@ import { CompositeDecorator, Editor, EditorState } from 'draft-js';
 
 import { createTransaction } from '../../../store/actions/transactions';
 import { currentDateYMD } from '../../../utils/dateTools';
+import { isDraftjsEvent } from '../../../utils/draftjsTools';
 import { allFieldsTouched, anyErrorsPresent, errorsList, touchAllFields } from '../../../utils/formikTools';
 import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
@@ -54,13 +55,17 @@ class TransForm extends React.Component {
     };
   }
 
-  handleDescChange = (editorState, handleChange) => {
-    this.setState({
-      editorState,
-    }, () => {
-      const value = this.state.editorState.getCurrentContent().getPlainText();
-      const synthEvent = { persist: () => null, target: { value, name: 'description' } };
-      handleChange(synthEvent);
+  handleDescChange = event => {
+    const usingDraftjs = isDraftjsEvent(event);
+    const newState = usingDraftjs ? { editorState: event } : { description: event.target.value };
+    if (!usingDraftjs) this.props.handleChange(event);
+
+    this.setState(newState, () => {
+      if (usingDraftjs) {
+        const value = this.state.editorState.getCurrentContent().getPlainText();
+        const synthEvent = { persist: () => null, target: { value, name: 'description' } };
+        this.props.handleChange(synthEvent);
+      }
     });
   }
 
@@ -84,7 +89,6 @@ class TransForm extends React.Component {
     const {
       className,
       errors,
-      handleChange,
       handleSubmit,
       isAddingTransaction,
       onCancel,
@@ -107,10 +111,17 @@ class TransForm extends React.Component {
                   width={16}
                 >
                   <label htmlFor='description'>Description</label>
-                  <div className={`input-imitation ${touched.description && errors.description ? 'error' : ''}`}>
+                  <div className={`hidden-tablet-and-mobile input-imitation ${touched.description && errors.description ? 'error' : ''}`}>
                     <Editor
                       editorState={this.state.editorState}
-                      onChange={editorState => this.handleDescChange(editorState, handleChange)}
+                      onChange={this.handleDescChange}
+                    />
+                  </div>
+                  <div className='tablet-and-mobile-only'>
+                    <Form.Input
+                      name='description'
+                      onChange={this.handleDescChange}
+                      value={this.state.description}
                     />
                   </div>
                 </Form.Field>

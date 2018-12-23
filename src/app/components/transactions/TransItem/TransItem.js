@@ -18,8 +18,9 @@ import {
   detachTagFromTransaction,
   modifyTransactionTag
 } from '../../../store/actions/tags';
-import { dollarToFloat } from '../../../utils/dollarTools';
 import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
+import { dollarToFloat } from '../../../utils/dollarTools';
+import { isDraftjsEvent } from '../../../utils/draftjsTools';
 import { tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class TransItem extends React.Component {
@@ -299,7 +300,7 @@ class TransItem extends React.Component {
       clearTimeout(this.descTagTimeout);
     }
 
-    const usingDraftjs = event.constructor.name === 'EditorState';
+    const usingDraftjs = isDraftjsEvent(event);
     const newState = usingDraftjs ? { editorState: event } : { description: event.target.value };
 
     this.setState(newState, () => {

@@ -14,7 +14,6 @@ const App = () => {
   return (
     <div>
       <Alerts />
-
       <BrowserRouter>
         <Switch>
           <Route exact path={routes.homePage} component={requireSignIn(TransactionsPage)} />
