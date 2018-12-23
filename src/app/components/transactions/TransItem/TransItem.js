@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Header, Icon, Input, Modal, Popup as SemPopup } from 'semantic-ui-react';
+import { Button, Card, Header, Icon, Input, Modal, Popup as SemPopup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
 import { symmetricDifference } from 'ramda';
@@ -21,7 +21,7 @@ import {
 import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
 import { isDraftjsEvent } from '../../../utils/draftjsTools';
-import { tagRegex, tagStrategy } from '../../../utils/tagTools';
+import { extractTags, tagRegex, tagStrategy } from '../../../utils/tagTools';
 
 class TransItem extends React.Component {
   static propTypes = {
@@ -353,9 +353,18 @@ class TransItem extends React.Component {
 
   /**
    * On tag click, add the clicked tag to the list of transaction queries
+   * This tag span ony appears on desktop devices
    */
   handleTagSpanClick = tagSpanProps => {
     const tagName = tagSpanProps.decoratedText.replace(/#/, '');
+    this.props.addTagNameToTransactionQuery(tagName);
+  }
+
+  /**
+   * On tag button click, add the clicked tag to the list of transaction queries
+   * This button only appears on mobile devices
+   */
+  handleTagButtonClick = tagName => {
     this.props.addTagNameToTransactionQuery(tagName);
   }
 
@@ -531,6 +540,15 @@ class TransItem extends React.Component {
                 onChange={this.handleDescTagChange}
                 value={description}
               />
+              {extractTags(description).map(tag => (
+                <Button
+                  className='mobile-tag-button'
+                  key={tag}
+                  onClick={() => this.handleTagButtonClick(tag)}
+                >
+                  {tag}
+                </Button>
+              ))}
             </div>
           </Card.Header>
           <Card.Description className='transaction-date-amount'>

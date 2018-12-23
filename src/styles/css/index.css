@@ -450,6 +450,11 @@ body {
     padding: 0 !important;
     border: none !important; }
 
+.mobile-tag-button {
+  color: #FDFFFF !important;
+  background-color: #006d5b !important;
+  padding: 3px !important; }
+
 /* Transaction List */
 #loader {
   text-align: center;

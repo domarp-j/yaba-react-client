@@ -18,7 +18,7 @@ import {
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
 import { isDraftjsEvent } from '../../../utils/draftjsTools';
-import { tagRegex, tagStrategy } from '../../../utils/tagTools';
+import { extractTags, tagStrategy } from '../../../utils/tagTools';
 
 class Filter extends React.Component {
   /**
@@ -239,17 +239,6 @@ class Filter extends React.Component {
     return true;
   }
 
-  extractTags = description => {
-    const tags = description.match(tagRegex);
-
-    if (tags) {
-      return tags.map(tag => tag.replace(/#/, '')).filter(tag => tag !== '');
-    }
-
-    return [];
-  }
-
-
   handleDateChange = (day, dateType) => {
     const dateMDY = dateToMDY(day);
     if (this.validDateInput(dateMDY, dateType)) {
@@ -281,7 +270,7 @@ class Filter extends React.Component {
 
     this.setState({
       ...newState,
-      tags: this.extractTags(text),
+      tags: extractTags(text),
     });
   }
 

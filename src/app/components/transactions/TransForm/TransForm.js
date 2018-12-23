@@ -11,7 +11,7 @@ import { createTransaction } from '../../../store/actions/transactions';
 import { currentDateYMD } from '../../../utils/dateTools';
 import { isDraftjsEvent } from '../../../utils/draftjsTools';
 import { allFieldsTouched, anyErrorsPresent, errorsList, touchAllFields } from '../../../utils/formikTools';
-import { tagRegex, tagStrategy } from '../../../utils/tagTools';
+import { extractTags, tagStrategy } from '../../../utils/tagTools';
 
 const fields = ['description'];
 
@@ -155,11 +155,6 @@ class TransForm extends React.Component {
     );
   }
 }
-
-const extractTags = description => {
-  const tags = description.match(tagRegex);
-  return tags && tags.map(tag => tag.replace(/#/, ''));
-};
 
 const schema = yup.object().shape({
   description: yup.string().required('A description of the transaction is required'),

@@ -15,3 +15,16 @@ export const tagStrategy = (contentBlock, callback) => {
     callback(start, start + matchArr[0].length);
   }
 };
+
+/**
+ * Extract tags from a description
+ */
+export const extractTags = description => {
+  const tags = description.match(tagRegex);
+
+  if (tags) {
+    return tags.map(tag => tag.replace(/#/, '')).filter(tag => tag !== '');
+  }
+
+  return [];
+};
