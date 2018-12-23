@@ -1,3 +1,4 @@
+import AmountInput from './AmountInput';
 import CsvDownload from './CsvDownload';
 import Dashboard from './Dashboard';
 import Filter from './Filter';
@@ -9,6 +10,7 @@ import TransItem from './TransItem';
 import TransList from './TransList';
 
 export {
+  AmountInput,
   CsvDownload,
   Dashboard,
   Filter,

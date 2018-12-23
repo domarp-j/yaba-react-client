@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
 import { symmetricDifference } from 'ramda';
 
-import { AmountInput, DatePicker } from '../../misc';
+import { DatePicker } from '../../misc';
+import { AmountInput } from '../../transactions';
 import {
   createTransaction,
   deleteTransaction,
