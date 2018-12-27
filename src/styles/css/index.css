@@ -406,6 +406,8 @@ body {
       left: -36px; }
     .mobile-button-group .action-button-wrapper #csv-label {
       left: -73px; }
+    .mobile-button-group .action-button-wrapper #clear-filter-label {
+      left: -80px; }
 
 .sorter .sort-title {
   font-size: 16px;

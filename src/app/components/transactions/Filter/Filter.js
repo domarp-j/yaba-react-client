@@ -101,6 +101,7 @@ class Filter extends React.Component {
       [FROM_DATE]: dateToMDY(this.props[FROM_DATE]),
       [TO_DATE]: dateToMDY(this.props[TO_DATE]),
       description: this.props.description,
+      tagInput: this.props.tags.map(tag => `#${tag}`).join(' '),
       tags: this.props.tags,
       matchAllTags: this.props.matchAllTags,
     });

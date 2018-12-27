@@ -5,12 +5,15 @@ import { connect } from 'react-redux';
 
 import { ButtonToModal } from '../../misc';
 import { CsvDownload, Filter, Sorter } from '../../transactions';
+import { clearTransactionQueries } from '../../../store/actions/queries';
 import { showTransactionForm } from '../../../store/actions/transactions';
 
 class MobileButtonGroup extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    clearQueries: PropTypes.func,
     id: PropTypes.string,
+    queryPresent: PropTypes.bool,
     showTransactionForm: PropTypes.func,
   }
 
@@ -34,7 +37,16 @@ class MobileButtonGroup extends React.Component {
     }));
   }
 
-  dashboardModal = ({ component: Component, icon, id, stateKey }) => {
+  ActionButton = props => (
+    <Button
+      className={this.buttonClassName}
+      circular
+      size={this.buttonSize}
+      {...props}
+    />
+  )
+
+  DashboardModal = ({ component: Component, icon, id, stateKey }) => {
     const openModal = () => {
       this.setState({
         [stateKey]: true,
@@ -48,14 +60,13 @@ class MobileButtonGroup extends React.Component {
       });
     };
 
+    const ActionButton = this.ActionButton;
+
     return (
       <ButtonToModal
-        button={<Button
-          className={this.buttonClassName}
-          circular
+        button={<ActionButton
           icon={icon}
           onClick={openModal}
-          size={this.buttonSize}
         />}
         id={id}
         showModal={this.state[stateKey]}
@@ -71,7 +82,9 @@ class MobileButtonGroup extends React.Component {
   render() {
     const {
       className,
+      clearQueries,
       id,
+      queryPresent,
       showTransactionForm,
     } = this.props;
 
@@ -79,52 +92,66 @@ class MobileButtonGroup extends React.Component {
       showButtons,
     } = this.state;
 
+    const ActionButton = this.ActionButton;
+    const DashboardModal = this.DashboardModal;
+
     return (
       <div className={`mobile-button-group ${className}`} id={id}>
         {showButtons &&
           <div>
+            {queryPresent &&
+              <div className='action-button-wrapper'>
+                <div className='action-label' id='clear-filter-label'>Clear Filter</div>
+                <ActionButton
+                  className='red-button action-button'
+                  icon='cancel'
+                  onClick={() => {
+                    clearQueries(),
+                    this.setState({ showButtons: false });
+                  }}
+                />
+              </div>
+            }
+
             <div className='action-button-wrapper'>
               <div className='action-label' id='csv-label'>Download</div>
-              {this.dashboardModal({
-                component: CsvDownload,
-                icon: 'file alternate',
-                id: 'csv-modal',
-                stateKey: 'openCsvModal',
-              })}
+              <DashboardModal
+                component={CsvDownload}
+                icon='file alternate'
+                id='csv-modal'
+                stateKey='openCsvModal'
+              />
             </div>
 
             <div className='action-button-wrapper'>
               <div className='action-label' id='sort-label'>Sort</div>
-              {this.dashboardModal({
-                component: Sorter,
-                icon: 'sort content ascending',
-                id: 'sort-modal',
-                stateKey: 'openSortModal',
-              })}
+              <DashboardModal
+                component={Sorter}
+                icon='sort content ascending'
+                id='sort-modal'
+                stateKey='openSortModal'
+              />
             </div>
 
             <div className='action-button-wrapper'>
               <div className='action-label' id='filter-label'>Filter</div>
-              {this.dashboardModal({
-                component: Filter,
-                icon: 'filter',
-                id: 'filter-modal',
-                stateKey: 'openFilterModal',
-              })}
+              <DashboardModal
+                component={Filter}
+                icon='filter'
+                id='filter-modal'
+                stateKey='openFilterModal'
+              />
             </div>
 
             <div className='action-button-wrapper'>
               <div className='action-label' id='form-label'>Add</div>
-              <Button
-                className={this.buttonClassName}
-                circular
+              <ActionButton
                 icon='plus'
                 onClick={() => {
                   showTransactionForm(true);
                   window.scrollTo(0,0);
                   this.setState({ showButtons: false });
                 }}
-                size={this.buttonSize}
               />
             </div>
           </div>
@@ -142,8 +169,13 @@ class MobileButtonGroup extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  queryPresent: state.transactions.boolEvents.queryPresent,
+});
+
 const mapDispatchToProps = dispatch => ({
+  clearQueries: () => dispatch(clearTransactionQueries()),
   showTransactionForm: newState => dispatch(showTransactionForm(newState)),
 });
 
-export default connect(null, mapDispatchToProps)(MobileButtonGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(MobileButtonGroup);
