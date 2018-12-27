@@ -5,18 +5,6 @@
 export const tagRegex = /#([^\s]*)/g;
 
 /**
- * Strategy used to decorate tags (for draft-js)
- */
-export const tagStrategy = (contentBlock, callback) => {
-  const text = contentBlock.getText();
-  let matchArr, start;
-  while ((matchArr = tagRegex.exec(text)) !== null) {
-    start = matchArr.index;
-    callback(start, start + matchArr[0].length);
-  }
-};
-
-/**
  * Extract tags from a description
  */
 export const extractTags = description => {
@@ -28,3 +16,4 @@ export const extractTags = description => {
 
   return [];
 };
+

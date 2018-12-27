@@ -9,9 +9,9 @@ import { CompositeDecorator, Editor, EditorState } from 'draft-js';
 
 import { createTransaction } from '../../../store/actions/transactions';
 import { currentDateYMD } from '../../../utils/dateTools';
-import { isDraftjsEvent } from '../../../utils/draftjsTools';
+import { isDraftjsEvent, tagStrategy } from '../../../utils/draftjsTools';
 import { allFieldsTouched, anyErrorsPresent, errorsList, touchAllFields } from '../../../utils/formikTools';
-import { extractTags, tagStrategy } from '../../../utils/tagTools';
+import { extractTags } from '../../../utils/tagTools';
 
 const fields = ['description'];
 

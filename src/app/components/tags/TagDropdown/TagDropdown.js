@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, equals, filter, length, match, prop, sortBy, toLower } from 'ramda';
 import { Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
 class TagDropdown extends React.Component {
   static propTypes = {
@@ -54,4 +55,8 @@ class TagDropdown extends React.Component {
   }
 }
 
-export default TagDropdown;
+const mapStateToProps = state => ({
+  tags: state.transactions.tags,
+});
+
+export default connect(mapStateToProps)(TagDropdown);

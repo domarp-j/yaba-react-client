@@ -17,8 +17,8 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
-import { isDraftjsEvent } from '../../../utils/draftjsTools';
-import { extractTags, tagStrategy } from '../../../utils/tagTools';
+import { isDraftjsEvent, tagStrategy } from '../../../utils/draftjsTools';
+import { extractTags } from '../../../utils/tagTools';
 
 class Filter extends React.Component {
   /**
@@ -88,7 +88,7 @@ class Filter extends React.Component {
       ...this.initialFieldsState,
       activeTab: this.paneList.indexOf(this.panes.desc),
       matchAllTags: true,
-      tagEditor: EditorState.createWithContent(
+      editorState: EditorState.createWithContent(
         ContentState.createFromText(props.tags.map(tag => `#${tag}`).join(' ')),
         this.compositeDecorator
       ),
@@ -187,7 +187,7 @@ class Filter extends React.Component {
             <label htmlFor='tags'>Tags <span>(i.e. #food and #travel)</span></label>
             <div className='input-imitation tag-field hidden-tablet-and-mobile'>
               <Editor
-                editorState={this.state.tagEditor}
+                editorState={this.state.editorState}
                 onChange={this.handleTagsChange}
               />
             </div>
@@ -261,7 +261,7 @@ class Filter extends React.Component {
     let text;
 
     if (usingDraftjs) {
-      newState = { tagEditor: event };
+      newState = { editorState: event };
       text = event.getCurrentContent().getPlainText();
     }  else {
       text = event.target.value;

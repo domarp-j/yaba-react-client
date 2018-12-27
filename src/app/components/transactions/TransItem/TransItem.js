@@ -1,8 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Header, Icon, Input, Modal, Popup as SemPopup } from 'semantic-ui-react';
+import {
+  Button,
+  Card,
+  Header,
+  Icon,
+  Input,
+  Modal,
+  Popup as SemPopup
+} from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
+import {
+  CompositeDecorator,
+  ContentState,
+  Editor,
+  EditorState
+} from 'draft-js';
 import { symmetricDifference } from 'ramda';
 
 import { DatePicker } from '../../misc';
@@ -20,8 +33,14 @@ import {
 } from '../../../store/actions/tags';
 import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
-import { isDraftjsEvent } from '../../../utils/draftjsTools';
-import { extractTags, tagRegex, tagStrategy } from '../../../utils/tagTools';
+import {
+  isDraftjsEvent,
+  tagStrategy
+} from '../../../utils/draftjsTools';
+import {
+  extractTags,
+  tagRegex
+} from '../../../utils/tagTools';
 
 class TransItem extends React.Component {
   static propTypes = {
@@ -45,7 +64,7 @@ class TransItem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.compositeDecorator = new CompositeDecorator([{
+    this.decorator = new CompositeDecorator([{
       strategy: tagStrategy,
       component: this.TagSpan,
     }]);
@@ -54,19 +73,12 @@ class TransItem extends React.Component {
       description: props.description,
       editorState: EditorState.createWithContent(
         ContentState.createFromText(props.description),
-        this.compositeDecorator
+        this.decorator
       ),
       editAmount: undefined,
       positiveAmount: dollarToFloat(props.amount) >= 0,
-      showAmountPopup: false,
       showDeleteModal: false,
-      showDatePopup: false,
-      showOptionsPopup: false,
     };
-
-    this.amountPopupRef = undefined;
-    this.datePopupRef = undefined;
-    this.optionsPopupRef = undefined;
 
     this.amountTimeout = undefined;
     this.descTagTimeout = undefined;
@@ -80,21 +92,7 @@ class TransItem extends React.Component {
   /**
    * Delay between user changing description/tags and saving
    */
-  saveDelay = 1200;
-
-  /***************************************************************/
-  /** LIFECYCLE METHODS */
-  /***************************************************************/
-
-  /**
-   * Keep track of mouse clicks so that amount & date popups can close as needed
-   */
-  componentDidMount() {
-    window.addEventListener('mousedown', this.handleClickAroundPopup);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('mousedown', this.handleClickAroundPopup);
-  }
+  saveDelay = 2250;
 
   /***************************************************************/
   /** STATE TOGGLERS */
@@ -103,24 +101,6 @@ class TransItem extends React.Component {
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       showDeleteModal: !prevState.showDeleteModal,
-    }));
-  }
-
-  toggleDatePopup = () => {
-    this.setState(prevState => ({
-      showDatePopup: !prevState.showDatePopup,
-    }));
-  }
-
-  toggleAmountPopup = () => {
-    this.setState(prevState => ({
-      showAmountPopup: !prevState.showAmountPopup,
-    }));
-  }
-
-  toggleOptionsPopup = () => {
-    this.setState(prevState => ({
-      showOptionsPopup: !prevState.showOptionsPopup,
     }));
   }
 
@@ -139,31 +119,6 @@ class TransItem extends React.Component {
       });
     });
   }
-
-  /***************************************************************/
-  /** REF SETTERS */
-  /***************************************************************/
-
-  /**
-   * Set ref using the provided element
-   */
-  setAmountPopupRef = ele => {
-    this.amountPopupRef = ele;
-  };
-
-  /**
-   * Set ref using the provided element
-   */
-  setDatePopupRef = ele => {
-    this.datePopupRef = ele;
-  };
-
-  /**
-   * Set ref using the provided element
-   */
-  setOptionsPopupRef = ele => {
-    this.optionsPopupRef = ele;
-  };
 
   /***************************************************************/
   /** SERVER-SIDE TRANSACTION MODIFIERS */
@@ -258,9 +213,9 @@ class TransItem extends React.Component {
       tags: this.props.tags.map(tag => tag.name),
     });
 
+    // Hacky way to enable scrolling, which hides exposed popups
+    window.scrollTo(1, 0);
     window.scrollTo(0, 0);
-
-    this.setState({ showOptionsPopup: false });
   }
 
   /***************************************************************/
@@ -268,40 +223,19 @@ class TransItem extends React.Component {
   /***************************************************************/
 
   /**
-   * Handle clicks outside of date & amount popups
-   * Make sure that popups close on click-away
-   */
-  handleClickAroundPopup = e => {
-    if (this.amountPopupRef && !this.amountPopupRef.contains(e.target)) {
-      this.setState({ showAmountPopup: false });
-    }
-
-    if (this.datePopupRef && !this.datePopupRef.contains(e.target)) {
-      this.setState({ showDatePopup: false });
-    }
-
-    /**
-     * TODO: This currently breaks delete functionality. Fix it.
-     */
-    // if (this.optionsPopupRef && !this.optionsPopupRef.contains(e.target)) {
-    //   this.setState({ showOptionsPopup: false });
-    // }
-  }
-
-  /**
    * On change, look for changes in the transaction description & tags.
    * Autosave descriptions and tags if they have been modified.
    * Behaves differently depending on whether argument is either:
-   * 1) An EditorState (for draft-js, which is used in desktop)
-   * 2) A SyntheticEvent (for plain inputs, which are used in tablet/mobile)
+   *   1) An EditorState (for draft-js, which is used in desktop)
+   *   2) A SyntheticEvent (for plain inputs, which are used in tablet/mobile)
    */
-  handleDescTagChange = event => {
+  handleDescChange = e => {
     if (this.descTagTimeout) {
       clearTimeout(this.descTagTimeout);
     }
 
-    const usingDraftjs = isDraftjsEvent(event);
-    const newState = usingDraftjs ? { editorState: event } : { description: event.target.value };
+    const usingDraftjs = isDraftjsEvent(e);
+    const newState = usingDraftjs ? { editorState: e } : { description: e.target.value };
 
     this.setState(newState, () => {
       let text;
@@ -348,7 +282,6 @@ class TransItem extends React.Component {
    */
   handleDatePickerClick = async date => {
     await this.updateTransaction({ date: dateToYMD(date) });
-    this.toggleDatePopup();
   };
 
   /**
@@ -450,6 +383,7 @@ class TransItem extends React.Component {
 
     return (
       <SemPopup
+        hideOnScroll
         keepInViewPort
         on='click'
         style={popupStyle}
@@ -510,7 +444,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { description, editAmount, showAmountPopup, showDatePopup, showOptionsPopup } = this.state;
+    const { description, editAmount } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -527,7 +461,7 @@ class TransItem extends React.Component {
             <div className='hidden-tablet-and-mobile'>
               <Editor
                 editorState={this.state.editorState}
-                onChange={this.handleDescTagChange}
+                onChange={this.handleDescChange}
               />
             </div>
             {/*
@@ -537,7 +471,7 @@ class TransItem extends React.Component {
             <div className='tablet-and-mobile-only'>
               <Input
                 className='transaction-description-mobile'
-                onChange={this.handleDescTagChange}
+                onChange={this.handleDescChange}
                 value={description}
               />
               {extractTags(description).map(tag => (
@@ -553,17 +487,15 @@ class TransItem extends React.Component {
           </Card.Header>
           <Card.Description className='transaction-date-amount'>
             <Popup
-              content={<div ref={this.setDatePopupRef}><DateEditor date={date} /></div>}
-              open={showDatePopup}
+              content={<DateEditor date={date} />}
               position='bottom left'
               style={{ padding: '0' }}
-              trigger={<span className='cursor-pointer' onClick={this.toggleDatePopup}>{date}</span>}
+              trigger={<span className='cursor-pointer' >{date}</span>}
             /> | <Popup
-              content={<div ref={this.setAmountPopupRef}><AmountEditor amount={amount} ref={this.setAmountPopupRef} /></div>}
+              content={<AmountEditor amount={amount} />}
               horizontalOffset={-8}
-              open={showAmountPopup}
               position='bottom left'
-              trigger={<span className='cursor-pointer' onClick={this.toggleAmountPopup}>
+              trigger={<span className='cursor-pointer'>
                 {dollarToFloat(amount) >= 0 ?
                   <Icon name='arrow circle up' className='green-color no-margsin' /> :
                   <Icon name='arrow circle down' className='red-color no-margin' />
@@ -572,15 +504,13 @@ class TransItem extends React.Component {
             />
             <div className='float-right'>
               <Popup
-                content={<div ref={this.setOptionsPopupRef}><OptionsList /></div>}
+                content={<OptionsList />}
                 horizontalOffset={8}
-                open={showOptionsPopup}
                 position='bottom right'
                 style={{ padding: '0' }}
                 trigger={<Icon
                   className='cursor-pointer grey-light-color'
                   name='ellipsis horizontal'
-                  onClick={this.toggleOptionsPopup}
                 />}
               />
             </div>
