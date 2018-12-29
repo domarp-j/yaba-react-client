@@ -1,17 +1,11 @@
 /* Transaction Item */
 
-.transaction-description {
-  font-weight: 500 !important;
-  font-size: 18px !important;
-}
-
 .transaction-date-amount {
   font-size: 18px !important;
 }
 
-.transaction-description-mobile {
+.transaction-description-textarea {
   width: 100%;
-  font-size: 1.05em !important;
   padding: 0 !important;
   border: none !important;
 
@@ -20,8 +14,9 @@
   }
 }
 
-.mobile-tag-button {
+.tag-button {
   color: $white !important;
   background-color: $green !important;
   padding: 3px !important;
+  border-radius: 0 !important;
 }

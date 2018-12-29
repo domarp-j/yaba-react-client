@@ -5,11 +5,9 @@ import { withFormik } from 'formik';
 import { compose } from 'ramda';
 import * as yup from 'yup';
 import { connect } from 'react-redux';
-import { CompositeDecorator, Editor, EditorState } from 'draft-js';
 
 import { createTransaction } from '../../../store/actions/transactions';
 import { currentDateYMD } from '../../../utils/dateTools';
-import { isDraftjsEvent, tagStrategy } from '../../../utils/draftjsTools';
 import { allFieldsTouched, anyErrorsPresent, errorsList, touchAllFields } from '../../../utils/formikTools';
 import { extractTags } from '../../../utils/tagTools';
 
@@ -42,58 +40,17 @@ class TransForm extends React.Component {
     className: '',
   }
 
-  constructor(props) {
-    super(props);
-
-    this.compositeDecorator = new CompositeDecorator([{
-      strategy: tagStrategy,
-      component: this.TagSpan,
-    }]);
-
-    this.state = {
-      editorState: EditorState.createEmpty(this.compositeDecorator),
-    };
-  }
-
-  handleDescChange = event => {
-    const usingDraftjs = isDraftjsEvent(event);
-    const newState = usingDraftjs ? { editorState: event } : { description: event.target.value };
-    if (!usingDraftjs) this.props.handleChange(event);
-
-    this.setState(newState, () => {
-      if (usingDraftjs) {
-        const value = this.state.editorState.getCurrentContent().getPlainText();
-        const synthEvent = { persist: () => null, target: { value, name: 'description' } };
-        this.props.handleChange(synthEvent);
-      }
-    });
-  }
-
-  /**
-   * Tag element & styling (for draft-js)
-   */
-  TagSpan = props => {
-    return (
-      <span
-        {...props}
-        className='transaction-tag'
-      >
-        <Button>
-          {props.children}
-        </Button>
-      </span>
-    );
-  }
-
   render() {
     const {
       className,
       errors,
+      handleChange,
       handleSubmit,
       isAddingTransaction,
       onCancel,
       setTouched,
       touched,
+      values,
     } = this.props;
 
     return (
@@ -111,19 +68,11 @@ class TransForm extends React.Component {
                   width={16}
                 >
                   <label htmlFor='description'>Description</label>
-                  <div className={`hidden-tablet-and-mobile input-imitation ${touched.description && errors.description ? 'error' : ''}`}>
-                    <Editor
-                      editorState={this.state.editorState}
-                      onChange={this.handleDescChange}
-                    />
-                  </div>
-                  <div className='tablet-and-mobile-only'>
-                    <Form.Input
-                      name='description'
-                      onChange={this.handleDescChange}
-                      value={this.state.description}
-                    />
-                  </div>
+                  <Form.Input
+                    name='description'
+                    onChange={handleChange}
+                    value={values.description}
+                  />
                 </Form.Field>
               </Form.Group>
 

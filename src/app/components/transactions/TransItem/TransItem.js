@@ -10,12 +10,6 @@ import {
   TextArea
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import {
-  CompositeDecorator,
-  ContentState,
-  Editor,
-  EditorState
-} from 'draft-js';
 import { symmetricDifference } from 'ramda';
 
 import { DatePicker } from '../../misc';
@@ -33,10 +27,6 @@ import {
 } from '../../../store/actions/tags';
 import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
 import { dollarToFloat } from '../../../utils/dollarTools';
-import {
-  isDraftjsEvent,
-  tagStrategy
-} from '../../../utils/draftjsTools';
 import {
   extractTags,
   tagRegex
@@ -64,17 +54,8 @@ class TransItem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.decorator = new CompositeDecorator([{
-      strategy: tagStrategy,
-      component: this.TagSpan,
-    }]);
-
     this.state = {
       description: props.description,
-      editorState: EditorState.createWithContent(
-        ContentState.createFromText(props.description),
-        this.decorator
-      ),
       editAmount: undefined,
       positiveAmount: dollarToFloat(props.amount) >= 0,
       showDeleteModal: false,
@@ -114,9 +95,7 @@ class TransItem extends React.Component {
     }), () => {
       const absAmount = this.props.amount.replace(this.dollarRegex, '');
       const sign = this.state.positiveAmount ? '+' : '-';
-      this.updateTransaction({
-        amount: `${sign}${absAmount}`,
-      });
+      this.updateTransaction({ amount: `${sign}${absAmount}` });
     });
   }
 
@@ -149,7 +128,7 @@ class TransItem extends React.Component {
   /**
    * Clear out ALL transactions tags if any tags have been modified.
    * This is the safest way to ensure that tags that should be removed are not accidentally persisted in the server somehow.
-   * TODO: Find a smarter way to check for changes in tags.
+   * TODO: Find a smarter way to check for changes in tags?
    */
   clearTransactionTags = () => {
     const promises = this.props.tags.map(tag => (
@@ -214,7 +193,7 @@ class TransItem extends React.Component {
     });
 
     // Hacky way to enable scrolling, which hides exposed popups
-    window.scrollTo(1, 0);
+    window.scrollTo(5, 0);
     window.scrollTo(0, 0);
   }
 
@@ -225,25 +204,14 @@ class TransItem extends React.Component {
   /**
    * On change, look for changes in the transaction description & tags.
    * Autosave descriptions and tags if they have been modified.
-   * Behaves differently depending on whether argument is either:
-   *   1) An EditorState (for draft-js, which is used in desktop)
-   *   2) A SyntheticEvent (for plain inputs, which are used in tablet/mobile)
    */
   handleDescChange = e => {
     if (this.descTagTimeout) {
       clearTimeout(this.descTagTimeout);
     }
 
-    const usingDraftjs = isDraftjsEvent(e);
-    const newState = usingDraftjs ? { editorState: e } : { description: e.target.value };
-
-    this.setState(newState, () => {
-      let text;
-      if (usingDraftjs) {
-        text = this.state.editorState.getCurrentContent().getPlainText();
-      } else {
-        text = this.state.description;
-      }
+    this.setState({ description: e.target.value }, () => {
+      const text = this.state.description;
 
       if (!this.isValidDescription(text)) return;
 
@@ -285,17 +253,7 @@ class TransItem extends React.Component {
   };
 
   /**
-   * On tag click, add the clicked tag to the list of transaction queries
-   * This tag span ony appears on desktop devices
-   */
-  handleTagSpanClick = tagSpanProps => {
-    const tagName = tagSpanProps.decoratedText.replace(/#/, '');
-    this.props.addTagNameToTransactionQuery(tagName);
-  }
-
-  /**
    * On tag button click, add the clicked tag to the list of transaction queries
-   * This button only appears on mobile devices
    */
   handleTagButtonClick = tagName => {
     this.props.addTagNameToTransactionQuery(tagName);
@@ -315,22 +273,6 @@ class TransItem extends React.Component {
   /***************************************************************/
   /** SUBCOMPONENTS */
   /***************************************************************/
-
-  /**
-   * Tag element & styling (for draft-js)
-   */
-  TagSpan = props => {
-    return (
-      <span
-        {...props}
-        className='transaction-tag'
-        onClick={() => this.handleTagSpanClick(props)}>
-        <Button>
-          {props.children}
-        </Button>
-      </span>
-    );
-  }
 
   /**
    * When the Delete button is clicked for this transaction, display a modal asking for delete confirmation.
@@ -454,38 +396,23 @@ class TransItem extends React.Component {
     return (
       <Card className='full-width no-margin-bottom' ref={this.setItemRef}>
         <Card.Content>
-          <Card.Header className='transaction-description'>
-            {/*
-              Display the draft-js editor on desktops
-            */}
-            <div className='hidden-tablet-and-mobile'>
-              <Editor
-                editorState={this.state.editorState}
-                onChange={this.handleDescChange}
-              />
-            </div>
-            {/*
-              Display a plain-old input on smaller devices, since draft-js doesn't work on
-              mobile browsers.
-            */}
-            <div className='tablet-and-mobile-only'>
-              <TextArea
-                autoHeight
-                className='transaction-description-mobile'
-                onChange={this.handleDescChange}
-                rows={1}
-                value={description}
-              />
-              {extractTags(description).map(tag => (
-                <Button
-                  className='mobile-tag-button'
-                  key={tag}
-                  onClick={() => this.handleTagButtonClick(tag)}
-                >
-                  {tag}
-                </Button>
-              ))}
-            </div>
+          <Card.Header>
+            <TextArea
+              autoHeight
+              className='transaction-description-textarea'
+              onChange={this.handleDescChange}
+              rows={1}
+              value={description}
+            />
+            {extractTags(description).map(tag => (
+              <Button
+                className='tag-button'
+                key={tag}
+                onClick={() => this.handleTagButtonClick(tag)}
+              >
+                {tag}
+              </Button>
+            ))}
           </Card.Header>
           <Card.Description className='transaction-date-amount'>
             <Popup

@@ -215,25 +215,6 @@ body {
 .trans-form-button {
   padding: 6px !important; }
 
-.transaction-tag button {
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: #FDFFFF !important;
-  color: #006d5b !important;
-  font-size: 18px !important;
-  font-weight: 600 !important; }
-
-.input-imitation {
-  border: 1px solid rgba(34, 36, 38, 0.15);
-  border-radius: 0.28em;
-  line-height: 1.32em;
-  padding: 6px 8px;
-  font-size: 18px;
-  color: #0F1B07; }
-  .input-imitation.error {
-    border-color: #E0B4B4;
-    background: #FFF6F6; }
-
 /*
   Imports below are automatically generated.
   Any changes made after the following comment will be
@@ -366,18 +347,6 @@ body {
   .transactions-filter .date-field input {
     cursor: pointer; }
 
-.transactions-filter .tag-field {
-  font-size: 14px !important;
-  padding: 10px 14px !important; }
-
-.transactions-filter .filter-tag button {
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: #FDFFFF !important;
-  color: #006d5b !important;
-  font-size: 14px !important;
-  font-weight: 600 !important; }
-
 .mobile-button-group {
   text-align: center;
   width: 64px;
@@ -438,25 +407,21 @@ body {
   padding: 0 !important; }
 
 /* Transaction Item */
-.transaction-description {
-  font-weight: 500 !important;
-  font-size: 18px !important; }
-
 .transaction-date-amount {
   font-size: 18px !important; }
 
-.transaction-description-mobile {
+.transaction-description-textarea {
   width: 100%;
-  font-size: 1.05em !important;
   padding: 0 !important;
   border: none !important; }
-  .transaction-description-mobile:focus {
+  .transaction-description-textarea:focus {
     outline: none; }
 
-.mobile-tag-button {
+.tag-button {
   color: #FDFFFF !important;
   background-color: #006d5b !important;
-  padding: 3px !important; }
+  padding: 3px !important;
+  border-radius: 0 !important; }
 
 /* Transaction List */
 #loader {

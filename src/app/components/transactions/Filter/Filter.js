@@ -4,7 +4,6 @@ import { Button, Form, Segment, Tab } from 'semantic-ui-react';
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
 
 import { DatePicker, Popup } from '../../misc';
 import { FilterText } from '../../transactions';
@@ -17,7 +16,6 @@ import {
   replaceTagNamesInTransactionQuery
 } from '../../../store/actions/queries';
 import { dateToMDY, dateToYMD, regexMDY } from '../../../utils/dateTools';
-import { isDraftjsEvent, tagStrategy } from '../../../utils/draftjsTools';
 import { extractTags } from '../../../utils/tagTools';
 
 class Filter extends React.Component {
@@ -78,20 +76,10 @@ class Filter extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.compositeDecorator = new CompositeDecorator([{
-      strategy: tagStrategy,
-      component: this.TagSpan,
-    }]);
-
     this.state = {
       ...this.initialFieldsState,
       activeTab: this.paneList.indexOf(this.panes.desc),
       matchAllTags: true,
-      editorState: EditorState.createWithContent(
-        ContentState.createFromText(props.tags.map(tag => `#${tag}`).join(' ')),
-        this.compositeDecorator
-      ),
       tagInput: '',
     };
   }
@@ -133,7 +121,7 @@ class Filter extends React.Component {
   dateFields = () => {
     const style = { padding: '0', zIndex: 1001 };
 
-    return (<div>
+    return (
       <Form>
         <Form.Group>
           <Popup
@@ -175,7 +163,7 @@ class Filter extends React.Component {
           />
         </Form.Group>
       </Form>
-    </div>);
+    );
   }
 
   tagFields = () => (
@@ -186,17 +174,9 @@ class Filter extends React.Component {
             width={16}
           >
             <label htmlFor='tags'>Tags <span>(i.e. #food and #travel)</span></label>
-            <div className='input-imitation tag-field hidden-tablet-and-mobile'>
-              <Editor
-                editorState={this.state.editorState}
-                onChange={this.handleTagsChange}
-              />
-            </div>
-            <div className='tablet-and-mobile-only'>
-              <Form.Input
-                onChange={this.handleTagsChange}
-              />
-            </div>
+            <Form.Input
+              onChange={this.handleTagsChange}
+            />
           </Form.Field>
         </Form.Group>
       </Form>
@@ -256,22 +236,9 @@ class Filter extends React.Component {
   }
 
   handleTagsChange = event => {
-    const usingDraftjs = isDraftjsEvent(event);
-
-    let newState;
-    let text;
-
-    if (usingDraftjs) {
-      newState = { editorState: event };
-      text = event.getCurrentContent().getPlainText();
-    }  else {
-      text = event.target.value;
-      newState = { tagInput: text };
-    }
-
     this.setState({
-      ...newState,
-      tags: extractTags(text),
+      tagInput: event.target.value,
+      tags: extractTags(event.target.value),
     });
   }
 
@@ -289,22 +256,6 @@ class Filter extends React.Component {
       ...prevState,
       ...this.initialFieldsState,
     }), this.handleFilterSubmit);
-  }
-
-  /**
-   * Tag element & styling (for draft-js)
-   */
-  TagSpan = props => {
-    return (
-      <span
-        {...props}
-        className='filter-tag'
-        onClick={() => this.handleTagSpanClick(props)}>
-        <Button>
-          {props.children}
-        </Button>
-      </span>
-    );
   }
 
   render() {

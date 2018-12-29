@@ -317,31 +317,6 @@ body {
   padding: 6px !important;
 }
 
-.transaction-tag {
-  button {
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: $white !important;
-    color: $green !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
-  }
-}
-
-.input-imitation {
-  border: 1px solid rgba(34, 36, 38, 0.15);
-  border-radius: 0.28em;
-  line-height: 1.32em;
-  padding: 6px 8px;
-  font-size: 18px;
-  color: $black;
-
-  &.error {
-    border-color: #E0B4B4;
-    background: #FFF6F6;
-  }
-}
-
 /*
   Imports below are automatically generated.
   Any changes made after the following comment will be
