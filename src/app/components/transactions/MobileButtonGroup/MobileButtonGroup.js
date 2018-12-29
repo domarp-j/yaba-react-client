@@ -106,7 +106,7 @@ class MobileButtonGroup extends React.Component {
                   className='red-button action-button'
                   icon='cancel'
                   onClick={() => {
-                    clearQueries(),
+                    clearQueries();
                     this.setState({ showButtons: false });
                   }}
                 />

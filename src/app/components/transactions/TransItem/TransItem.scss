@@ -12,10 +12,11 @@
 .transaction-description-mobile {
   width: 100%;
   font-size: 1.05em !important;
+  padding: 0 !important;
+  border: none !important;
 
-  input {
-    padding: 0 !important;
-    border: none !important;
+  &:focus {
+    outline: none;
   }
 }
 

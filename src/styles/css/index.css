@@ -447,10 +447,11 @@ body {
 
 .transaction-description-mobile {
   width: 100%;
-  font-size: 1.05em !important; }
-  .transaction-description-mobile input {
-    padding: 0 !important;
-    border: none !important; }
+  font-size: 1.05em !important;
+  padding: 0 !important;
+  border: none !important; }
+  .transaction-description-mobile:focus {
+    outline: none; }
 
 .mobile-tag-button {
   color: #FDFFFF !important;

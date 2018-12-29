@@ -5,9 +5,9 @@ import {
   Card,
   Header,
   Icon,
-  Input,
   Modal,
-  Popup as SemPopup
+  Popup as SemPopup,
+  TextArea
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import {
@@ -469,9 +469,11 @@ class TransItem extends React.Component {
               mobile browsers.
             */}
             <div className='tablet-and-mobile-only'>
-              <Input
+              <TextArea
+                autoHeight
                 className='transaction-description-mobile'
                 onChange={this.handleDescChange}
+                rows={1}
                 value={description}
               />
               {extractTags(description).map(tag => (
