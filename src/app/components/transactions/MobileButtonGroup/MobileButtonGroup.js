@@ -117,7 +117,7 @@ class MobileButtonGroup extends React.Component {
               <div className='action-label' id='csv-label'>Download</div>
               <DashboardModal
                 component={CsvDownload}
-                icon='file alternate'
+                icon='alternate file'
                 id='csv-modal'
                 stateKey='openCsvModal'
               />

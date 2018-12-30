@@ -402,6 +402,7 @@ class TransItem extends React.Component {
               className='transaction-description-textarea'
               onChange={this.handleDescChange}
               rows={1}
+              style={{ minHeight: 23 }}
               value={description}
             />
             {extractTags(description).map(tag => (

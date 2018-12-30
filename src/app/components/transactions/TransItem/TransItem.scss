@@ -8,6 +8,9 @@
   width: 100%;
   padding: 0 !important;
   border: none !important;
+  overflow: auto !important;
+  resize: none !important;
+  margin-bottom: -3px !important;
 
   &:focus {
     outline: none;
