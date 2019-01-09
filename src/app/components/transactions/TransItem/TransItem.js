@@ -191,10 +191,6 @@ class TransItem extends React.Component {
       date: currentDateYMD(),
       tags: this.props.tags.map(tag => tag.name),
     });
-
-    // Hacky way to enable scrolling, which hides exposed popups
-    window.scrollTo(5, 0);
-    window.scrollTo(0, 0);
   }
 
   /***************************************************************/
@@ -325,7 +321,6 @@ class TransItem extends React.Component {
 
     return (
       <SemPopup
-        hideOnScroll
         keepInViewPort
         on='click'
         style={popupStyle}
@@ -386,7 +381,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { description, editAmount } = this.state;
+    const { description, editAmount, positiveAmount } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -426,7 +421,7 @@ class TransItem extends React.Component {
               horizontalOffset={-8}
               position='bottom left'
               trigger={<span className='cursor-pointer'>
-                {dollarToFloat(amount) >= 0 ?
+                {positiveAmount ?
                   <Icon name='arrow circle up' className='green-color no-margsin' /> :
                   <Icon name='arrow circle down' className='red-color no-margin' />
                 } {editAmount || amount.replace(/-/, '')}
