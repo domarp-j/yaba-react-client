@@ -4,6 +4,7 @@ import { Card, Dimmer, Loader  } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { any, equals, identity, keys, merge, partition } from 'ramda';
 
+import routes from '../../../routes';
 import { TransForm, TransItem } from '../../transactions';
 import {
   DEFAULT_FETCH_LIMIT,
@@ -54,7 +55,9 @@ class TransList extends React.PureComponent {
       this.props.clearTransactions();
       resolve();
     }).then(() => {
-      this.fetchTransRequest(this.state.limit, this.state.page);
+      if (window.location.pathname === routes.homePage) {
+        this.fetchTransRequest(this.state.limit, this.state.page);
+      }
     });
   }
 
