@@ -62,6 +62,36 @@ class Filter extends React.Component {
   }
   paneList = [this.panes.desc, this.panes.dates, this.panes.tags]
 
+  /**
+   * The date filter page will have date query "shortcuts", i.e.
+   * past week, last 30 days, etc.
+   *
+   * This array of objects dictates the text & fromDate for each
+   * of these date shortcut buttons.
+   */
+  dateQueryShortcuts = [
+    { text: 'since last sunday', fromDate: moment().day(0)._d },
+    { text: 'past seven days', fromDate: moment().subtract(7, 'days')._d },
+    { text: 'this month', fromDate: moment().date(1)._d },
+    { text: 'past thirty days', fromDate: moment().subtract(30, 'days')._d },
+    {
+      text: 'this quarter',
+      fromDate: (() => {
+        let monthAndDay;
+        switch(moment().quarter()) {
+        case 1: monthAndDay = 'January 1'; break;
+        case 2: monthAndDay = 'April 1'; break;
+        case 3: monthAndDay = 'July 1'; break;
+        case 4: monthAndDay = 'October 1'; break;
+        }
+        return moment(monthAndDay).year(moment().year())._d;
+      })(),
+    },
+    { text: 'past three months', fromDate: moment().subtract(3, 'months')._d },
+    { text: 'this year', fromDate: moment().dayOfYear(1)._d },
+    { text: 'past year', fromDate: moment().subtract(1, 'years')._d },
+  ]
+
   static propTypes = {
     description: PropTypes.string,
     matchAllTags: PropTypes.bool,
@@ -101,6 +131,21 @@ class Filter extends React.Component {
     }));
   }
 
+  DateQuery = ({ fromDate, text }) => (
+    <Button
+      className='margin-bottom-5 padding-5'
+      onClick={() => {
+        this.setState({
+          [TO_DATE]: undefined,
+        }, () => {
+          this.handleDateChange(fromDate, FROM_DATE);
+        });
+      }}
+    >
+      {text}
+    </Button>
+  )
+
   descriptionField = () => (
     <div>
       <Form>
@@ -120,6 +165,7 @@ class Filter extends React.Component {
 
   dateFields = () => {
     const style = { padding: '0', zIndex: 1001 };
+    const DateQuery = this.DateQuery;
 
     return (
       <Form>
@@ -162,6 +208,16 @@ class Filter extends React.Component {
             />}
           />
         </Form.Group>
+
+        <div className='margin-top-20-mobile'>
+          {this.dateQueryShortcuts.map(dqs => (
+            <DateQuery
+              fromDate={dqs.fromDate}
+              key={dqs.text}
+              text={dqs.text}
+            />
+          ))}
+        </div>
       </Form>
     );
   }
