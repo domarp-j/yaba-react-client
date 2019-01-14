@@ -73,7 +73,7 @@ class TransItem extends React.Component {
   /**
    * Delay between user changing description/tags and saving
    */
-  saveDelay = 2250;
+  saveDelay = 1750;
 
   /***************************************************************/
   /** STATE TOGGLERS */
@@ -90,12 +90,19 @@ class TransItem extends React.Component {
    * On toggle, make an external call to update the transaction's amount with a flipped sign
    */
   togglePositiveAmount = () => {
+    if (this.amountTimeout) {
+      clearTimeout(this.amountTimeout);
+    }
+
     this.setState(prevState => ({
       positiveAmount: !prevState.positiveAmount,
     }), () => {
-      const absAmount = this.props.amount.replace(this.dollarRegex, '');
-      const sign = this.state.positiveAmount ? '+' : '-';
-      this.updateTransaction({ amount: `${sign}${absAmount}` });
+      this.amountTimeout = setTimeout(() => {
+        const amount = this.state.editAmount || this.props.amount;
+        const absAmount = amount.replace(this.dollarRegex, '');
+        const sign = this.state.positiveAmount ? '+' : '-';
+        this.updateTransaction({ amount: `${sign}${absAmount}` });
+      }, this.saveDelay);
     });
   }
 
@@ -222,12 +229,12 @@ class TransItem extends React.Component {
    * When editing the amount, delay for a bit before saving
    */
   handleAmountChange = e => {
-    if (this.dateTimeout) {
-      clearTimeout(this.dateTimeout);
+    if (this.amountTimeout) {
+      clearTimeout(this.amountTimeout);
     }
 
     this.setState({ editAmount: e.target.value }, () => {
-      this.dateTimeout = setTimeout(() => {
+      this.amountTimeout = setTimeout(() => {
         this.updateTransactionAmount();
       }, this.saveDelay);
     });
