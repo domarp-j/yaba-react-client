@@ -8,15 +8,6 @@ import { ButtonToModal } from '../../misc';
 import { clearTransactionQueries } from '../../../store/actions/queries';
 import { showTransactionForm } from '../../../store/actions/transactions';
 
-/*
-  This is a dashboard that shows important transaction data such as
-    total amount & total number of transactions.
-
-  This dashboard also includes buttons to add, filter, and sort transactions,
-    along with a segment that displays the user's currently transaction
-    filter queries in a human-readable format.
-*/
-
 class Dashboard extends React.Component {
   static propTypes = {
     addButton: PropTypes.func,

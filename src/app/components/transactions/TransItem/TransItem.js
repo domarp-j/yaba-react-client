@@ -70,7 +70,7 @@ class TransItem extends React.Component {
   }
 
   /**
-   * Regex to find dollar-based chars
+   * Regex to find dollar chars
    */
   DOLLAR_REGEX = /\$|,|-/g;
 

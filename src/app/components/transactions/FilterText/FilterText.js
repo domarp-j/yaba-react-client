@@ -4,10 +4,6 @@ import { filter, identity } from 'ramda';
 
 import { friendlyDate } from '../../../utils/dateTools';
 
-/*
-  This component takes transaction query values as props
-  and turns them into a sentence.
-*/
 const FilterText = ({
   description,
   fromDate,

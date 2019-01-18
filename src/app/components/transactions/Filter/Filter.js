@@ -83,6 +83,7 @@ class Filter extends React.Component {
         case 2: monthAndDay = 'April 1'; break;
         case 3: monthAndDay = 'July 1'; break;
         case 4: monthAndDay = 'October 1'; break;
+        default: return;
         }
         return moment(monthAndDay).year(moment().year())._d;
       })(),
@@ -209,7 +210,7 @@ class Filter extends React.Component {
           />
         </Form.Group>
 
-        <div className='margin-top-20-mobile'>
+        <div className='hidden-mobile'>
           {this.dateQueryShortcuts.map(dqs => (
             <DateQuery
               fromDate={dqs.fromDate}

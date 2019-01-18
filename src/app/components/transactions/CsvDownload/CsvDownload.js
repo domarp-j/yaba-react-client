@@ -28,7 +28,6 @@ class CsvDownload extends React.Component {
       .then(res => {
         this.generateCsvFile(res.data);
       })
-      // TODO: Catch & display error
       .finally(() => {
         this.setState({ loading: false });
       });
