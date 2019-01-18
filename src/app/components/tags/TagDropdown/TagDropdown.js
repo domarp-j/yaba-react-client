@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { compose, equals, filter, length, match, prop, sortBy, toLower } from 'ramda';
+import { compose, filter, prop, sortBy, toLower } from 'ramda';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 class TagDropdown extends React.Component {
   static propTypes = {
+    className: PropTypes.string,
     filterText: PropTypes.string,
+    limit: PropTypes.number,
     onSelect: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
@@ -17,7 +19,7 @@ class TagDropdown extends React.Component {
   filterTags = (tags, filterText) => (
     filterText ?
       filter(
-        tag => !equals(length(match(new RegExp(toLower(filterText)), toLower(tag.name))), 0),
+        tag => tag.name.slice(0, filterText.length).match(new RegExp(filterText)),
         tags
       ) : tags
   )
@@ -28,28 +30,29 @@ class TagDropdown extends React.Component {
 
   render() {
     const {
+      className,
       filterText,
+      limit,
       onSelect,
       tags,
     } = this.props;
 
     const filteredTags = this.filterTags(tags, filterText);
+    const dislayedTags = limit ? filteredTags.slice(0, limit) : filteredTags;
 
     return (
-      filteredTags.length > 0 &&
-        <div className='tag-dropdown' tabIndex="-1">
-          <Button.Group basic vertical>
-            {this.sortTags(filteredTags).map((tag, index) => (
-              <Button
-                className='tag-dropdown-option'
-                key={tag.id}
-                onClick={onSelect}
-                tabIndex={index}
-              >
-                {tag.name}
-              </Button>
-            ))}
-          </Button.Group>
+      dislayedTags.length > 0 &&
+        <div className={`tag-dropdown ${className}`}>
+          {this.sortTags(dislayedTags).map((tag, index) => (
+            <Button
+              className='tag-dropdown-option'
+              key={tag.id}
+              onClick={() => onSelect(tag.name)}
+              tabIndex={index}
+            >
+              {tag.name}
+            </Button>
+          ))}
         </div>
     );
   }

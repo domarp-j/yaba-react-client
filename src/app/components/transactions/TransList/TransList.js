@@ -6,6 +6,7 @@ import { any, equals, identity, keys, merge, partition } from 'ramda';
 
 import routes from '../../../routes';
 import { TransForm, TransItem } from '../../transactions';
+import { fetchTags } from '../../../store/actions/tags';
 import {
   DEFAULT_FETCH_LIMIT,
   clearTransactions,
@@ -18,6 +19,7 @@ class TransList extends React.PureComponent {
     allTransactionsFetched: PropTypes.bool,
     clearTransactions: PropTypes.func,
     displayTransactionForm: PropTypes.bool,
+    fetchTags: PropTypes.func,
     fetchTransactions: PropTypes.func,
     isFetchingTransactions: PropTypes.bool,
     noTransactionsFound: PropTypes.bool,
@@ -50,6 +52,8 @@ class TransList extends React.PureComponent {
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
+
+    this.props.fetchTags();
 
     new Promise(resolve => {
       this.props.clearTransactions();
@@ -214,6 +218,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearTransactions: () => dispatch(clearTransactions()),
+  fetchTags: () => dispatch(fetchTags()),
   fetchTransactions: params => dispatch(fetchTransactions(params)),
   showTransactionForm: newState => dispatch(showTransactionForm(newState)),
 });

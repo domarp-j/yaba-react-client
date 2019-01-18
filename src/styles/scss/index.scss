@@ -3,6 +3,7 @@ $white: #FDFFFF;
 $grey-dark: #333;
 $grey: #666;
 $grey-light: #BBB;
+$grey-semantic-ui: #D4D4D5;
 $black: #0F1B07;
 $red: #D72C16;
 $blue: #217CA3;
@@ -176,6 +177,10 @@ body {
 }
 
 /* Positioning */
+
+.position-absolute {
+  position: absolute;
+}
 
 .center-horizontally {
   text-align: center;

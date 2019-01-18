@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { symmetricDifference } from 'ramda';
 
 import { DatePicker } from '../../misc';
+import { TagDropdown } from '../../tags';
 import { AmountInput } from '../../transactions';
 import {
   createTransaction,
@@ -23,6 +24,7 @@ import { addTagNameToTransactionQuery } from '../../../store/actions/queries';
 import {
   attachTagToTransaction,
   detachTagFromTransaction,
+  fetchTags,
   modifyTransactionTag
 } from '../../../store/actions/tags';
 import { currentDateYMD, dateToYMD } from '../../../utils/dateTools';
@@ -42,6 +44,7 @@ class TransItem extends React.Component {
     deleteTransaction: PropTypes.func,
     description: PropTypes.string,
     detachTagFromTransaction: PropTypes.func,
+    fetchTags: PropTypes.func,
     modifyTransactionTag: PropTypes.func,
     tags: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
@@ -57,6 +60,7 @@ class TransItem extends React.Component {
     this.state = {
       description: props.description,
       editAmount: undefined,
+      filterData: {},
       positiveAmount: dollarToFloat(props.amount) >= 0,
       showDeleteModal: false,
     };
@@ -68,12 +72,12 @@ class TransItem extends React.Component {
   /**
    * Regex to find dollar-based chars
    */
-  dollarRegex = /\$|,|-/g;
+  DOLLAR_REGEX = /\$|,|-/g;
 
   /**
    * Delay between user changing description/tags and saving
    */
-  saveDelay = 1750;
+  SAVE_DELAY = 1750;
 
   /***************************************************************/
   /** STATE TOGGLERS */
@@ -99,10 +103,10 @@ class TransItem extends React.Component {
     }), () => {
       this.amountTimeout = setTimeout(() => {
         const amount = this.state.editAmount || this.props.amount;
-        const absAmount = amount.replace(this.dollarRegex, '');
+        const absAmount = amount.replace(this.DOLLAR_REGEX, '');
         const sign = this.state.positiveAmount ? '+' : '-';
         this.updateTransaction({ amount: `${sign}${absAmount}` });
-      }, this.saveDelay);
+      }, this.SAVE_DELAY);
     });
   }
 
@@ -174,6 +178,9 @@ class TransItem extends React.Component {
         transactionId: this.props.transactionId,
       });
     });
+
+    // Fetch all tags & save in global state
+    this.props.fetchTags();
   }
 
   /**
@@ -182,7 +189,7 @@ class TransItem extends React.Component {
   updateTransactionAmount = () => {
     const { editAmount, positiveAmount } = this.state;
     this.updateTransaction({
-      amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(this.dollarRegex, '')}`,
+      amount: `${positiveAmount ? '+' : '-'}${editAmount.replace(this.DOLLAR_REGEX, '')}`,
     });
   }
 
@@ -193,11 +200,13 @@ class TransItem extends React.Component {
     const { amount } = this.props;
 
     this.props.createTransaction({
-      amount:  `${dollarToFloat(amount) > 0 ? '+' : '-'}${amount.replace(this.dollarRegex, '')}`,
+      amount:  `${dollarToFloat(amount) > 0 ? '+' : '-'}${amount.replace(this.DOLLAR_REGEX, '')}`,
       description: this.props.description,
       date: currentDateYMD(),
       tags: this.props.tags.map(tag => tag.name),
     });
+
+    window.scrollTo(0, 0);
   }
 
   /***************************************************************/
@@ -213,15 +222,16 @@ class TransItem extends React.Component {
       clearTimeout(this.descTagTimeout);
     }
 
-    this.setState({ description: e.target.value }, () => {
-      const text = this.state.description;
-
-      if (!this.isValidDescription(text)) return;
-
+    this.setState({
+      description: e.target.value,
+      filterData: this.getFilterData(e),
+    }, () => {
+      const { description } = this.state;
+      if (!this.isValidDescription(description)) return;
       this.descTagTimeout = setTimeout(() => {
-        this.saveTransactionDescription(text);
-        this.updateTransactionTags(text);
-      }, this.saveDelay);
+        this.saveTransactionDescription(description);
+        this.updateTransactionTags(description);
+      }, this.SAVE_DELAY);
     });
   }
 
@@ -236,7 +246,7 @@ class TransItem extends React.Component {
     this.setState({ editAmount: e.target.value }, () => {
       this.amountTimeout = setTimeout(() => {
         this.updateTransactionAmount();
-      }, this.saveDelay);
+      }, this.SAVE_DELAY);
     });
   }
 
@@ -262,6 +272,33 @@ class TransItem extends React.Component {
     this.props.addTagNameToTransactionQuery(tagName);
   }
 
+  /**
+   * When clicking a tag dropdown option, update the description with the selected
+   * tag based on the filterData in state
+   */
+  handleTagDropdownClick = tagName => {
+    const { position } = this.state.filterData;
+
+    const descBeforePos = this.state.description.slice(0, position);
+    const descAfterPos = this.state.description.slice(position);
+
+    const splitDescAfterPos = descAfterPos.split(/\s/);
+    splitDescAfterPos[0] = `#${tagName}`;
+    const newDescAfterPos = splitDescAfterPos.join(' ');
+
+    this.setState({
+      description: `${descBeforePos}${newDescAfterPos}`,
+      filterData: {},
+    }, () => {
+      const { description } = this.state;
+      this.saveTransactionDescription(description);
+      this.updateTransactionTags(description);
+      if (this.descTagTimeout) {
+        clearTimeout(this.descTagTimeout);
+      }
+    });
+  }
+
   /***************************************************************/
   /** UTILITY FUNCTIONS */
   /***************************************************************/
@@ -272,6 +309,53 @@ class TransItem extends React.Component {
 
     return true;
   }
+
+  /**
+   * If the cursor in the description field is close to a #tag,
+   * return data on that tag that could be used for the tag
+   * dropdown filter:
+   * {
+   *   text: The text of the tag near the cursor,
+   *   position: Position of the tag (0 - all the way to the left)
+   * }
+   * Return an empty object if the cursor is not near an object
+   */
+  getFilterData = event => {
+    let desc = event.target.value;
+
+    // Return empty object if no tags are present in description or
+    // if description is empty
+    if (!desc.match(/#/) || desc === '') return {};
+    // Return empty object if a range of text is selected
+    if (event.target.selectionStart !== event.target.selectionEnd) {
+      return {};
+    }
+
+    let caretPosition = event.target.selectionStart;
+    let currPosition = caretPosition;
+
+    // Return empty object if caret is at beginning of description field
+    if (currPosition === 0) return {};
+
+    // Find the first space or '#' to the left of the caret
+    while (!desc[currPosition - 1].match(/\s|#/)) currPosition--;
+
+    // Return filter data if the caret is near a #tag
+    if (desc[currPosition - 1].match(/#/)) {
+      return {
+        text: desc.slice(currPosition - 1).split(/\s/)[0].replace(/#/, ''),
+        position: currPosition - 1,
+      };
+    }
+
+    // Return empty objects if the character to the left of the caret is a
+    // space, implying that the caret is not near a #tag
+    return {};
+  }
+
+  setTransItemRef = ele => {
+    this.transItemRef = ele;
+  };
 
   /***************************************************************/
   /** SUBCOMPONENTS */
@@ -388,7 +472,7 @@ class TransItem extends React.Component {
 
   render() {
     const { amount, date } = this.props;
-    const { description, editAmount, positiveAmount } = this.state;
+    const { description, editAmount, filterData, positiveAmount } = this.state;
 
     const AmountEditor = this.AmountEditor;
     const DateEditor = this.DateEditor;
@@ -396,7 +480,7 @@ class TransItem extends React.Component {
     const Popup = this.Popup;
 
     return (
-      <Card className='full-width no-margin-bottom' ref={this.setItemRef}>
+      <Card className='full-width no-margin-bottom'>
         <Card.Content>
           <Card.Header>
             <TextArea
@@ -407,6 +491,14 @@ class TransItem extends React.Component {
               style={{ minHeight: 23 }}
               value={description}
             />
+            {filterData.text &&
+              <TagDropdown
+                className='position-absolute'
+                filterText={filterData.text}
+                onSelect={this.handleTagDropdownClick}
+                ref={this.setPageRef}
+              />
+            }
             {extractTags(description).map(tag => (
               <Button
                 className='tag-button'
@@ -459,8 +551,9 @@ const mapDispatchToProps = dispatch => ({
   createTransaction: data => dispatch(createTransaction(data)),
   deleteTransaction: data => dispatch(deleteTransaction(data)),
   detachTagFromTransaction: data => dispatch(detachTagFromTransaction(data)),
+  fetchTags: () => dispatch(fetchTags()),
   modifyTransactionTag: data => dispatch(modifyTransactionTag(data)),
   updateTransaction: data => dispatch(updateTransaction(data)),
 });
 
-export default connect(undefined, mapDispatchToProps)(TransItem);
+export default connect(null, mapDispatchToProps)(TransItem);

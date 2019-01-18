@@ -1,13 +1,14 @@
 .tag-dropdown {
   background-color: $white;
   z-index: 10;
-  max-height: 270px;
-  overflow-y: scroll;
+  width: 95%;
+  border: 1px solid $grey-semantic-ui;
+  border-radius: 5px;
+  padding: 5px;
 
   .tag-dropdown-option {
-    text-align: left;
-    padding: 6px 4px !important;
-    min-width: 100px;
+    margin-bottom: 5px;
+    padding: 5px;
   }
 }
 
