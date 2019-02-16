@@ -103,7 +103,7 @@ const formikOptions = {
     props.signInUser({ email: values.email, password: values.password })
       .then(() => {
         configureAxios().then(() => {
-          props.history.push(routes.homePage);
+          props.history.push(routes.transactionsPage);
         });
       })
       .catch(() => { setErrors({ saving: 'It looks like we could not sign you in. Please try again later.' }); });

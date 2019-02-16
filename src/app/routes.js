@@ -3,17 +3,18 @@
 const server = process.env.REACT_APP_SERVER;
 
 export default {
-  homePage: '/',
-  signUpPage: '/sign-up',
-  signInPage: '/sign-in',
-  signUp: `${server}/auth`,
-  signIn: `${server}/auth/sign_in`,
-  tags: `${server}/api/tags`,
-  transactions: `${server}/api/transaction-items`,
-  updateTransaction: `${server}/api/transaction-item/update`,
-  deleteTransaction: `${server}/api/transaction-item/delete`,
   addTransactionTag: transactionId => `${server}/api/transaction-items/${transactionId}/tags`,
-  updateTransactionTag: transactionId => `${server}/api/transaction-items/${transactionId}/tags/update`,
+  deleteTransaction: `${server}/api/transaction-item/delete`,
   deleteTransactionTag: transactionId => `${server}/api/transaction-items/${transactionId}/tags/delete`,
   downloadCsv: `${server}/api/transaction-items/csv`,
+  homePage: '/',
+  signIn: `${server}/auth/sign_in`,
+  signInPage: '/sign-in',
+  signUp: `${server}/auth`,
+  signUpPage: '/sign-up',
+  tags: `${server}/api/tags`,
+  transactions: `${server}/api/transaction-items`,
+  transactionsPage: '/transactions',
+  updateTransaction: `${server}/api/transaction-item/update`,
+  updateTransactionTag: transactionId => `${server}/api/transaction-items/${transactionId}/tags/update`,
 };

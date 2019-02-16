@@ -1,25 +1,7 @@
-.header-catch-phrase {
+.auth-header {
   text-align: center;
   font-family: 'Playfair Display';
-  font-size: 42px;
-  font-weight: 100;
-
-  @media only screen and (max-width: $tablet-width) {
-    font-size: 32px;
-  }
-}
-
-.what-is-yaba {
-  text-align: center;
-  font-family: 'Abel';
-  font-size: 24px;
-  max-width: 520px;
-  margin: 0 auto;
-  color: $grey-dark;
-
-  @media only screen and (max-width: $tablet-width) {
-    font-size: 18px;
-  }
+  font-size: 32px;
 }
 
 .auth-form-wrapper {

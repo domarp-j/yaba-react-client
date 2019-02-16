@@ -35,6 +35,14 @@ body {
   padding-bottom: 5px !important;
 }
 
+.padding-10 {
+  padding: 10px !important;
+}
+
+.padding-15 {
+  padding: 15px !important;
+}
+
 .padding-30 {
   padding: 30px !important;
 }
@@ -352,4 +360,5 @@ body {
 @import 'src/app/components/transactions/TransItem/TransItem.scss';
 @import 'src/app/components/transactions/TransList/TransList.scss';
 @import 'src/app/pages/AuthPage/AuthPage.scss';
+@import 'src/app/pages/HomePage/HomePage.scss';
 @import 'src/app/pages/TransactionsPage/TransactionsPage.scss';

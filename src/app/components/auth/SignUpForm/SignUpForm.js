@@ -118,7 +118,7 @@ const formikOptions = {
     }
   ) => {
     props.registerUser({ email: values.email, password: values.password })
-      .then(() => { props.history.push(routes.homePage); })
+      .then(() => { props.history.push(routes.transactionsPage); })
       .catch(() => { setErrors({ saving: 'It looks like we could not save your sign-up information. Please try again later.' }); });
   },
   validationSchema: schema,

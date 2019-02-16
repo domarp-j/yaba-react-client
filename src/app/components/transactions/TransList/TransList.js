@@ -59,7 +59,7 @@ class TransList extends React.PureComponent {
       this.props.clearTransactions();
       resolve();
     }).then(() => {
-      if (window.location.pathname === routes.homePage) {
+      if (window.location.pathname === routes.transactionsPage) {
         this.fetchTransRequest(this.state.limit, this.state.page);
       }
     });

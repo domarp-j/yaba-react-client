@@ -1,0 +1,50 @@
+.home-page {
+  max-width: 1080px;
+  margin: 80px auto !important;
+
+  .splash-info {
+    .motto {
+      font-family: 'Playfair Display';
+      font-size: 48px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .explanation {
+      text-align: left;
+      font-family: 'Abel';
+      font-size: 26px;
+      font-weight: 100;
+      line-height: 1.2em;
+      margin-top: 30px;
+      color: $grey;
+    }
+  }
+
+  .sign-up {
+    padding-left: 30px !important;
+    border-left: 3px solid $green;
+  }
+}
+
+@media only screen and (max-width: $tablet-width) {
+  .home-page {
+    margin: 0 auto !important;
+
+    .splash-info {
+      .motto {
+        text-align: center;
+        font-size: 38px;
+      }
+
+      .explanation {
+        font-size: 24px;
+      }
+    }
+
+    .sign-up {
+      border-left: none;
+      padding-left: none;
+    }
+  }
+}
