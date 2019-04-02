@@ -38,7 +38,7 @@ class Filter extends React.Component {
     desc: {
       menuItem: 'By description',
       render: () => (
-        <Tab.Pane as='div' className='margin-top-bottom-30'>
+        <Tab.Pane as='div' className='margin-top-30 margin-bottom-30'>
           {this.descriptionField()}
         </Tab.Pane>
       ),
@@ -46,7 +46,7 @@ class Filter extends React.Component {
     dates: {
       menuItem: 'By date',
       render: () => (
-        <Tab.Pane as='div' className='margin-top-bottom-30'>
+        <Tab.Pane as='div' className='margin-top-30 margin-bottom-30'>
           {this.dateFields()}
         </Tab.Pane>
       ),
@@ -54,7 +54,7 @@ class Filter extends React.Component {
     tags: {
       menuItem: 'By tags',
       render: () => (
-        <Tab.Pane as='div' className='margin-top-bottom-30'>
+        <Tab.Pane as='div' className='margin-top-30 margin-bottom-30'>
           {this.tagFields()}
         </Tab.Pane>
       ),
@@ -70,10 +70,8 @@ class Filter extends React.Component {
    * of these date shortcut buttons.
    */
   dateQueryShortcuts = [
-    { text: 'since last sunday', fromDate: moment().day(0)._d },
-    { text: 'past seven days', fromDate: moment().subtract(7, 'days')._d },
-    { text: 'this month', fromDate: moment().date(1)._d },
-    { text: 'past thirty days', fromDate: moment().subtract(30, 'days')._d },
+    { text: 'past week', fromDate: moment().subtract(8, 'days')._d },
+    { text: 'this month', fromDate: moment().date(0)._d },
     {
       text: 'this quarter',
       fromDate: (() => {
@@ -88,9 +86,8 @@ class Filter extends React.Component {
         return moment(monthAndDay).year(moment().year())._d;
       })(),
     },
-    { text: 'past three months', fromDate: moment().subtract(3, 'months')._d },
-    { text: 'this year', fromDate: moment().dayOfYear(1)._d },
-    { text: 'past year', fromDate: moment().subtract(1, 'years')._d },
+    { text: 'this year', fromDate: moment().dayOfYear(0)._d },
+    { text: 'past year', fromDate: moment().subtract(1, 'years').subtract(1, 'days')._d },
   ]
 
   static propTypes = {
