@@ -311,17 +311,6 @@ body {
     height: 4px;
     border-radius: 50%; }
 
-.tag-dropdown {
-  background-color: #FDFFFF;
-  z-index: 10;
-  width: 95%;
-  border: 1px solid #D4D4D5;
-  border-radius: 5px;
-  padding: 5px; }
-  .tag-dropdown .tag-dropdown-option {
-    margin-bottom: 5px;
-    padding: 5px; }
-
 /* CSV Download */
 #csv-upload-input {
   position: absolute;
